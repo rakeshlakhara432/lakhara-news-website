@@ -11,6 +11,8 @@ import { CreateArticle } from "./pages/admin/CreateArticle";
 import { EditArticle } from "./pages/admin/EditArticle";
 import { ManageCategories } from "./pages/admin/ManageCategories";
 import { AdminSettings } from "./pages/admin/Settings";
+import { ProfilePage } from "./pages/ProfilePage";
+import { AlertsPage } from "./pages/AlertsPage";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createHashRouter([
@@ -22,6 +24,8 @@ export const router = createHashRouter([
       { path: "article/:slug", Component: ArticlePage },
       { path: "category/:category", Component: CategoryPage },
       { path: "live", Component: LiveTVPage },
+      { path: "profile", Component: ProfilePage },
+      { path: "alerts", Component: AlertsPage },
     ],
   },
   {
