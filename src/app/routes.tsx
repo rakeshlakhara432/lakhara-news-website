@@ -10,6 +10,7 @@ import { ManageArticles } from "./pages/admin/ManageArticles";
 import { CreateArticle } from "./pages/admin/CreateArticle";
 import { EditArticle } from "./pages/admin/EditArticle";
 import { ManageCategories } from "./pages/admin/ManageCategories";
+import { AdminSettings } from "./pages/admin/Settings";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createHashRouter([
@@ -32,6 +33,7 @@ export const router = createHashRouter([
       { path: "articles/create", Component: CreateArticle },
       { path: "articles/edit/:id", Component: EditArticle },
       { path: "categories", Component: ManageCategories },
+      { path: "settings", Component: AdminSettings },
     ],
   },
   {
