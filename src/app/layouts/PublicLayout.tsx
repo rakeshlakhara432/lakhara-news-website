@@ -28,8 +28,8 @@ export function PublicLayout() {
           {/* Logo and Search */}
           <div className="flex items-center justify-between py-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="bg-red-600 text-white px-4 py-2 rounded font-bold text-2xl">
-                NEWS<span className="text-yellow-400">24</span>
+              <div className="bg-red-600 text-white px-4 py-2 rounded font-bold text-xl md:text-2xl tracking-tight">
+                Lakhara <span className="text-yellow-400">Digital News</span>
               </div>
             </Link>
 
@@ -142,7 +142,7 @@ export function PublicLayout() {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">About NEWS24</h3>
+              <h3 className="font-bold text-lg mb-4">About Lakhara Digital News</h3>
               <p className="text-gray-400 text-sm">
                 Your trusted source for breaking news, analysis, and insights. Stay
                 informed with 24/7 coverage.
@@ -179,7 +179,7 @@ export function PublicLayout() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            © 2026 NEWS24. All rights reserved.
+            © 2026 Lakhara Digital News. All rights reserved.
           </div>
         </div>
       </footer>
