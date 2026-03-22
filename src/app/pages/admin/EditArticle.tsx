@@ -84,6 +84,21 @@ export function EditArticle() {
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image must be less than 2MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, imageUrl: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center gap-4 mb-8">
@@ -162,18 +177,31 @@ export function EditArticle() {
             />
           </div>
 
-          {/* Image URL */}
+          {/* Article Image */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Image URL
+              Article Image
             </label>
             <input
-              type="url"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 transition-all cursor-pointer"
             />
+            {formData.imageUrl && formData.imageUrl.length > 5 && (
+              <div className="mt-3 relative inline-block">
+                <img src={formData.imageUrl} alt="Preview" className="h-20 w-auto rounded-lg object-cover border border-gray-200 shadow-sm" />
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, imageUrl: "" }))}
+                  className="absolute -top-2 -right-2 bg-gray-900 hover:bg-black text-white rounded-full size-6 flex items-center justify-center text-sm shadow-md"
+                  title="Remove image"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            <p className="text-xs text-gray-500 mt-1">Upload a cover image for the article (max 2MB). Leave empty to keep existing.</p>
           </div>
 
           {/* Excerpt */}
