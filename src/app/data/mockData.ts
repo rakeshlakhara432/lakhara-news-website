@@ -22,190 +22,190 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: '1', name: 'Breaking News', slug: 'breaking', color: '#ef4444' },
-  { id: '2', name: 'Politics', slug: 'politics', color: '#3b82f6' },
-  { id: '3', name: 'Sports', slug: 'sports', color: '#10b981' },
-  { id: '4', name: 'Entertainment', slug: 'entertainment', color: '#f59e0b' },
-  { id: '5', name: 'Business', slug: 'business', color: '#6366f1' },
-  { id: '6', name: 'Technology', slug: 'technology', color: '#8b5cf6' },
-  { id: '7', name: 'Health', slug: 'health', color: '#ec4899' },
-  { id: '8', name: 'World', slug: 'world', color: '#14b8a6' },
+  { id: '1', name: 'ब्रेकिंग न्यूज़', slug: 'breaking', color: '#ef4444' },
+  { id: '2', name: 'राजनीति', slug: 'politics', color: '#3b82f6' },
+  { id: '3', name: 'खेल', slug: 'sports', color: '#10b981' },
+  { id: '4', name: 'मनोरंजन', slug: 'entertainment', color: '#f59e0b' },
+  { id: '5', name: 'बिज़नेस', slug: 'business', color: '#6366f1' },
+  { id: '6', name: 'टेक्नोलॉजी', slug: 'technology', color: '#8b5cf6' },
+  { id: '7', name: 'स्वास्थ्य', slug: 'health', color: '#ec4899' },
+  { id: '8', name: 'दुनिया', slug: 'world', color: '#14b8a6' },
 ];
 
 export const articles: Article[] = [
   {
     id: '1',
-    title: 'Breaking: Major Economic Reform Bill Passed in Parliament',
+    title: 'ब्रेकिंग: संसद में ऐतिहासिक आर्थिक सुधार विधेयक पारित',
     slug: 'major-economic-reform-bill-passed',
-    content: `In a historic move, the Parliament has passed a comprehensive economic reform bill that is expected to transform the country's financial landscape. The bill, which has been in discussion for over six months, received overwhelming support from both sides of the house.
+    content: `एक ऐतिहासिक कदम में, संसद ने एक व्यापक आर्थिक सुधार विधेयक पारित किया है जिससे देश के वित्तीय परिदृश्य को बदलने की उम्मीद है। छह महीने से अधिक समय से चर्चा में रहे इस विधेयक को सदन के दोनों पक्षों से भारी समर्थन मिला।
 
-The new legislation includes provisions for tax reforms, investment incentives, and measures to boost domestic manufacturing. Finance Minister addressed the media after the bill's passage, stating that this reform will create millions of jobs and attract foreign investment.
+नई व्यवस्था में कर सुधार, निवेश प्रोत्साहन और घरेलू विनिर्माण को बढ़ावा देने के उपाय शामिल हैं। वित्त मंत्री ने विधेयक पारित होने के बाद मीडिया को संबोधित करते हुए कहा कि इस सुधार से लाखों नौकरियां पैदा होंगी और विदेशी निवेश आकर्षित होगा।
 
-Key highlights of the bill include:
-- Reduction in corporate tax rates for small and medium enterprises
-- Streamlined GST implementation
-- Special economic zones in underdeveloped regions
-- Incentives for startups and innovation
+विधेयक की मुख्य विशेषताएं:
+- लघु और मध्यम उद्यमों के लिए कॉर्पोरेट टैक्स दरों में कटौती
+- जीएसटी कार्यान्वयन को सरल बनाना
+- पिछड़े क्षेत्रों में विशेष आर्थिक क्षेत्र
+- स्टार्टअप और नवाचार के लिए प्रोत्साहन
 
-Opposition leaders, while supporting the bill, raised concerns about implementation timelines and requested regular monitoring mechanisms. The government has assured that a special committee will be formed to oversee the execution of these reforms.
+विपक्ष के नेताओं ने विधेयक का समर्थन करते हुए कार्यान्वयन की समयसीमा के बारे में चिंता जताई और नियमित निगरानी तंत्र का अनुरोध किया। सरकार ने आश्वासन दिया है कि इन सुधारों के निष्पादन की देखरेख के लिए एक विशेष समिति बनाई जाएगी।
 
-Economists have welcomed the move, predicting a GDP growth boost of 2-3% in the coming fiscal year. Stock markets responded positively, with major indices closing at record highs.`,
-    excerpt: 'Parliament passes historic economic reform bill expected to transform financial landscape and create millions of jobs.',
+अर्थशास्त्रियों ने इस कदम का स्वागत किया है, और आने वाले वित्तीय वर्ष में जीडीपी विकास दर में 2-3% की वृद्धि की भविष्यवाणी की है। शेयर बाजारों ने सकारात्मक प्रतिक्रिया दी, प्रमुख सूचकांक रिकॉर्ड ऊंचाई पर बंद हुए।`,
+    excerpt: 'संसद ने ऐतिहासिक आर्थिक सुधार विधेयक पारित किया, जिससे वित्तीय परिदृश्य बदलने और लाखों नौकरियां पैदा होने की उम्मीद है।',
     category: 'politics',
-    author: 'Rajesh Kumar',
+    author: 'राजेश कुमार',
     publishedAt: '2026-03-20T09:30:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
     isBreaking: true,
     isTrending: true,
     views: 125430,
-    tags: ['Parliament', 'Economy', 'Reform', 'Finance'],
+    tags: ['संसद', 'अर्थव्यवस्था', 'सुधार', 'वित्त'],
   },
   {
     id: '2',
-    title: 'Cricket World Cup: India Defeats Australia in Thrilling Final',
+    title: 'क्रिकेट विश्व कप: रोमांचक फाइनल में भारत ने ऑस्ट्रेलिया को हराया',
     slug: 'india-defeats-australia-cricket-final',
-    content: `In a nail-biting finish, India clinched the Cricket World Cup title by defeating Australia by 6 wickets in the final match. The victory came after a spectacular batting performance by captain Virat Sharma, who scored an unbeaten 115 runs.
+    content: `एक रोमांचक मुकाबले में, भारत ने फाइनल मैच में ऑस्ट्रेलिया को 6 विकेट से हराकर क्रिकेट विश्व कप का खिताब अपने नाम कर लिया। यह जीत कप्तान विराट शर्मा के शानदार बल्लेबाजी प्रदर्शन के बाद मिली, जिन्होंने नाबाद 115 रन बनाए।
 
-Australia, batting first, posted a competitive total of 287 runs. Their innings was anchored by Steve Williams' brilliant century. However, India's bowlers, led by Jasprit Kumar, kept taking crucial wickets to prevent a massive total.
+ऑस्ट्रेलिया ने पहले बल्लेबाजी करते हुए 287 रनों का चुनौतीपूर्ण स्कोर खड़ा किया। उनकी पारी को स्टीव विलियम्स के शानदार शतक ने सहारा दिया। हालांकि, जसप्रीत कुमार के नेतृत्व में भारत के गेंदबाजों ने महत्वपूर्ण विकेट लेकर बड़ा स्कोर बनने से रोका।
 
-Chasing 288, India got off to a shaky start, losing two early wickets. But Sharma's masterclass, combined with a crucial 89-run partnership with Rohit Patel, steered the team to victory with 8 balls to spare.
+288 के लक्ष्य का पीछा करते हुए भारत की शुरुआत खराब रही और दो शुरुआती विकेट गिर गए। लेकिन शर्मा के मास्टरक्लास और रोहित पटेल के साथ 89 रनों की महत्वपूर्ण साझेदारी ने टीम को 8 गेंद शेष रहते जीत दिला दी।
 
-The win marks India's third World Cup title and their first in 15 years. Celebrations have erupted across the country, with fans taking to the streets in jubilation. The Prime Minister congratulated the team, announcing cash rewards and honors for the players.`,
-    excerpt: 'India wins Cricket World Cup in thrilling final against Australia, captain scores brilliant century.',
+यह भारत का तीसरा विश्व कप खिताब है और 15 साल में पहला। पूरे देश में जश्न का माहौल है और प्रशंसक खुशी में सड़कों पर उतर आए हैं। प्रधानमंत्री ने टीम को बधाई दी और खिलाड़ियों के लिए नकद पुरस्कार और सम्मान की घोषणा की।`,
+    excerpt: 'भारत ने ऑस्ट्रेलिया के खिलाफ रोमांचक फाइनल में क्रिकेट विश्व कप जीता, कप्तान ने शानदार शतक लगाया।',
     category: 'sports',
-    author: 'Priya Sharma',
+    author: 'प्रिया शर्मा',
     publishedAt: '2026-03-20T08:15:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800',
     isBreaking: true,
     isTrending: true,
     views: 234567,
-    tags: ['Cricket', 'World Cup', 'India', 'Sports'],
+    tags: ['क्रिकेट', 'विश्व कप', 'भारत', 'खेल'],
   },
   {
     id: '3',
-    title: 'Bollywood Star Announces Major Film Production House Launch',
+    title: 'बॉलीवुड स्टार ने बड़ी फिल्म प्रोडक्शन हाउस लॉन्च करने की घोषणा की',
     slug: 'bollywood-star-launches-production-house',
-    content: `Acclaimed actress Priyanka Verma today announced the launch of her production company, "Purple Dreams Productions," at a star-studded event in Mumbai. The production house aims to create content-driven cinema and web series.
+    content: `प्रसिद्ध अभिनेत्री प्रियंका वर्मा ने आज मुंबई में एक सितारों से भरे कार्यक्रम में अपनी प्रोडक्शन कंपनी "पर्पल ड्रीम्स प्रोडक्शंस" के लॉन्च की घोषणा की। प्रोडक्शन हाउस का उद्देश्य कंटेंट-चालित सिनेमा और वेब सीरीज बनाना है।
 
-Speaking at the launch event, Verma said, "I've been fortunate to work with amazing filmmakers throughout my career. Now, I want to create a platform for new voices and untold stories." The production house has already signed three projects, including a biopic and a social drama.
+लॉन्च इवेंट में बोलते हुए वर्मा ने कहा, "मैं अपने करियर के दौरान अद्भुत फिल्म निर्माताओं के साथ काम करने के लिए भाग्यशाली रही हूं। अब, मैं नई आवाजों और अनकही कहानियों के लिए एक मंच बनाना चाहती हूं।" प्रोडक्शन हाउस ने पहले ही तीन प्रोजेक्ट्स साइन किए हैं, जिसमें एक बायोपिक और एक सामाजिक ड्रामा शामिल है।
 
-Industry veterans and fellow actors congratulated Verma on this new venture. Director Karan Malhotra, who attended the event, praised her vision and expressed interest in collaborating. The first project is scheduled to go on floors next month.
+उद्योग के दिग्गजों और सह-कलाकारों ने वर्मा को इस नए उद्यम पर बधाई दी। कार्यक्रम में शामिल हुए निर्देशक करण मल्होत्रा ने उनके दृष्टिकोण की प्रशंसा की और सहयोग करने में रुचि व्यक्त की। पहला प्रोजेक्ट अगले महीने से शुरू होने वाला है।
 
-Verma also announced a mentorship program for aspiring filmmakers and actors, stating that the production house will focus on discovering fresh talent. This initiative has been welcomed by industry insiders as a positive step toward inclusivity in Bollywood.`,
-    excerpt: 'Top Bollywood actress launches production house focusing on content-driven cinema and new talent.',
+वर्मा ने महत्वाकांक्षी फिल्म निर्माताओं और अभिनेताओं के लिए एक मेंटरशिप कार्यक्रम की भी घोषणा की, जिसमें कहा गया कि प्रोडक्शन हाउस नई प्रतिभाओं की खोज पर ध्यान केंद्रित करेगा। इस पहल का उद्योग जगत के लोगों ने बॉलीवुड में समावेशिता की दिशा में एक सकारात्मक कदम के रूप में स्वागत किया है।`,
+    excerpt: 'शीर्ष बॉलीवुड अभिनेत्री ने कंटेंट-चालित सिनेमा और नई प्रतिभा पर ध्यान केंद्रित करने वाले प्रोडक्शन हाउस का शुभारंभ किया।',
     category: 'entertainment',
-    author: 'Amit Singh',
+    author: 'अमित सिंह',
     publishedAt: '2026-03-20T07:45:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=800',
     isBreaking: false,
     isTrending: true,
     views: 87654,
-    tags: ['Bollywood', 'Entertainment', 'Production', 'Cinema'],
+    tags: ['बॉलीवुड', 'मनोरंजन', 'प्रोडक्शन', 'सिनेमा'],
   },
   {
     id: '4',
-    title: 'Tech Giants Announce Breakthrough in Quantum Computing',
+    title: 'तकनीकी दिग्गजों ने क्वांटम कंप्यूटिंग में बड़ी उपलब्धि की घोषणा की',
     slug: 'quantum-computing-breakthrough',
-    content: `Leading technology companies have announced a major breakthrough in quantum computing that could revolutionize data processing. The new quantum processor, developed through international collaboration, can perform calculations 1000 times faster than current supercomputers.
+    content: `प्रमुख प्रौद्योगिकी कंपनियों ने क्वांटम कंप्यूटिंग में एक बड़ी सफलता की घोषणा की है जो डेटा प्रोसेसिंग में क्रांति ला सकती है। अंतरराष्ट्रीय सहयोग के माध्यम से विकसित नया क्वांटम प्रोसेसर वर्तमान सुपर कंप्यूटरों की तुलना में 1000 गुना तेजी से गणना कर सकता है।
 
-Dr. Sarah Chen, lead scientist on the project, explained that this advancement could have significant implications for fields like cryptography, drug discovery, and climate modeling. The quantum processor uses a novel approach to maintain quantum coherence, a major challenge in the field.
+परियोजना की मुख्य वैज्ञानिक डॉ. सारा चेन ने बताया कि इस प्रगति के क्रिप्टोग्राफी, ड्रग डिस्कवरी और क्लाइमेट मॉडलिंग जैसे क्षेत्रों के लिए महत्वपूर्ण प्रभाव हो सकते हैं। क्वांटम प्रोसेसर क्वांटम सुसंगतता बनाए रखने के लिए एक नया दृष्टिकोण अपनाता है, जो इस क्षेत्र में एक बड़ी चुनौती रही है।
 
-The announcement was made at the International Technology Summit, where prototypes were demonstrated to researchers and industry leaders. While commercial applications are still years away, experts believe this marks a turning point in computing technology.
+यह घोषणा इंटरनेशनल टेक्नोलॉजी समिट में की गई, जहां शोधकर्ताओं और उद्योग जगत के नेताओं को प्रोटोटाइप का प्रदर्शन किया गया। हालांकि वाणिज्यिक अनुप्रयोग अभी वर्षों दूर हैं, विशेषज्ञों का मानना है कि यह कंप्यूटिंग तकनीक में एक महत्वपूर्ण मोड़ है।
 
-Investment in quantum computing research has surged, with governments and private companies allocating billions of dollars. India's Department of Science and Technology has also announced plans to establish quantum computing research centers.`,
-    excerpt: 'Major breakthrough in quantum computing promises to revolutionize data processing and scientific research.',
+क्वांटम कंप्यूटिंग अनुसंधान में निवेश बढ़ा है, जिसमें सरकारों और निजी कंपनियों ने अरबों डॉलर आवंटित किए हैं। भारत के विज्ञान और प्रौद्योगिकी विभाग ने भी क्वांटम कंप्यूटिंग अनुसंधान केंद्र स्थापित करने की योजना की घोषणा की है।`,
+    excerpt: 'क्वांटम कंप्यूटिंग में बड़ी सफलता डेटा प्रोसेसिंग और वैज्ञानिक अनुसंधान में क्रांति लाने का वादा करती है।',
     category: 'technology',
-    author: 'Neha Patel',
+    author: 'नेहा पटेल',
     publishedAt: '2026-03-20T06:20:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800',
     isBreaking: false,
     isTrending: true,
     views: 65432,
-    tags: ['Technology', 'Quantum Computing', 'Innovation', 'Science'],
+    tags: ['टेक्नोलॉजी', 'क्वांटम कंप्यूटिंग', 'नवाचार', 'विज्ञान'],
   },
   {
     id: '5',
-    title: 'Stock Markets Hit All-Time High Amid Economic Optimism',
+    title: 'आर्थिक आशावाद के बीच शेयर बाजार सर्वकालिक उच्च स्तर पर',
     slug: 'stock-markets-all-time-high',
-    content: `Indian stock markets reached unprecedented levels today, with the Sensex crossing 85,000 and Nifty surpassing 25,000 for the first time in history. The rally was driven by strong corporate earnings and positive economic indicators.
+    content: `भारतीय शेयर बाजार आज अभूतपूर्व स्तर पर पहुंच गए, जिसमें सेंसेक्स पहली बार 85,000 और निफ्टी 25,000 के पार निकल गया। यह तेजी मजबूत कॉर्पोरेट कमाई और सकारात्मक आर्थिक संकेतों के कारण रही।
 
-Market analysts attribute the surge to multiple factors, including the recently passed economic reform bill, robust GDP growth projections, and increased foreign institutional investment. Banking, IT, and manufacturing sectors led the gains.
+बाजार विश्लेषकों का मानना है कि इस उछाल के पीछे कई कारक हैं, जिनमें हाल ही में पारित आर्थिक सुधार विधेयक, मजबूत जीडीपी विकास अनुमान और विदेशी संस्थागत निवेश में वृद्धि शामिल है। बैंकिंग, आईटी और विनिर्माण क्षेत्रों ने लाभ की अगुवाई की।
 
-Retail investors have also shown increased participation, with demat account openings hitting record numbers. Financial advisors, however, caution against irrational exuberance and recommend diversified investment strategies.
+खुदरा निवेशकों ने भी बढ़ती भागीदारी दिखाई है, जिसमें डीमैट खाता खोलने की संख्या रिकॉर्ड स्तर पर पहुंच गई है। हालांकि, वित्तीय सलाहकार तर्कहीन उत्साह के खिलाफ चेतावनी देते हैं और विविधीकृत निवेश रणनीतियों की सलाह देते हैं।
 
-The Reserve Bank's monetary policy stance and stable inflation rates have created a favorable environment for market growth. Experts predict continued momentum in the coming quarters, though volatility remains a concern.`,
-    excerpt: 'Sensex crosses 85,000 mark as markets rally on economic optimism and strong corporate earnings.',
+भारतीय रिजर्व बैंक के मौद्रिक नीति रुख और स्थिर मुद्रास्फीति दरों ने बाजार विकास के लिए अनुकूल वातावरण बनाया है। विशेषज्ञों का अनुमान है कि आने वाली तिमाहियों में गति बनी रहेगी, हालांकि अस्थिरता एक चिंता का विषय बनी हुई है।`,
+    excerpt: 'आर्थिक आशावाद और मजबूत कॉर्पोरेट कमाई पर बाजार में तेजी के साथ सेंसेक्स 85,000 के स्तर को पार कर गया।',
     category: 'business',
-    author: 'Vikram Malhotra',
+    author: 'विक्रम मल्होत्रा',
     publishedAt: '2026-03-19T15:30:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
     isBreaking: false,
     isTrending: true,
     views: 54321,
-    tags: ['Business', 'Stock Market', 'Economy', 'Finance'],
+    tags: ['बिज़नेस', 'शेयर बाजार', 'अर्थव्यवस्था', 'वित्त'],
   },
   {
     id: '6',
-    title: 'New Health Initiative Aims to Provide Free Medical Care in Rural Areas',
+    title: 'नई स्वास्थ्य पहल का उद्देश्य ग्रामीण क्षेत्रों में मुफ्त चिकित्सा देखभाल प्रदान करना है',
     slug: 'free-medical-care-rural-initiative',
-    content: `The government has launched an ambitious health initiative to provide free medical care to rural populations. Named "Swasth Bharat Mission 2.0," the program will establish mobile medical units and telemedicine centers in 10,000 villages.
+    content: `सरकार ने ग्रामीण आबादी को मुफ्त चिकित्सा देखभाल प्रदान करने के लिए एक महत्वाकांक्षी स्वास्थ्य पहल शुरू की है। "स्वस्थ भारत मिशन 2.0" नाम का यह कार्यक्रम 10,000 गांवों में मोबाइल मेडिकल इकाइयां और टेलीमेडिसिन केंद्र स्थापित करेगा।
 
-Health Minister inaugurated the program at a ceremony in a remote village in Madhya Pradesh. The initiative includes free health check-ups, medicines, and specialist consultations through video conferencing with urban hospitals.
+स्वास्थ्य मंत्री ने मध्य प्रदेश के एक दूरदराज के गांव में एक समारोह में कार्यक्रम का उद्घाटन किया। इस पहल में मुफ्त स्वास्थ्य जांच, दवाएं और शहरी अस्पतालों के साथ वीडियो कॉन्फ्रेंसिंग के माध्यम से विशेषज्ञ परामर्श शामिल हैं।
 
-Each mobile medical unit will be equipped with basic diagnostic facilities and staffed by trained healthcare workers. The program also focuses on preventive care, with awareness campaigns about nutrition, hygiene, and common diseases.
+प्रत्येक मोबाइल मेडिकल इकाई बुनियादी नैदानिक सुविधाओं से लैस होगी और प्रशिक्षित स्वास्थ्य कर्मियों द्वारा संचालित की जाएगी। यह कार्यक्रम निवारक देखभाल पर भी ध्यान केंद्रित करता है, जिसमें पोषण, स्वच्छता और सामान्य बीमारियों के बारे में जागरूकता अभियान शामिल हैं।
 
-Healthcare experts have praised the initiative, noting that rural areas have long suffered from inadequate medical infrastructure. The program aims to reduce infant mortality rates and improve overall health outcomes in underserved regions.`,
-    excerpt: 'Government launches Swasth Bharat Mission 2.0 to bring free healthcare to 10,000 rural villages.',
+स्वास्थ्य विशेषज्ञों ने इस पहल की प्रशंसा की है, यह देखते हुए कि ग्रामीण क्षेत्रों में लंबे समय से अपर्याप्त चिकित्सा बुनियादी ढांचे का सामना करना पड़ा है। इस कार्यक्रम का उद्देश्य शिशु मृत्यु दर को कम करना और कम सेवा वाले क्षेत्रों में समग्र स्वास्थ्य परिणामों में सुधार करना है।`,
+    excerpt: 'सरकार ने 10,000 ग्रामीण गांवों में मुफ्त स्वास्थ्य सेवा पहुंचाने के लिए स्वस्थ भारत मिशन 2.0 लॉन्च किया।',
     category: 'health',
-    author: 'Dr. Anjali Reddy',
+    author: 'डॉ अंजली रेड्डी',
     publishedAt: '2026-03-19T14:00:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
     isBreaking: false,
     isTrending: false,
     views: 43210,
-    tags: ['Health', 'Rural Development', 'Government', 'Healthcare'],
+    tags: ['स्वास्थ्य', 'ग्रामीण विकास', 'सरकार', 'हेल्थकेयर'],
   },
   {
     id: '7',
-    title: 'International Climate Summit: Nations Commit to Zero Emissions by 2050',
+    title: 'अंतर्राष्ट्रीय जलवायु शिखर सम्मेलन: राष्ट्रों ने 2050 तक शून्य उत्सर्जन के लिए प्रतिबद्धता जताई',
     slug: 'climate-summit-zero-emissions',
-    content: `World leaders at the International Climate Summit have committed to achieving zero carbon emissions by 2050. The agreement includes concrete action plans and financial commitments to support developing nations in their transition to renewable energy.
+    content: `अंतर्राष्ट्रीय जलवायु शिखर सम्मेलन में विश्व नेताओं ने 2050 तक शुद्ध-शून्य कार्बन उत्सर्जन प्राप्त करने की प्रतिबद्धता जताई है। समझौते में विकासशील देशों को नवीकरणीय ऊर्जा में उनके परिवर्तन में सहायता करने के लिए ठोस कार्य योजनाएं और वित्तीय प्रतिबद्धताएं शामिल हैं।
 
-India announced a $50 billion investment in solar and wind energy infrastructure over the next decade. The country also pledged to increase forest cover and promote electric vehicles through tax incentives and infrastructure development.
+भारत ने अगले दशक में सौर और पवन ऊर्जा बुनियादी ढांचे में 50 अरब डॉलर के निवेश की घोषणा की। देश ने वन क्षेत्र बढ़ाने और कर प्रोत्साहन और बुनियादी ढांचे के विकास के माध्यम से इलेक्ट्रिक वाहनों को बढ़ावा देने का भी संकल्प लिया।
 
-Environmental activists welcomed the commitments but stressed the importance of accountability and regular monitoring. The summit also addressed issues like ocean pollution, biodiversity conservation, and sustainable agriculture.
+पर्यावरण कार्यकर्ताओं ने प्रतिबद्धताओं का स्वागत किया लेकिन जवाबदेही और नियमित निगरानी के महत्व पर जोर दिया। शिखर सम्मेलन में समुद्री प्रदूषण, जैव विविधता संरक्षण और टिकाऊ कृषि जैसे मुद्दों पर भी चर्चा की गई।
 
-Youth representatives from various countries presented innovative solutions and urged immediate action. The summit concluded with the signing of the "Global Green Pact," which outlines specific targets and timelines for each participating nation.`,
-    excerpt: 'Global leaders commit to zero emissions by 2050, India pledges $50 billion for renewable energy.',
+विभिन्न देशों के युवा प्रतिनिधियों ने नवीन समाधान प्रस्तुत किए और तत्काल कार्रवाई का आग्रह किया। शिखर सम्मेलन "ग्लोबल ग्रीन पैक्ट" के हस्ताक्षर के साथ संपन्न हुआ, जो प्रत्येक भाग लेने वाले देश के लिए विशिष्ट लक्ष्यों और समयसीमाओं की रूपरेखा तैयार करता है।`,
+    excerpt: 'वैश्विक नेता 2050 तक शून्य उत्सर्जन के लिए प्रतिबद्ध, भारत ने नवीकरणीय ऊर्जा के लिए 50 अरब डॉलर का संकल्प लिया।',
     category: 'world',
-    author: 'Rahul Krishnan',
+    author: 'राहुल कृष्णन',
     publishedAt: '2026-03-19T12:30:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1569163139394-de4798aa62b5?w=800',
     isBreaking: false,
     isTrending: false,
     views: 38765,
-    tags: ['Climate', 'Environment', 'World', 'Sustainability'],
+    tags: ['जलवायु', 'पर्यावरण', 'दुनिया', 'स्थिरता'],
   },
   {
     id: '8',
-    title: 'Education Sector Embraces AI: Smart Classrooms in 5000 Schools',
+    title: 'शिक्षा क्षेत्र ने AI को अपनाया: 5000 स्कूलों में स्मार्ट क्लासरूम',
     slug: 'ai-smart-classrooms-schools',
-    content: `The Education Ministry has announced the implementation of AI-powered smart classrooms in 5,000 government schools across the country. The initiative aims to revolutionize traditional teaching methods and make education more interactive and personalized.
+    content: `शिक्षा मंत्रालय ने देश भर के 5,000 सरकारी स्कूलों में AI-संचालित स्मार्ट क्लासरूम लागू करने की घोषणा की है। इस पहल का उद्देश्य पारंपरिक शिक्षण विधियों में क्रांति लाना और शिक्षा को अधिक इंटरैक्टिव और व्यक्तिगत बनाना है।
 
-Smart classrooms will feature AI tutors that can adapt to each student's learning pace, interactive digital boards, and augmented reality modules for science and mathematics. Teachers will receive specialized training to effectively use these technologies.
+स्मार्ट क्लासरूम में AI ट्यूटर होंगे जो प्रत्येक छात्र की सीखने की गति के अनुकूल हो सकते हैं, इंटरैक्टिव डिजिटल बोर्ड और विज्ञान और गणित के लिए संवर्धित वास्तविकता (AR) मॉड्यूल होंगे। इन तकनीकों का प्रभावी ढंग से उपयोग करने के लिए शिक्षकों को विशेष प्रशिक्षण प्राप्त होगा।
 
-Education experts believe this could significantly improve learning outcomes, especially in subjects where students typically struggle. The AI system can identify knowledge gaps and provide customized remedial content.
+शिक्षा विशेषज्ञों का मानना है कि इससे सीखने के परिणामों में काफी सुधार हो सकता है, विशेष रूप से उन विषयों में जहां छात्र आमतौर पर संघर्ष करते हैं। AI प्रणाली ज्ञान के अंतराल की पहचान कर सकती है और अनुकूलित उपचारात्मक सामग्री प्रदान कर सकती है।
 
-Parents and teachers have expressed enthusiasm about the initiative, though some raised concerns about screen time and the need for human interaction. The ministry assured that AI would complement, not replace, traditional teaching methods.`,
-    excerpt: 'Government introduces AI-powered smart classrooms in 5,000 schools to enhance learning experience.',
+माता-पिता और शिक्षकों ने पहल के प्रति उत्साह व्यक्त किया है, हालांकि कुछ ने स्क्रीन समय और मानवीय संपर्क की आवश्यकता के बारे में चिंता जताई है। मंत्रालय ने आश्वासन दिया कि AI पारंपरिक शिक्षण विधियों की जगह नहीं लेगा, बल्कि उनका पूरक होगा।`,
+    excerpt: 'सरकार ने सीखने के अनुभव को बढ़ाने के लिए 5,000 स्कूलों में AI-संचालित स्मार्ट क्लासरूम पेश किए।',
     category: 'technology',
-    author: 'Kavita Deshmukh',
+    author: 'कविता देशमुख',
     publishedAt: '2026-03-19T11:00:00Z',
     imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800',
     isBreaking: false,
     isTrending: false,
     views: 29876,
-    tags: ['Education', 'AI', 'Technology', 'Schools'],
+    tags: ['शिक्षा', 'AI', 'टेक्नोलॉजी', 'स्कूल'],
   },
 ];
 

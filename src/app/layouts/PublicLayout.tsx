@@ -17,7 +17,7 @@ export function PublicLayout() {
           <div className="flex items-center justify-between py-4">
             <Link to="/" className="flex items-center gap-2">
               <div className="bg-red-600 text-white px-4 py-2 rounded font-bold text-xl md:text-2xl tracking-tight">
-                Lakhara <span className="text-yellow-400">Digital News</span>
+                लखारा <span className="text-yellow-400">डिजिटल न्यूज़</span>
               </div>
             </Link>
 
@@ -25,7 +25,7 @@ export function PublicLayout() {
               <div className="relative flex-1">
                 <input
                   type="text"
-                  placeholder="Search news..."
+                  placeholder="खबरें खोजें..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
@@ -39,7 +39,7 @@ export function PublicLayout() {
               className="hidden md:flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
               <Tv className="size-5" />
-              <span className="font-semibold">LIVE TV</span>
+              <span className="font-semibold">लाइव टीवी</span>
             </Link>
 
             {/* Hiding top mobile menu button to push it to bottom nav */}
@@ -60,7 +60,7 @@ export function PublicLayout() {
                   location.pathname === "/" ? "text-red-600" : "text-gray-700"
                 }`}
               >
-                Home
+                होम
               </Link>
               {categories.map((cat) => (
                 <Link
@@ -84,7 +84,7 @@ export function PublicLayout() {
               <div className="mb-4">
                 <input
                   type="text"
-                  placeholder="Search news..."
+                  placeholder="खबरें खोजें..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
@@ -96,7 +96,7 @@ export function PublicLayout() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 font-semibold hover:text-red-600"
                 >
-                  Home
+                  होम
                 </Link>
                 {categories.map((cat) => (
                   <Link
@@ -113,7 +113,7 @@ export function PublicLayout() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 font-semibold text-red-600"
                 >
-                  LIVE TV
+                  लाइव टीवी
                 </Link>
               </nav>
             </div>
@@ -131,23 +131,22 @@ export function PublicLayout() {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">About Lakhara Digital News</h3>
+              <h3 className="font-bold text-lg mb-4">लखारा डिजिटल न्यूज़ के बारे में</h3>
               <p className="text-gray-400 text-sm">
-                Your trusted source for breaking news, analysis, and insights. Stay
-                informed with 24/7 coverage.
+                ब्रेकिंग न्यूज़, विश्लेषण और अंतर्दृष्टि के लिए आपका विश्वसनीय स्रोत। 24/7 कवरेज के साथ सूचित रहें।
               </p>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+              <h3 className="font-bold text-lg mb-4">त्वरित लिंक</h3>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link to="/" className="hover:text-white">Home</Link></li>
-                <li><Link to="/live" className="hover:text-white">Live TV</Link></li>
-                <li><a href="#" className="hover:text-white">About Us</a></li>
-                <li><a href="#" className="hover:text-white">Contact</a></li>
+                <li><Link to="/" className="hover:text-white">होम</Link></li>
+                <li><Link to="/live" className="hover:text-white">लाइव टीवी</Link></li>
+                <li><a href="#" className="hover:text-white">हमारे बारे में</a></li>
+                <li><a href="#" className="hover:text-white">संपर्क करें</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Categories</h3>
+              <h3 className="font-bold text-lg mb-4">श्रेणियां</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 {categories.slice(0, 4).map((cat) => (
                   <li key={cat.id}>
@@ -159,7 +158,7 @@ export function PublicLayout() {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Follow Us</h3>
+              <h3 className="font-bold text-lg mb-4">हमें फॉलो करें</h3>
               <div className="flex gap-4">
                 <a href="#" className="hover:text-red-500">Facebook</a>
                 <a href="#" className="hover:text-red-500">Twitter</a>
@@ -168,7 +167,7 @@ export function PublicLayout() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            © 2026 Lakhara Digital News. All rights reserved.
+            © 2026 लखारा डिजिटल न्यूज़। सर्वाधिकार सुरक्षित।
           </div>
         </div>
       </footer>
@@ -177,23 +176,23 @@ export function PublicLayout() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between items-center px-4 py-2 z-50 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
         <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center gap-1 ${location.pathname === '/' ? 'text-red-600' : 'text-gray-500 hover:text-red-600'}`}>
           <Home className="size-6" />
-          <span className="text-[10px] font-semibold">Home</span>
+          <span className="text-[10px] font-semibold">होम</span>
         </Link>
         <Link to="/live" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center gap-1 ${location.pathname === '/live' ? 'text-red-600' : 'text-gray-500 hover:text-red-600'}`}>
           <Tv className="size-6" />
-          <span className="text-[10px] font-semibold">Live TV</span>
+          <span className="text-[10px] font-semibold">लाइव टीवी</span>
         </Link>
         <button onClick={() => alert('Shorts coming soon in V2!')} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-600">
           <PlaySquare className="size-6" />
-          <span className="text-[10px] font-semibold">Shorts</span>
+          <span className="text-[10px] font-semibold">शॉर्ट्स</span>
         </button>
         <button onClick={() => setIsMobileMenuOpen(true)} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-600">
           <Search className="size-6" />
-          <span className="text-[10px] font-semibold">Search</span>
+          <span className="text-[10px] font-semibold">खोजें</span>
         </button>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="flex flex-col items-center gap-1 text-[10px] font-semibold text-gray-500 hover:text-red-600">
           {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-          <span>Menu</span>
+          <span>मेनू</span>
         </button>
       </div>
 
