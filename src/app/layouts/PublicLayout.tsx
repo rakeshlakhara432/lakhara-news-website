@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Tv, Search, Menu, X } from "lucide-react";
+import { Tv, Search, Menu, X, Home, PlaySquare } from "lucide-react";
 import { categories } from "../data/mockData";
 import { useState } from "react";
 
@@ -54,9 +54,10 @@ export function PublicLayout() {
               <span className="font-semibold">LIVE TV</span>
             </Link>
 
+            {/* Hiding top mobile menu button to push it to bottom nav */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2"
+              className="hidden p-2"
             >
               {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
             </button>
@@ -183,6 +184,33 @@ export function PublicLayout() {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation Bar (App Mode) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between items-center px-4 py-2 z-50 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center gap-1 ${location.pathname === '/' ? 'text-red-600' : 'text-gray-500 hover:text-red-600'}`}>
+          <Home className="size-6" />
+          <span className="text-[10px] font-semibold">Home</span>
+        </Link>
+        <Link to="/live" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center gap-1 ${location.pathname === '/live' ? 'text-red-600' : 'text-gray-500 hover:text-red-600'}`}>
+          <Tv className="size-6" />
+          <span className="text-[10px] font-semibold">Live TV</span>
+        </Link>
+        <button onClick={() => alert('Shorts coming soon in V2!')} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-600">
+          <PlaySquare className="size-6" />
+          <span className="text-[10px] font-semibold">Shorts</span>
+        </button>
+        <button onClick={() => setIsMobileMenuOpen(true)} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-600">
+          <Search className="size-6" />
+          <span className="text-[10px] font-semibold">Search</span>
+        </button>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="flex flex-col items-center gap-1 text-[10px] font-semibold text-gray-500 hover:text-red-600">
+          {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+          <span>Menu</span>
+        </button>
+      </div>
+
+      {/* Padding to avoid bottom nav clipping on mobile */}
+      <div className="md:hidden h-16"></div>
     </div>
   );
 }
