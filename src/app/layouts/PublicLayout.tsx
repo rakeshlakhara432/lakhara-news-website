@@ -10,18 +10,6 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Header - Red Bar */}
-      <div className="bg-red-600 text-white">
-        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-          <div className="text-sm">
-            Friday, March 20, 2026 | आज तक
-          </div>
-          <Link to="/admin" className="text-sm hover:underline">
-            Admin Panel
-          </Link>
-        </div>
-      </div>
-
       {/* Main Header */}
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4">
