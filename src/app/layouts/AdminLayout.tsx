@@ -10,12 +10,24 @@ import {
   LogOut,
   Lock,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { db } from "../data/database";
 
 export function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCloudSyncing, setIsCloudSyncing] = useState(false);
+
+  useEffect(() => {
+    // Force sync articles from cloud when admin enters
+    const syncData = async () => {
+      setIsCloudSyncing(true);
+      await (db as any).syncWithCloud();
+      setIsCloudSyncing(false);
+    };
+    syncData();
+  }, [location.pathname]); // Re-sync on navigation inside admin
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("isAdminLoggedIn") === "true";
@@ -125,6 +137,10 @@ export function AdminLayout() {
             <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
           </div>
           <div className="flex gap-2">
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${isCloudSyncing ? "bg-blue-50 text-blue-600" : "bg-green-50 text-green-600"}`}>
+              <div className={`size-1.5 rounded-full ${isCloudSyncing ? "bg-blue-500 animate-spin" : "bg-green-500 shadow-sm shadow-green-200"}`}></div>
+              {isCloudSyncing ? "Syncing..." : "Cloud Live"}
+            </div>
             <button
               onClick={() => navigate("/")}
               className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"

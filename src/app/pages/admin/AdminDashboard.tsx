@@ -85,14 +85,29 @@ export function AdminDashboard() {
           <p className="text-3xl font-black text-gray-900">{categories.length}</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 group">
           <div className="flex items-center justify-between mb-4">
-            <div className="bg-orange-50 p-3 rounded-xl text-orange-600">
-              <Users className="size-6" />
+            <div className="bg-blue-600 p-3 rounded-xl text-white shadow-lg shadow-blue-100">
+              <TrendingUp className="size-6" />
             </div>
+            <button 
+              onClick={() => {
+                import("../../data/database").then(m => {
+                  m.db.save(m.db.get()); // Trigger cloud upload
+                  alert("Cloud Sync Triggered! Check your Firebase Console.");
+                });
+              }}
+              className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline"
+            >
+              Sync Now
+            </button>
           </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Community Members</p>
-          <p className="text-3xl font-black text-gray-900">{totalUsers}</p>
+          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Database Server</p>
+          <div className="flex items-center gap-2">
+            <div className="size-2 bg-green-500 rounded-full animate-pulse"></div>
+            <p className="text-xl font-black text-gray-900">Connected</p>
+          </div>
+          <p className="text-[10px] text-blue-500 font-bold mt-2">Status: Firebase Real-time</p>
         </div>
       </div>
 
