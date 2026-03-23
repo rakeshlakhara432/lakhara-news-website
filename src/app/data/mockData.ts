@@ -209,14 +209,13 @@ export const articles: Article[] = [
   },
 ];
 
-// Storage helpers for admin panel
 export const getArticles = (): Article[] => {
   const stored = localStorage.getItem('newsArticles');
   return stored ? JSON.parse(stored) : articles;
 };
 
-export const saveArticles = (articles: Article[]) => {
-  localStorage.setItem('newsArticles', JSON.stringify(articles));
+export const saveArticles = (updatedArticles: Article[]) => {
+  localStorage.setItem('newsArticles', JSON.stringify(updatedArticles));
 };
 
 export const getCategories = (): Category[] => {
@@ -224,8 +223,28 @@ export const getCategories = (): Category[] => {
   return stored ? JSON.parse(stored) : categories;
 };
 
-export const saveCategories = (categories: Category[]) => {
-  localStorage.setItem('newsCategories', JSON.stringify(categories));
+export const saveCategories = (updatedCategories: Category[]) => {
+  localStorage.setItem('newsCategories', JSON.stringify(updatedCategories));
+};
+
+export interface YouTubeSettings {
+  liveVideoId: string;
+  isLive: boolean;
+  channelId?: string;
+}
+
+export const defaultYouTubeSettings: YouTubeSettings = {
+  liveVideoId: 'jfKfPfyJRdk', // Default example video
+  isLive: true,
+};
+
+export const getYouTubeSettings = (): YouTubeSettings => {
+  const stored = localStorage.getItem('youtubeSettings');
+  return stored ? JSON.parse(stored) : defaultYouTubeSettings;
+};
+
+export const saveYouTubeSettings = (settings: YouTubeSettings) => {
+  localStorage.setItem('youtubeSettings', JSON.stringify(settings));
 };
 
 // Initialize localStorage on first load
@@ -234,4 +253,7 @@ if (!localStorage.getItem('newsArticles')) {
 }
 if (!localStorage.getItem('newsCategories')) {
   saveCategories(categories);
+}
+if (!localStorage.getItem('youtubeSettings')) {
+  saveYouTubeSettings(defaultYouTubeSettings);
 }

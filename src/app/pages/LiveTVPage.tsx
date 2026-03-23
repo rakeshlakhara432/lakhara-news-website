@@ -1,10 +1,11 @@
-import { Tv, Radio } from "lucide-react";
-import { getArticles } from "../data/mockData";
+import { Tv, Radio, AlertCircle } from "lucide-react";
+import { getArticles, getYouTubeSettings } from "../data/mockData";
 import { ArticleCard } from "../components/ArticleCard";
 
 export function LiveTVPage() {
   const articles = getArticles();
   const latestNews = articles.slice(0, 6);
+  const youtubeSettings = getYouTubeSettings();
 
   return (
     <div className="bg-white min-h-screen">
@@ -22,18 +23,30 @@ export function LiveTVPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Video Player */}
           <div className="lg:col-span-2">
-            <div className="bg-black rounded-lg overflow-hidden aspect-video flex items-center justify-center mb-6">
-              <div className="text-center text-white">
-                <Tv className="size-20 mx-auto mb-4 opacity-50" />
-                <p className="text-2xl font-bold mb-2">LIVE STREAM</p>
-                <p className="text-gray-400">
-                  Live TV streaming would be integrated here
-                </p>
-                <div className="mt-6 flex items-center justify-center gap-2">
-                  <div className="size-3 bg-red-600 rounded-full animate-pulse"></div>
-                  <span className="text-red-500 font-semibold">LIVE NOW</span>
+            <div className="bg-black rounded-lg overflow-hidden aspect-video relative group mb-6">
+              {youtubeSettings.liveVideoId ? (
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${youtubeSettings.liveVideoId}?autoplay=1&mute=1`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-white p-6">
+                  <AlertCircle className="size-16 mb-4 opacity-50" />
+                  <p className="text-xl font-bold">No Live Stream Configured</p>
+                  <p className="text-gray-400">Please configure YouTube Video ID in Admin Settings</p>
                 </div>
-              </div>
+              )}
+              
+              {youtubeSettings.isLive && (
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                  <div className="size-2 bg-white rounded-full"></div>
+                  LIVE NOW
+                </div>
+              )}
             </div>
 
             <div className="bg-gray-50 rounded-lg p-6">
