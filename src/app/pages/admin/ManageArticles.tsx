@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { getArticles, saveArticles } from "../../data/mockData";
-import { Pencil, Trash2, Plus, Eye, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, Search, Loader2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { newsService, Article } from "../../services/newsService";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,16 +16,29 @@ import {
 } from "../../components/ui/alert-dialog";
 
 export function ManageArticles() {
-  const [articles, setArticles] = useState(getArticles());
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleDelete = () => {
+  useEffect(() => {
+    const unsubscribe = newsService.subscribeToArticles((data) => {
+      setArticles(data);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleDelete = async () => {
     if (!deleteId) return;
-    const updated = articles.filter((a) => a.id !== deleteId);
-    setArticles(updated);
-    saveArticles(updated);
-    setDeleteId(null);
+    try {
+      await newsService.deleteArticle(deleteId);
+      toast.success("Article deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete article");
+    } finally {
+      setDeleteId(null);
+    }
   };
 
   const filteredArticles = articles.filter(
@@ -34,15 +48,17 @@ export function ManageArticles() {
       article.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-IN", {
+  const formatDate = (date: any) => {
+    if (!date) return "N/A";
+    const d = date.toDate ? date.toDate() : new Date(date);
+    return d.toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
       year: "numeric",
     });
   };
 
-  const formatViews = (views: number) => {
+  const formatViews = (views: number = 0) => {
     if (views >= 100000) return `${(views / 100000).toFixed(1)}L`;
     if (views >= 1000) return `${(views / 1000).toFixed(1)}K`;
     return views.toString();
@@ -128,48 +144,48 @@ export function ManageArticles() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {article.author}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(article.publishedAt)}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-bold">
+                    {formatDate(article.createdAt)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
-                    <div className="flex items-center gap-1">
-                      <Eye className="size-4" />
-                      {formatViews(article.views)}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-black">
+                    <div className="flex items-center gap-2">
+                       <div className="size-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                          <Eye className="size-4" />
+                       </div>
+                       {formatViews(article.views)}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col gap-1">
                       {article.isBreaking && (
-                        <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
+                        <span className="px-3 py-1 text-[10px] font-black text-white bg-red-600 rounded-lg text-center uppercase tracking-tighter">
                           BREAKING
                         </span>
                       )}
                       {article.isTrending && (
-                        <span className="px-2 py-0.5 text-xs font-bold text-gray-900 bg-yellow-400 rounded">
+                        <span className="px-3 py-1 text-[10px] font-black text-gray-900 bg-yellow-400 rounded-lg text-center uppercase tracking-tighter">
                           TRENDING
                         </span>
                       )}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Link to={`/admin/articles/edit/${article.id}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
+                        <button
+                          className="size-10 bg-white border border-gray-100 text-gray-400 hover:text-blue-600 hover:border-blue-100 hover:bg-blue-50 rounded-xl flex items-center justify-center transition-all shadow-sm"
+                          title="एडिट करें"
                         >
-                          <Pencil className="size-4" />
-                        </Button>
+                          <Pencil className="size-5" />
+                        </button>
                       </Link>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setDeleteId(article.id)}
-                        className="hover:bg-red-50 hover:text-red-600 hover:border-red-600"
+                      <button
+                        onClick={() => setDeleteId(article.id || null)}
+                        className="size-10 bg-white border border-gray-100 text-gray-400 hover:text-red-600 hover:border-red-100 hover:bg-red-50 rounded-xl flex items-center justify-center transition-all shadow-sm"
+                        title="डिलीट करें"
                       >
-                        <Trash2 className="size-4" />
-                      </Button>
+                        <Trash2 className="size-5" />
+                      </button>
                     </div>
                   </td>
                 </tr>

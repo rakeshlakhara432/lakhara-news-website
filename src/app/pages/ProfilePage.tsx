@@ -1,72 +1,83 @@
 import { useState, useEffect } from "react";
-import { User, Mail, Lock, LogIn, UserPlus, ShieldCheck, Heart, Camera, Settings, Bell, Bookmark, Share2, LogOut, ChevronRight } from "lucide-react";
+import { User, Mail, Lock, LogIn, UserPlus, ShieldCheck, Heart, Camera, Settings, Bell, Bookmark, Share2, LogOut, ChevronRight, Loader2 } from "lucide-react";
+import { auth, db } from "../data/firebase";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
 
 export function ProfilePage() {
+  const { user, userData, loading: authLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: ""
   });
-  const [message, setMessage] = useState("");
 
-  // New settings states
-  const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem("news_user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
-
-  const handleAuth = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAuth = async (e: React.FormEvent) => { e.preventDefault();
+    setIsLoading(true);
     
-    if (!isLogin) {
-      if (formData.password !== formData.confirmPassword) {
-        setMessage("पासवर्ड मेल नहीं खाते!");
-        return;
-      }
-      
-      const newUser = { 
-        name: formData.name, 
-        email: formData.email, 
-        role: 'community_member', 
-        joinedAt: new Date().toISOString(),
-        bio: "लखारा न्यूज़ समुदाय का गर्वित सदस्य।",
-        location: "भारत"
-      };
-      
-      const users = JSON.parse(localStorage.getItem("community_users") || "[]");
-      users.push(newUser);
-      localStorage.setItem("community_users", JSON.stringify(users));
-      
-      localStorage.setItem("news_user", JSON.stringify(newUser));
-      setUser(newUser);
-      setMessage("पंजीकरण सफल! समुदाय में आपका स्वागत है।");
-    } else {
-      const users = JSON.parse(localStorage.getItem("community_users") || "[]");
-      const foundUser = users.find((u: any) => u.email === formData.email);
-      
-      if (foundUser) {
-          localStorage.setItem("news_user", JSON.stringify(foundUser));
-          setUser(foundUser);
-          setMessage("लॉगिन सफल!");
+    try {
+      if (!isLogin) {
+        if (formData.password !== formData.confirmPassword) {
+            toast.error("पासवर्ड मेल नहीं खाते!");
+            setIsLoading(false);
+            return;
+        }
+        
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        const firebaseUser = userCredential.user;
+        
+        // Save additional info to Firestore
+        const newUser = { 
+            uid: firebaseUser.uid,
+            name: formData.name, 
+            email: formData.email, 
+            role: 'community_member', 
+            joinedAt: new Date().toISOString(),
+            bio: "लखारा न्यूज़ समुदाय का गर्वित सदस्य।",
+            location: "भारत"
+        };
+        
+        await setDoc(doc(db, "users", firebaseUser.uid), newUser);
+        toast.success("पंजीकरण सफल! समुदाय में आपका स्वागत है।");
       } else {
-          setMessage("अमान्य क्रेडेंशियल या उपयोगकर्ता नहीं मिला!");
+        // Sign in with email and password
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        toast.success("लॉगिन सफल!");
       }
+    } catch (error: any) {
+        console.error("Auth error:", error);
+        toast.error(error.message || "कुछ गलत हुआ!");
+    } finally {
+        setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("news_user");
-    setUser(null);
-    setMessage("सफलतापूर्वक लॉग आउट किया गया।");
+  const handleLogout = async () => {
+    try {
+        await signOut(auth);
+        toast.success("सफलतापूर्वक लॉग आउट किया गया।");
+    } catch (error) {
+        toast.error("लॉग आउट करने में विफल।");
+    }
   };
 
-  if (user) {
+  if (authLoading) {
+    return (
+      <div className="flex h-[80vh] items-center justify-center">
+        <Loader2 className="size-12 animate-spin text-red-600" />
+      </div>
+    );
+  }
+
+  const profile = userData || (user ? { name: user.displayName || user.email, bio: "लखारा न्यूज़ समुदाय का गर्वित सदस्य।", joinedAt: new Date().toISOString() } : null);
+
+  if (user && profile) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl pb-32">
         {/* Profile Header */}
@@ -84,10 +95,10 @@ export function ProfilePage() {
              </button>
           </div>
 
-          <h1 className="text-3xl font-black text-gray-900 mt-6 mb-1">{user.name}</h1>
+          <h1 className="text-3xl font-black text-gray-900 mt-6 mb-1">{profile.name}</h1>
           <p className="text-red-600 font-black text-xs uppercase tracking-widest mb-4">समुदाय सदस्य</p>
           <p className="text-gray-500 font-bold max-w-sm mb-8 leading-relaxed">
-             {user.bio}
+             {profile.bio}
           </p>
 
           <div className="grid grid-cols-2 gap-4 w-full">
@@ -99,7 +110,7 @@ export function ProfilePage() {
             <div className="bg-gray-50 p-6 rounded-3xl text-center border border-gray-100">
                <Heart className="size-6 text-red-600 mx-auto mb-2" />
                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">जुड़ने की तिथि</p>
-               <p className="font-black text-gray-800">{new Date(user.joinedAt).toLocaleDateString('hi-IN')}</p>
+               <p className="font-black text-gray-800">{new Date(profile.joinedAt).toLocaleDateString('hi-IN')}</p>
             </div>
           </div>
         </div>
@@ -158,7 +169,7 @@ export function ProfilePage() {
                  <ChevronRight className="size-5 text-gray-300 transition-colors" />
               </button>
 
-              <button onClick={logout} className="w-full flex items-center justify-between p-5 hover:bg-red-50 rounded-3xl transition-all group">
+              <button onClick={handleLogout} className="w-full flex items-center justify-between p-5 hover:bg-red-50 rounded-3xl transition-all group">
                  <div className="flex items-center gap-4">
                     <div className="size-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all">
                        <LogOut className="size-6" />
@@ -187,9 +198,9 @@ export function ProfilePage() {
           </p>
         </div>
 
-        {message && (
-          <div className={`p-4 rounded-2xl mb-8 text-center font-bold text-sm ${message.includes('सफल') ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
-            {message}
+        {isLoading && (
+          <div className="flex justify-center mb-6">
+            <Loader2 className="size-8 animate-spin text-red-600" />
           </div>
         )}
 
@@ -246,10 +257,13 @@ export function ProfilePage() {
             </div>
           )}
 
-          <button className="w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-3xl font-black text-xl shadow-2xl shadow-red-200 transition-all transform active:scale-95 group relative overflow-hidden">
+          <button 
+            disabled={isLoading}
+            className="w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-3xl font-black text-xl shadow-2xl shadow-red-200 transition-all transform active:scale-95 group relative overflow-hidden disabled:opacity-70"
+          >
             <span className="relative z-10 flex items-center justify-center gap-3">
-               {isLogin ? "लॉगिन करें" : "पंजीकरण करें"}
-               <ChevronRight className="size-6 group-hover:translate-x-2 transition-transform" />
+               {isLoading ? "कृपया प्रतीक्षा करें..." : (isLogin ? "लॉगिन करें" : "पंजीकरण करें")}
+               {!isLoading && <ChevronRight className="size-6 group-hover:translate-x-2 transition-transform" />}
             </span>
             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
           </button>
@@ -257,7 +271,7 @@ export function ProfilePage() {
 
         <div className="text-center mt-12 pb-4">
           <button 
-            onClick={() => { setIsLogin(!isLogin); setMessage(""); }}
+            onClick={() => setIsLogin(!isLogin)}
             className="text-gray-500 font-black hover:text-red-600 transition-colors flex items-center justify-center gap-2 mx-auto"
           >
             {isLogin ? "नया अकाउंट बनाएं? पंजीकरण करें" : "पहले से अकाउंट है? लॉगिन करें"}

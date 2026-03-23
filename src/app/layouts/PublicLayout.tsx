@@ -2,8 +2,10 @@ import { Link, Outlet, useLocation } from "react-router";
 import { Tv, Search, Menu, X, Home, PlaySquare, Bell, User, History, ChevronRight } from "lucide-react";
 import { categories } from "../data/mockData";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export function PublicLayout() {
+  const { user } = useAuth();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,6 +53,16 @@ export function PublicLayout() {
             <Link to="/live" className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-full font-bold hover:bg-red-700 transition-all shadow-md shadow-red-200">
               <Tv className="size-4" />
               <span>लाइव टीवी</span>
+            </Link>
+            
+            <Link 
+              to="/profile" 
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${
+                isScrolled ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-red-50 text-red-600 hover:bg-red-100'
+              }`}
+            >
+              <User className="size-4" />
+              <span>{user ? (user.displayName || "प्रोफ़ाइल") : "लॉगिन"}</span>
             </Link>
           </div>
         </div>
@@ -194,14 +206,14 @@ export function PublicLayout() {
           </div>
           <span className="text-[10px] font-black mt-1">लाइव टीवी</span>
         </Link>
-        <button className="flex flex-col items-center py-2 px-3 text-gray-400 opacity-50 cursor-not-allowed">
+        <Link to="/alerts" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/alerts' ? 'text-red-600' : 'text-gray-400'}`}>
           <Bell className="size-6" />
           <span className="text-[10px] font-black mt-1">अलर्ट</span>
-        </button>
-        <button className="flex flex-col items-center py-2 px-3 text-gray-400 opacity-50 cursor-not-allowed">
+        </Link>
+        <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/profile' ? 'text-red-600' : 'text-gray-400'}`}>
           <User className="size-6" />
           <span className="text-[10px] font-black mt-1">प्रोफ़ाइल</span>
-        </button>
+        </Link>
       </nav>
 
       {/* 📱 MOBILE MENU PANEL */}
