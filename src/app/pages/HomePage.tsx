@@ -1,4 +1,4 @@
-import { getArticles, getCategories } from "../data/mockData";
+import { getArticles, getCategories, getYouTubeSettings } from "../data/mockData";
 import { ArticleCard } from "../components/ArticleCard";
 import { BreakingNews } from "../components/BreakingNews";
 import { TrendingUp } from "lucide-react";
@@ -128,6 +128,52 @@ export function HomePage() {
             </div>
           );
         })}
+
+        {/* Video News / YouTube Gallery */}
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-red-600 text-white rounded-lg">
+              <TrendingUp className="size-5" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Video News</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="lg:col-span-2 aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group">
+              <iframe
+                className="size-full"
+                src={`https://www.youtube.com/embed/${getYouTubeSettings().liveVideoId}?autoplay=0&mute=1`}
+                title="YouTube Video"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+              <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
+                <span className="size-2 bg-white rounded-full animate-pulse"></span>
+                LIVE NOW
+              </div>
+            </div>
+            
+            {getYouTubeSettings().favoriteVideos.slice(0, 2).map((video) => (
+              <div key={video.id} className="group cursor-pointer">
+                <div className="aspect-video bg-gray-200 rounded-xl overflow-hidden mb-3 relative">
+                  <img 
+                    src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`} 
+                    alt={video.title}
+                    className="size-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 flex items-center justify-center transition-colors">
+                    <div className="size-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <TrendingUp className="size-6 text-white fill-current" />
+                    </div>
+                  </div>
+                </div>
+                <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-red-600 transition-colors">
+                  {video.title}
+                </h3>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* More Stories */}
         <div>

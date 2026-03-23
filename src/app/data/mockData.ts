@@ -227,15 +227,26 @@ export const saveCategories = (updatedCategories: Category[]) => {
   localStorage.setItem('newsCategories', JSON.stringify(updatedCategories));
 };
 
+export interface YouTubeVideo {
+  id: string;
+  title: string;
+}
+
 export interface YouTubeSettings {
   liveVideoId: string;
   isLive: boolean;
   channelId?: string;
+  favoriteVideos: YouTubeVideo[];
 }
 
 export const defaultYouTubeSettings: YouTubeSettings = {
   liveVideoId: 'jfKfPfyJRdk', // Default example video
   isLive: true,
+  favoriteVideos: [
+    { id: 'jfKfPfyJRdk', title: 'Live News Coverage' },
+    { id: 'o9-nU7S9Ags', title: 'Breaking News Update' },
+    { id: 'W0LHTWG-UmQ', title: 'Inside the Parliament' }
+  ]
 };
 
 export const getYouTubeSettings = (): YouTubeSettings => {
