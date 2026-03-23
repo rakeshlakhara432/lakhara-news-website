@@ -209,23 +209,28 @@ export const articles: Article[] = [
   },
 ];
 
-export const getArticles = (): Article[] => {
-  const stored = localStorage.getItem('newsArticles');
-  return stored ? JSON.parse(stored) : articles;
-};
+export interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  category: string;
+  author: string;
+  publishedAt: string;
+  imageUrl: string;
+  isBreaking: boolean;
+  isTrending: boolean;
+  views: number;
+  tags: string[];
+}
 
-export const saveArticles = (updatedArticles: Article[]) => {
-  localStorage.setItem('newsArticles', JSON.stringify(updatedArticles));
-};
-
-export const getCategories = (): Category[] => {
-  const stored = localStorage.getItem('newsCategories');
-  return stored ? JSON.parse(stored) : categories;
-};
-
-export const saveCategories = (updatedCategories: Category[]) => {
-  localStorage.setItem('newsCategories', JSON.stringify(updatedCategories));
-};
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+}
 
 export interface YouTubeVideo {
   id: string;
@@ -239,32 +244,45 @@ export interface YouTubeSettings {
   favoriteVideos: YouTubeVideo[];
 }
 
-export const defaultYouTubeSettings: YouTubeSettings = {
-  liveVideoId: 'NqM0UUX-92c', // Aaj Tak Live (Example)
-  isLive: true,
-  favoriteVideos: [
-    { id: 'NqM0UUX-92c', title: 'Aaj Tak Live TV' },
-    { id: 'jfKfPfyJRdk', title: 'Live News Feed' },
-    { id: 'W0LHTWG-UmQ', title: 'News Bulletin' }
-  ]
+import { db } from './database';
+
+export const getArticles = (): Article[] => {
+  const articlesInDB = db.getTable('articles');
+  if (articlesInDB.length === 0) {
+    // Populate once if empty
+    db.updateTable('articles', articles as any);
+    return articles;
+  }
+  return articlesInDB as any;
+};
+
+export const saveArticles = (updatedArticles: Article[]) => {
+  db.updateTable('articles', updatedArticles as any);
+};
+
+export const getCategories = (): Category[] => {
+  return db.getTable('categories');
+};
+
+export const saveCategories = (updatedCategories: Category[]) => {
+  db.updateTable('categories', updatedCategories);
 };
 
 export const getYouTubeSettings = (): YouTubeSettings => {
-  const stored = localStorage.getItem('youtubeSettings');
-  return stored ? JSON.parse(stored) : defaultYouTubeSettings;
+  const settings = db.getTable('settings');
+  return {
+    liveVideoId: settings.youtubeLiveId,
+    isLive: settings.isLive,
+    favoriteVideos: (settings as any).favoriteVideos || []
+  };
 };
 
 export const saveYouTubeSettings = (settings: YouTubeSettings) => {
-  localStorage.setItem('youtubeSettings', JSON.stringify(settings));
+  const dbSettings = db.getTable('settings');
+  dbSettings.youtubeLiveId = settings.liveVideoId;
+  dbSettings.isLive = settings.isLive;
+  (dbSettings as any).favoriteVideos = settings.favoriteVideos;
+  db.updateTable('settings', dbSettings);
 };
 
-// Initialize localStorage on first load
-if (!localStorage.getItem('newsArticles')) {
-  saveArticles(articles);
-}
-if (!localStorage.getItem('newsCategories')) {
-  saveCategories(categories);
-}
-if (!localStorage.getItem('youtubeSettings')) {
-  saveYouTubeSettings(defaultYouTubeSettings);
-}
+// Initialize DB is handled inside Database class
