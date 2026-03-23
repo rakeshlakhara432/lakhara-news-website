@@ -114,62 +114,89 @@ const initialDatabase: DatabaseSchema = {
   }
 };
 
-class NewsDatabase {
-  private STORAGE_KEY = 'lakhara_news_db_v3';
+import { db as firebaseDb } from './firebase';
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
+// Local Storage Key
+const STORAGE_KEY = 'lakhara_news_db_v3';
+
+class NewsDatabase {
   constructor() {
     this.init();
   }
 
-  /**
-   * AI Automation: Dynamic Schema Migration
-   * If the code version is higher than the stored version, 
-   * this will automatically add missing tables/fields without losing data.
-   */
+  // --- Persistence & Sync ---
+
   private init() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      console.log('DB INIT: Creating fresh database...');
       this.save(initialDatabase);
       return;
     }
 
     try {
       const currentDB = JSON.parse(stored);
-      
-      // Check if migration is needed
       if (currentDB.version < initialDatabase.version) {
-        console.log(`DB MIGRATION: Upgrading version ${currentDB.version} -> ${initialDatabase.version}`);
-        const upgradedDB = this.migrate(currentDB, initialDatabase);
-        this.save(upgradedDB);
+        this.save(this.migrate(currentDB, initialDatabase));
       }
     } catch (e) {
-      console.error('DB Repair: Resetting corrupted database');
       this.save(initialDatabase);
+    }
+    
+    // Attempt Cloud Sync
+    this.syncWithCloud();
+  }
+
+  private async syncWithCloud() {
+    if (!firebaseDb) return;
+    console.log('CLOUDSYNC: Syncing with Firebase...');
+    
+    try {
+      const docRef = doc(firebaseDb, "config", "main");
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const cloudData = docSnap.data();
+        if (cloudData.version > this.get().version) {
+          console.log('CLOUDSYNC: Downloaded newer database from Cloud');
+          this.save(cloudData as DatabaseSchema);
+        }
+      }
+    } catch (e) {
+      console.warn('CLOUDSYNC: Remote database unavailable (Offline or No Config)');
     }
   }
 
+  private async uploadToCloud(data: DatabaseSchema) {
+    if (!firebaseDb) return;
+    try {
+      const docRef = doc(firebaseDb, "config", "main");
+      await setDoc(docRef, data);
+      console.log('CLOUDSYNC: Successfully pushed to Firebase');
+    } catch (e) {
+      console.error('CLOUDSYNC: Push failed', e);
+    }
+  }
+
+  // --- DB Operations ---
+
   private migrate(oldDB: any, targetDB: any): DatabaseSchema {
-    // Basic merge strategy: keep old values where they exist, add new fields from target
     const merged = { ...targetDB, ...oldDB };
-    
-    // Deep merge selective nested objects
     merged.settings = { ...targetDB.settings, ...oldDB.settings };
     merged.analytics = { ...targetDB.analytics, ...oldDB.analytics };
-    
-    // Force version to target
     merged.version = targetDB.version;
-    
     return merged;
   }
 
   public get(): DatabaseSchema {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : initialDatabase;
   }
 
   public save(data: DatabaseSchema) {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    // Automatic Cloud Push
+    this.uploadToCloud(data);
   }
 
   public getTable<K extends keyof DatabaseSchema>(table: K): DatabaseSchema[K] {
@@ -177,9 +204,9 @@ class NewsDatabase {
   }
 
   public updateTable<K extends keyof DatabaseSchema>(table: K, data: DatabaseSchema[K]) {
-    const db = this.get();
-    db[table] = data;
-    this.save(db);
+    const currentDB = this.get();
+    currentDB[table] = data;
+    this.save(currentDB);
   }
 }
 
