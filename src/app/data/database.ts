@@ -69,6 +69,7 @@ export interface DB_Settings {
 
 export interface DatabaseSchema {
   version: number;
+  lastUpdated: number; // Unique timestamp for syncing
   articles: DB_Article[];
   categories: DB_Category[];
   shorts: DB_Short[];
@@ -83,6 +84,7 @@ export interface DatabaseSchema {
 // Initial Data for the first-time setup
 const initialDatabase: DatabaseSchema = {
   version: 1.2,
+  lastUpdated: Date.now(),
   articles: [],
   categories: [
     { id: '1', name: 'ब्रेकिंग न्यूज़', slug: 'breaking', color: '#ef4444' },
@@ -136,34 +138,39 @@ class NewsDatabase {
 
     try {
       const currentDB = JSON.parse(stored);
+      // Run internal migration if code version changed
       if (currentDB.version < initialDatabase.version) {
-        this.save(this.migrate(currentDB, initialDatabase));
+        this.save(this.migrate(currentDB, initialDatabase), false); // migrate locally
       }
     } catch (e) {
       this.save(initialDatabase);
     }
     
-    // Attempt Cloud Sync
+    // Attempt Cloud Sync immediately
     this.syncWithCloud();
   }
 
-  private async syncWithCloud() {
+  public async syncWithCloud() {
     if (!firebaseDb) return;
-    console.log('CLOUDSYNC: Syncing with Firebase...');
-    
     try {
       const docRef = doc(firebaseDb, "config", "main");
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
-        const cloudData = docSnap.data();
-        if (cloudData.version > this.get().version) {
-          console.log('CLOUDSYNC: Downloaded newer database from Cloud');
-          this.save(cloudData as DatabaseSchema);
-        }
+        const cloudData = docSnap.data() as DatabaseSchema;
+        const currentData = this.get();
+        
+        // Sync Logic: If cloud is newer than local, download it
+        if (cloudData.lastUpdated > (currentData.lastUpdated || 0)) {
+          console.log('CLOUDSYNC: Downloaded newer version from Cloud');
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudData));
+          // Refresh page to apply changes for the visitor
+          if (typeof window !== 'undefined') window.location.reload();
+        } 
+        // Sync Logic: If local is newer than cloud (Admin just saved), it will be handled by save()
       }
     } catch (e) {
-      console.warn('CLOUDSYNC: Remote database unavailable (Offline or No Config)');
+      console.warn('CLOUDSYNC: Sync failed', e);
     }
   }
 
@@ -172,9 +179,9 @@ class NewsDatabase {
     try {
       const docRef = doc(firebaseDb, "config", "main");
       await setDoc(docRef, data);
-      console.log('CLOUDSYNC: Successfully pushed to Firebase');
+      console.log('CLOUDSYNC: Pushed local changes to Cloud');
     } catch (e) {
-      console.error('CLOUDSYNC: Push failed', e);
+      console.error('CLOUDSYNC: Upload failed', e);
     }
   }
 
@@ -185,6 +192,7 @@ class NewsDatabase {
     merged.settings = { ...targetDB.settings, ...oldDB.settings };
     merged.analytics = { ...targetDB.analytics, ...oldDB.analytics };
     merged.version = targetDB.version;
+    merged.lastUpdated = Date.now(); // Mark as updated
     return merged;
   }
 
@@ -193,10 +201,19 @@ class NewsDatabase {
     return stored ? JSON.parse(stored) : initialDatabase;
   }
 
-  public save(data: DatabaseSchema) {
+  /**
+   * Save database changes
+   * @param data Full database object
+   * @param pushToCloud Whether to trigger cloud upload (default true)
+   */
+  public save(data: DatabaseSchema, pushToCloud: boolean = true) {
+    // ALWAYS update timestamp on save to ensure others see it as 'new'
+    data.lastUpdated = Date.now();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    // Automatic Cloud Push
-    this.uploadToCloud(data);
+    
+    if (pushToCloud) {
+       this.uploadToCloud(data);
+    }
   }
 
   public getTable<K extends keyof DatabaseSchema>(table: K): DatabaseSchema[K] {
