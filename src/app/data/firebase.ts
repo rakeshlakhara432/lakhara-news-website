@@ -1,29 +1,31 @@
+// Digital News Website - Firebase Integration
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-// [INSTRUCTION] 
-// 1. Visit console.firebase.google.com
-// 2. Create a new project called "Lakhara News"
-// 3. Add a "Web App" to get your config
-// 4. Paste those values below
-
+/**
+ * [USER CONFIGURATION]
+ * This config connects the website to your live Firebase project.
+ */
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyDavZkLSFhkqj8VV_KCzaGrnyDRgNoEJZ4",
+  authDomain: "lakhara-news-website.firebaseapp.com",
+  projectId: "lakhara-news-website",
+  storageBucket: "lakhara-news-website.firebasestorage.app",
+  messagingSenderId: "400554051368",
+  appId: "1:400554051368:web:bc48d1826cc00a3c3e721d",
+  measurementId: "G-G69KT7GV2W"
 };
 
-// Check if Config is default or provided
-const isConfigSet = firebaseConfig.apiKey !== "YOUR_API_KEY";
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-const app = isConfigSet ? initializeApp(firebaseConfig) : null;
-export const db = app ? getFirestore(app) : null;
-export const auth = app ? getAuth(app) : null;
-export const storage = app ? getStorage(app) : null;
+// Initialize Services
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+export const storage = getStorage(app);
 
 export default app;
