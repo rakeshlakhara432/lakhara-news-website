@@ -159,6 +159,14 @@ export function AdminSettings() {
                   placeholder="e.g. jfKfPfyJRdk"
                   required
                 />
+                <div className="mt-3 p-3 bg-blue-50 text-blue-800 rounded-lg text-xs space-y-1">
+                  <p className="font-bold">Troubleshooting IDs:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>If it says <b>"Video Unavailable"</b>, check if embedding is enabled on YouTube.</li>
+                    <li>For Live channels, IDs often change daily. Update latest ID here.</li>
+                    <li>Make sure you only enter the ID (11 characters), not the full link.</li>
+                  </ul>
+                </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                 <input

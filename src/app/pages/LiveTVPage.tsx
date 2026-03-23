@@ -53,13 +53,31 @@ export function LiveTVPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 About Live Coverage
               </h2>
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 mb-6">
                 Watch our 24/7 live news coverage bringing you the latest updates from
                 around the country and the world. Our expert journalists and anchors
                 keep you informed about breaking news, politics, sports, entertainment,
                 and more.
               </p>
-              <div className="grid grid-cols-2 gap-4 mt-6">
+              
+              <div className="border-t border-gray-200 pt-6 mt-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <AlertCircle className="size-5 text-red-600" />
+                  Video Troubleshooting
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="bg-white p-4 rounded-lg border border-gray-100">
+                    <p className="font-bold text-gray-800 mb-1">"An error has occurred"</p>
+                    <p className="text-gray-600 italic">Try refreshing the page or checking your internet connection.</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border border-gray-100">
+                    <p className="font-bold text-gray-800 mb-1">"Video is unavailable"</p>
+                    <p className="text-gray-600 italic">This usually means the live stream has ended or embedding is restricted.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-8">
                 <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-bold text-gray-900 mb-1">News Bulletins</h3>
                   <p className="text-sm text-gray-600">Every hour</p>
