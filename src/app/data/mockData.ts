@@ -240,12 +240,12 @@ export interface YouTubeSettings {
 }
 
 export const defaultYouTubeSettings: YouTubeSettings = {
-  liveVideoId: 'jfKfPfyJRdk', // Default example video
+  liveVideoId: 'NqM0UUX-92c', // Aaj Tak Live (Example)
   isLive: true,
   favoriteVideos: [
-    { id: 'jfKfPfyJRdk', title: 'Live News Coverage' },
-    { id: 'o9-nU7S9Ags', title: 'Breaking News Update' },
-    { id: 'W0LHTWG-UmQ', title: 'Inside the Parliament' }
+    { id: 'NqM0UUX-92c', title: 'Aaj Tak Live TV' },
+    { id: 'jfKfPfyJRdk', title: 'Live News Feed' },
+    { id: 'W0LHTWG-UmQ', title: 'News Bulletin' }
   ]
 };
 
