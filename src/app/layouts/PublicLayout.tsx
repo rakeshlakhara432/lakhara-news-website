@@ -156,10 +156,10 @@ export function PublicLayout() {
       <footer className="bg-gray-900 text-white mt-12 pb-24 md:pb-12">
         <div className="container mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="space-y-6">
-               <div className="bg-red-600 text-white inline-block px-4 py-2 rounded-lg font-black text-xl tracking-tighter">
-                  लखारा न्यूज़
-               </div>
+             <div className="space-y-6">
+                <div className="bg-red-600 text-white inline-block px-4 py-2 rounded-lg font-black text-xl tracking-tighter">
+                   लखारा न्यूज़
+                </div>
                <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
                   भारत का सबसे तेज़ी से बढ़ता डिजिटल न्यूज़ नेटवर्क। हम लाते हैं आप तक सच्ची और सटीक खबरें सबसे पहले।
                </p>
