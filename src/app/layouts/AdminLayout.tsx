@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   Lock,
+  Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -112,6 +113,7 @@ export function AdminLayout() {
     { path: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { path: "/admin/articles", label: "Manage Articles", icon: FileText },
     { path: "/admin/categories", label: "Manage Categories", icon: FolderOpen },
+    { path: "/admin/videos", label: "Video Control", icon: Shield },
     { path: "/admin/settings", label: "Settings", icon: Settings },
   ];
 

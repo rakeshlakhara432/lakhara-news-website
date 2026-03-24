@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Tv, Search, Menu, X, Home, PlaySquare, Bell, User, History, ChevronRight } from "lucide-react";
+import { Tv, Search, Menu, X, Home, PlaySquare, Bell, User, History, ChevronRight, Film, Upload, Compass } from "lucide-react";
 import { categories } from "../data/mockData";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -41,28 +41,38 @@ export function PublicLayout() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-3 ml-auto">
             <div className="relative">
               <input
                 type="text"
                 placeholder="खबरें खोजें..."
-                className="bg-gray-100 border-none rounded-full px-5 py-2 w-64 focus:ring-2 focus:ring-red-500 transition-all outline-none text-sm"
+                className="bg-gray-100 border-none rounded-full px-5 py-2 w-48 focus:ring-2 focus:ring-red-500 transition-all outline-none text-sm"
               />
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-gray-500" />
             </div>
-            <Link to="/live" className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-full font-bold hover:bg-red-700 transition-all shadow-md shadow-red-200">
-              <Tv className="size-4" />
-              <span>लाइव टीवी</span>
+            <Link to="/reels" className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-bold transition-all ${location.pathname === '/reels' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              <Film className="size-4" />
+              <span>Reels</span>
             </Link>
-            
+            <Link to="/explore" className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-bold transition-all ${location.pathname === '/explore' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              <Compass className="size-4" />
+              <span>Explore</span>
+            </Link>
+            <Link to="/live" className="flex items-center gap-2 bg-red-600 text-white px-5 py-2 rounded-full font-bold hover:bg-red-700 transition-all shadow-md shadow-red-200">
+              <Tv className="size-4" />
+              <span>Live</span>
+            </Link>
+            <Link to="/notifications" className={`relative p-2 rounded-full transition-all ${location.pathname === '/notifications' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              <Bell className="size-5" />
+            </Link>
             <Link 
               to="/profile" 
-              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all ${
                 isScrolled ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-red-50 text-red-600 hover:bg-red-100'
               }`}
             >
               <User className="size-4" />
-              <span>{user ? (user.displayName || "प्रोफ़ाइल") : "लॉगिन"}</span>
+              <span>{user ? (user.displayName?.split(' ')[0] || "Profile") : "Login"}</span>
             </Link>
           </div>
         </div>
@@ -190,29 +200,27 @@ export function PublicLayout() {
       </footer>
 
       {/* 📱 MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-4 pt-2 pb-safe z-[60] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.06)]">
-        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/' ? 'text-red-600' : 'text-gray-400 hover:text-gray-600'}`}>
-          <Home className={`size-6 ${location.pathname === '/' ? 'fill-red-600/10' : ''}`} />
-          <span className="text-[10px] font-black mt-1">होम</span>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 pt-2 pb-safe z-[60] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
+        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/' ? 'text-red-600' : 'text-gray-400'}`}>
+          <Home className="size-6" />
+          <span className="text-[9px] font-black mt-0.5">होम</span>
         </Link>
-        <button onClick={() => setIsMobileMenuOpen(true)} className={`flex flex-col items-center py-2 px-3 transition-all ${isMobileMenuOpen ? 'text-red-600' : 'text-gray-400'}`}>
-          <Menu className="size-6" />
-          <span className="text-[10px] font-black mt-1">श्रेणियां</span>
-        </button>
-        <Link to="/live" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/live' ? 'text-red-600' : 'text-gray-400'}`}>
-          <div className="relative">
-            <Tv className="size-6" />
-            <span className="absolute -top-1 -right-1 size-2 bg-red-600 rounded-full animate-ping"></span>
+        <Link to="/reels" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/reels' ? 'text-red-600' : 'text-gray-400'}`}>
+          <Film className="size-6" />
+          <span className="text-[9px] font-black mt-0.5">Reels</span>
+        </Link>
+        <Link to="/upload" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-1 px-2 transition-all`}>
+          <div className={`size-12 rounded-2xl flex items-center justify-center shadow-lg transition-all ${location.pathname === '/upload' ? 'bg-red-700 scale-95' : 'bg-red-600 hover:bg-red-700'}`}>
+            <Upload className="size-6 text-white" />
           </div>
-          <span className="text-[10px] font-black mt-1">लाइव टीवी</span>
         </Link>
-        <Link to="/alerts" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/alerts' ? 'text-red-600' : 'text-gray-400'}`}>
+        <Link to="/notifications" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/notifications' ? 'text-red-600' : 'text-gray-400'}`}>
           <Bell className="size-6" />
-          <span className="text-[10px] font-black mt-1">अलर्ट</span>
+          <span className="text-[9px] font-black mt-0.5">Notif</span>
         </Link>
-        <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-3 transition-all ${location.pathname === '/profile' ? 'text-red-600' : 'text-gray-400'}`}>
+        <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/profile' ? 'text-red-600' : 'text-gray-400'}`}>
           <User className="size-6" />
-          <span className="text-[10px] font-black mt-1">प्रोफ़ाइल</span>
+          <span className="text-[9px] font-black mt-0.5">Profile</span>
         </Link>
       </nav>
 

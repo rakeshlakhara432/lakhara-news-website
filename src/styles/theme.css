@@ -179,3 +179,20 @@
     line-height: 1.5;
   }
 }
+
+/* ── Utility: Hide Scrollbar ─────────────────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;   /* IE and Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, Opera */
+}
+
+/* ── Reels: Full-screen snap ─────────────────────────────────────────────────── */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
+}

@@ -11,9 +11,14 @@ import { CreateArticle } from "./pages/admin/CreateArticle";
 import { EditArticle } from "./pages/admin/EditArticle";
 import { ManageCategories } from "./pages/admin/ManageCategories";
 import { AdminSettings } from "./pages/admin/Settings";
+import { ManageVideos } from "./pages/admin/ManageVideos";
 import { ProfilePage } from "./pages/ProfilePage";
 import { AlertsPage } from "./pages/AlertsPage";
 import { NotFound } from "./pages/NotFound";
+import { ReelsPage } from "./pages/ReelsPage";
+import { UploadPage } from "./pages/UploadPage";
+import { ExplorePage } from "./pages/ExplorePage";
+import { NotificationsPage } from "./pages/NotificationsPage";
 
 export const router = createHashRouter([
   {
@@ -26,6 +31,10 @@ export const router = createHashRouter([
       { path: "live", Component: LiveTVPage },
       { path: "profile", Component: ProfilePage },
       { path: "alerts", Component: AlertsPage },
+      { path: "reels", Component: ReelsPage },
+      { path: "upload", Component: UploadPage },
+      { path: "explore", Component: ExplorePage },
+      { path: "notifications", Component: NotificationsPage },
     ],
   },
   {
@@ -38,6 +47,7 @@ export const router = createHashRouter([
       { path: "articles/edit/:id", Component: EditArticle },
       { path: "categories", Component: ManageCategories },
       { path: "settings", Component: AdminSettings },
+      { path: "videos", Component: ManageVideos },
     ],
   },
   {
