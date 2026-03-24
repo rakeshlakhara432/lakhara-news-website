@@ -52,7 +52,25 @@ export function ProfilePage() {
       }
     } catch (error: any) {
         console.error("Auth error:", error);
-        toast.error(error.message || "कुछ गलत हुआ!");
+        // Specific error messages in Hindi
+        const code = error?.code || "";
+        if (code === "auth/configuration-not-found" || code === "auth/operation-not-allowed") {
+          toast.error("Firebase Console में Email/Password Sign-in Enable नहीं है। Admin से संपर्क करें।");
+        } else if (code === "auth/email-already-in-use") {
+          toast.error("यह ईमेल पहले से पंजीकृत है। लॉगिन करें।");
+        } else if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential") {
+          toast.error("ईमेल या पासवर्ड गलत है।");
+        } else if (code === "auth/weak-password") {
+          toast.error("पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।");
+        } else if (code === "auth/invalid-email") {
+          toast.error("ईमेल एड्रेस सही नहीं है।");
+        } else if (code === "auth/too-many-requests") {
+          toast.error("बहुत अधिक प्रयास। कुछ देर बाद दोबारा प्रयास करें।");
+        } else if (code === "auth/network-request-failed") {
+          toast.error("नेटवर्क त्रुटि। इंटरनेट कनेक्शन जांचें।");
+        } else {
+          toast.error(error.message || "कुछ गलत हुआ! दोबारा प्रयास करें।");
+        }
     } finally {
         setIsLoading(false);
     }
