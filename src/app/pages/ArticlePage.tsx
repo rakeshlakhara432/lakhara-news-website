@@ -1,13 +1,22 @@
 import { useParams, Link, useNavigate } from "react-router";
+import { useState } from "react";
 import { getArticles } from "../data/mockData";
-import { Clock, Eye, Share2, Facebook, Twitter, ArrowLeft } from "lucide-react";
+import { Clock, Eye, Share2, Facebook, Twitter, ArrowLeft, Bookmark } from "lucide-react";
 import { ArticleCard } from "../components/ArticleCard";
+import { toggleSaveArticle, isArticleSaved } from "./ProfilePage";
 
 export function ArticlePage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const articles = getArticles();
   const article = articles.find((a) => a.slug === slug);
+  const [saved, setSaved] = useState(() => article ? isArticleSaved(article.id) : false);
+
+  const handleBookmark = () => {
+    if (!article) return;
+    const result = toggleSaveArticle(article.id);
+    setSaved(result);
+  };
 
   if (!article) {
     return (
@@ -91,19 +100,32 @@ export function ArticlePage() {
                 </span>
               </div>
 
-              {/* Share Buttons */}
-              <div className="flex items-center gap-4 mb-8">
+              {/* Share + Bookmark Buttons */}
+              <div className="flex flex-wrap items-center gap-3 mb-8">
                 <span className="font-semibold text-gray-700 flex items-center gap-2">
                   <Share2 className="size-5" />
                   Share:
                 </span>
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                   <Facebook className="size-4" />
                   Facebook
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600">
+                <button className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors">
                   <Twitter className="size-4" />
                   Twitter
+                </button>
+                {/* Bookmark button */}
+                <button
+                  onClick={handleBookmark}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+                    saved
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600"
+                  }`}
+                  title={saved ? "सहेजी हुई खबर हटाएं" : "खबर सहेजें"}
+                >
+                  <Bookmark className={`size-4 ${saved ? "fill-white" : ""}`} />
+                  {saved ? "सहेजी गई ✓" : "सहेजें"}
                 </button>
               </div>
 
