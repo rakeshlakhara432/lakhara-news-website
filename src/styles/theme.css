@@ -2,135 +2,68 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── TRADITIONAL HINDU HERITAGE DESIGN SYSTEM ── */
+/* ── SIMPLE NEWS INTERFACE ── */
 
 :root {
-  /* Heritage Palette (Saffron, Gold, Deep Maroon) */
-  --saffron-bright: #FF9933; /* Kesariya */
-  --saffron-deep: #FF6600;
-  --maroon-sacred: #800000;
-  --gold-royal: #D4AF37;
-  --sand-warm: #FDF5E6;
-  --paper-ivory: #FFFBF2;
-  --ink-classic: #2C1810;
-  
-  /* Modern Neutral Overlays */
-  --radius: 0.75rem;
+  --p-red: #d32f2f;
+  --p-blue: #1976d2;
+  --bg-white: #ffffff;
+  --bg-gray: #f5f5f5;
+  --txt-dark: #212121;
+  --txt-gray: #757575;
+  --brd-gray: #e0e0e0;
 }
 
 @theme {
-  /* Elegant & Heritage Typography */
-  --font-serif-heritage: "Playfair Display", "Noto Serif Devanagari", serif;
-  --font-sans-classic: "Plus Jakarta Sans", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-main: "Inter", system-ui, sans-serif;
+  --font-display: "Roboto", sans-serif;
 
-  /* Classic Colors */
-  --color-background: var(--paper-ivory);
-  --color-foreground: var(--ink-classic);
-  --color-card: #ffffff;
-  --color-primary: var(--saffron-bright);
-  --color-secondary: var(--maroon-sacred);
-  --color-accent: var(--gold-royal);
-  --color-paper: var(--paper-ivory);
-  --color-ink: var(--ink-classic);
-  --color-border: rgba(128, 0, 0, 0.1);
-
-  /* Heritage Gradients */
-  --lakhara-gradient: linear-gradient(135deg, var(--maroon-sacred) 0%, var(--saffron-deep) 100%);
-  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-  
-  /* Traditional Textures */
-  --border-heritage: 1px solid rgba(128, 0, 0, 0.1);
-  --shadow-heritage: 0 10px 40px -10px rgba(44, 24, 16, 0.15);
+  --color-primary: var(--p-red);
+  --color-secondary: var(--p-blue);
+  --color-background: var(--bg-white);
+  --color-surface: var(--bg-gray);
+  --color-text-main: var(--txt-dark);
+  --color-text-muted: var(--txt-gray);
+  --color-border: var(--brd-gray);
 }
-
-/* ── CUSTOM REFINEMENTS ── */
 
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body leading-relaxed;
-    background-image: radial-gradient(circle at 2px 2px, rgba(128, 0, 0, 0.03) 1px, transparent 0);
-    background-size: 40px 40px;
+    @apply bg-background text-text-main font-main antialiased selection:bg-primary/20;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif-heritage font-bold tracking-tight text-secondary leading-tight;
+    @apply font-display font-bold text-text-main mb-4 leading-tight;
   }
 }
 
-/* ── TRADITIONAL UI COMPONENTS ── */
+/* ── SIMPLE UTILITIES ── */
 
-@utility btn-heritage {
-  @apply px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all duration-300 relative overflow-hidden;
-  background: var(--lakhara-gradient);
-  color: white;
-  box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
-  &:hover {
-    @apply -translate-y-1 shadow-xl;
-    box-shadow: 0 8px 25px rgba(255, 102, 0, 0.3);
-  }
-  &:active {
-    @apply scale-95;
-  }
+@utility btn-simple {
+  @apply px-6 py-2 bg-primary text-white font-bold rounded hover:bg-red-700 transition-colors uppercase text-sm;
 }
 
-@utility card-newspaper {
-  @apply bg-white dark:bg-card border-border hover:border-primary/30 transition-all duration-500 rounded-2xl p-6 shadow-sm hover:shadow-heritage;
-  border: 1px solid rgba(128, 0, 0, 0.05);
+@utility card-simple {
+  @apply bg-white border border-border p-4 rounded-lg hover:shadow-md transition-shadow;
 }
 
-@utility text-gradient-sacred {
-  background: var(--lakhara-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+@utility badge-news {
+  @apply px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase;
 }
 
-@utility badge-saffron {
-  @apply px-4 py-1.5 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20;
-}
+/* ── CUSTOM SCROLLBAR ── */
 
-/* ── ORNAMENTAL ELEMENTS ── */
-
-.mandala-bg {
-  position: absolute;
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
-  filter: sepia(1);
-}
-
-.newspaper-divider {
-  @apply w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-12;
-}
-
-/* Custom Scrollbar Heritage */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-paper;
+  @apply bg-surface;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+  @apply bg-border rounded-full transition-colors;
 }
-
-/* ── ANIMATIONS ── */
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.float-sacred {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Grid Pattern Subtle */
-.grid-paper {
-  background-image: linear-gradient(to right, rgba(128, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(128, 0, 0, 0.02) 1px, transparent 1px);
-  background-size: 20px 20px;
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-muted/30;
 }
