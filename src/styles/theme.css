@@ -2,38 +2,35 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── HINDU RASHTRA NEWS (MODERN INDIAN THEME) ── */
+/* ── LAKHARA MISSION CONTROL DESIGN SYSTEM ── */
 
 :root {
-  --saffron: #FF9933;
-  --indian-green: #138808;
-  --charcoal: #222222;
-  --bg-light: #F5F5F5;
-  --white: #FFFFFF;
+  --background: #05080f;
+  --foreground: #ffffff;
+  --card: #0a0f1a;
+  --primary: #ff003c; /* High-velocity Crimson */
+  --secondary: #00f2ff; /* Data Blue */
+  --accent: #ff003c;
+  --muted: #1a1f2e;
+  --border: #1a1f2e;
   
-  /* System Tokens */
-  --primary: 33 100% 60%; /* Saffron */
-  --secondary: 125 94% 28%; /* Indian Green */
-  --background: 0 0% 96%;
-  --foreground: 0 0% 13%;
-  --card: 0 0% 100%;
-  --border: 0 0% 90%;
+  --radius: 1rem;
 }
 
 @theme {
-  --font-main: "Noto Sans Devanagari", "Mukta", sans-serif;
-  --font-display: "Mukta", sans-serif;
+  --font-main: "Plus Jakarta Sans", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
 
-  --color-saffron: var(--saffron);
-  --color-accent: var(--indian-green);
-  --color-charcoal: var(--charcoal);
-  --color-white: var(--white);
-  --color-background: var(--bg-light);
-  --color-border: #e2e2e2;
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
 
-  /* Custom Gradients */
-  --saffron-gradient: linear-gradient(135deg, #FF9933 0%, #FFCC33 100%);
-  --tricolor-gradient: linear-gradient(to right, #FF9933, #FFFFFF, #138808);
+  /* Cinematic Effects */
+  --shadow-glow: 0 0 20px rgba(255, 0, 60, 0.3);
+  --glass-bg: rgba(10, 15, 26, 0.8);
 }
 
 @layer base {
@@ -41,43 +38,36 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-charcoal font-main antialiased selection:bg-saffron/30;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-black text-charcoal leading-tight;
+    @apply bg-background text-foreground font-main antialiased selection:bg-primary/30;
+    background-image: radial-gradient(circle at 50% 50%, rgba(255, 0, 60, 0.05) 0%, transparent 70%);
   }
 }
 
-/* ── MODERN INDIAN UTILITIES ── */
+/* ── SYSTEM UI COMPONENTS ── */
 
-@utility btn-saffron {
-  @apply px-6 py-2.5 bg-saffron text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-md active:scale-95 uppercase text-sm tracking-wider;
+@utility nav-pill {
+  @apply bg-card/50 backdrop-blur-xl border border-white/10 px-6 py-2 rounded-full flex items-center gap-6 shadow-2xl;
 }
 
-@utility card-modern {
-  @apply bg-white border border-border shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden cursor-pointer;
+@utility btn-action {
+  @apply px-6 py-2.5 bg-primary text-white font-bold rounded-xl hover:shadow-glow transition-all active:scale-95 uppercase text-xs tracking-widest;
 }
 
-@utility badge-cultural {
-  @apply px-3 py-1 bg-saffron/10 text-saffron text-[10px] font-black uppercase rounded-lg border border-saffron/20;
+@utility card-magnetic {
+  @apply bg-card border border-white/5 hover:border-primary/30 transition-all duration-500 rounded-2xl p-6 shadow-xl relative overflow-hidden;
 }
 
-@utility bottom-nav-item {
-  @apply flex flex-col items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-saffron transition-colors cursor-pointer;
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
 }
 
-/* Newspaper Style Divider */
-.hr-divider {
-  @apply w-full h-1 bg-gradient-to-r from-saffron via-white to-accent my-8 opacity-30;
-}
-
-/* Custom Scrollbar */
+/* Scrollbar Mission Control */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+  @apply bg-background;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-saffron/40 rounded-full hover:bg-saffron/60 transition-colors;
+  @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
 }
