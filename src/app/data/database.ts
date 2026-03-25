@@ -56,6 +56,8 @@ export interface DB_Settings {
   siteLogo: string;
   youtubeLiveId: string;
   isLive: boolean;
+  channelId?: string;
+  channelTitle?: string;
   socialLinks: {
     facebook?: string;
     twitter?: string;
@@ -105,6 +107,8 @@ const initialDatabase: DatabaseSchema = {
     siteLogo: '',
     youtubeLiveId: 'NqM0UUX-92c',
     isLive: true,
+    channelId: 'UC_x5XG1OV2P6uYZGwsN9S8g',
+    channelTitle: 'Lakhara Digital News',
     socialLinks: {},
     contactEmail: 'contact@lakhara.com',
     theme: 'light',

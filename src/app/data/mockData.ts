@@ -6,13 +6,18 @@ export interface Article {
   excerpt: string;
   category: string;
   author: string;
-  publishedAt: string;
+  authorId: string;
+  createdAt: any;
+  updatedAt: any;
   imageUrl: string;
   isBreaking: boolean;
   isTrending: boolean;
   views: number;
   tags: string[];
+  status: 'published' | 'draft';
 }
+
+
 
 export interface Category {
   id: string;
@@ -53,7 +58,10 @@ export const articles: Article[] = [
     excerpt: 'संसद ने ऐतिहासिक आर्थिक सुधार विधेयक पारित किया, जिससे वित्तीय परिदृश्य बदलने और लाखों नौकरियां पैदा होने की उम्मीद है।',
     category: 'politics',
     author: 'राजेश कुमार',
-    publishedAt: '2026-03-20T09:30:00Z',
+    authorId: '1',
+    createdAt: '2026-03-20T09:30:00Z',
+    updatedAt: '2026-03-20T09:30:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
     isBreaking: true,
     isTrending: true,
@@ -74,7 +82,10 @@ export const articles: Article[] = [
     excerpt: 'भारत ने ऑस्ट्रेलिया के खिलाफ रोमांचक फाइनल में क्रिकेट विश्व कप जीता, कप्तान ने शानदार शतक लगाया।',
     category: 'sports',
     author: 'प्रिया शर्मा',
-    publishedAt: '2026-03-20T08:15:00Z',
+    authorId: '1',
+    createdAt: '2026-03-20T08:15:00Z',
+    updatedAt: '2026-03-20T08:15:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800',
     isBreaking: true,
     isTrending: true,
@@ -95,7 +106,10 @@ export const articles: Article[] = [
     excerpt: 'शीर्ष बॉलीवुड अभिनेत्री ने कंटेंट-चालित सिनेमा और नई प्रतिभा पर ध्यान केंद्रित करने वाले प्रोडक्शन हाउस का शुभारंभ किया।',
     category: 'entertainment',
     author: 'अमित सिंह',
-    publishedAt: '2026-03-20T07:45:00Z',
+    authorId: '1',
+    createdAt: '2026-03-20T07:45:00Z',
+    updatedAt: '2026-03-20T07:45:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=800',
     isBreaking: false,
     isTrending: true,
@@ -116,7 +130,10 @@ export const articles: Article[] = [
     excerpt: 'क्वांटम कंप्यूटिंग में बड़ी सफलता डेटा प्रोसेसिंग और वैज्ञानिक अनुसंधान में क्रांति लाने का वादा करती है।',
     category: 'technology',
     author: 'नेहा पटेल',
-    publishedAt: '2026-03-20T06:20:00Z',
+    authorId: '1',
+    createdAt: '2026-03-20T06:20:00Z',
+    updatedAt: '2026-03-20T06:20:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800',
     isBreaking: false,
     isTrending: true,
@@ -137,7 +154,10 @@ export const articles: Article[] = [
     excerpt: 'आर्थिक आशावाद और मजबूत कॉर्पोरेट कमाई पर बाजार में तेजी के साथ सेंसेक्स 85,000 के स्तर को पार कर गया।',
     category: 'business',
     author: 'विक्रम मल्होत्रा',
-    publishedAt: '2026-03-19T15:30:00Z',
+    authorId: '1',
+    createdAt: '2026-03-19T15:30:00Z',
+    updatedAt: '2026-03-19T15:30:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
     isBreaking: false,
     isTrending: true,
@@ -158,7 +178,10 @@ export const articles: Article[] = [
     excerpt: 'सरकार ने 10,000 ग्रामीण गांवों में मुफ्त स्वास्थ्य सेवा पहुंचाने के लिए स्वस्थ भारत मिशन 2.0 लॉन्च किया।',
     category: 'health',
     author: 'डॉ अंजली रेड्डी',
-    publishedAt: '2026-03-19T14:00:00Z',
+    authorId: '1',
+    createdAt: '2026-03-19T14:00:00Z',
+    updatedAt: '2026-03-19T14:00:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
     isBreaking: false,
     isTrending: false,
@@ -179,7 +202,10 @@ export const articles: Article[] = [
     excerpt: 'वैश्विक नेता 2050 तक शून्य उत्सर्जन के लिए प्रतिबद्ध, भारत ने नवीकरणीय ऊर्जा के लिए 50 अरब डॉलर का संकल्प लिया।',
     category: 'world',
     author: 'राहुल कृष्णन',
-    publishedAt: '2026-03-19T12:30:00Z',
+    authorId: '1',
+    createdAt: '2026-03-19T12:30:00Z',
+    updatedAt: '2026-03-19T12:30:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1569163139394-de4798aa62b5?w=800',
     isBreaking: false,
     isTrending: false,
@@ -200,7 +226,10 @@ export const articles: Article[] = [
     excerpt: 'सरकार ने सीखने के अनुभव को बढ़ाने के लिए 5,000 स्कूलों में AI-संचालित स्मार्ट क्लासरूम पेश किए।',
     category: 'technology',
     author: 'कविता देशमुख',
-    publishedAt: '2026-03-19T11:00:00Z',
+    authorId: '1',
+    createdAt: '2026-03-19T11:00:00Z',
+    updatedAt: '2026-03-19T11:00:00Z',
+    status: 'published',
     imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800',
     isBreaking: false,
     isTrending: false,
@@ -218,6 +247,7 @@ export interface YouTubeSettings {
   liveVideoId: string;
   isLive: boolean;
   channelId?: string;
+  channelTitle?: string;
   favoriteVideos: YouTubeVideo[];
 }
 
@@ -250,6 +280,8 @@ export const getYouTubeSettings = (): YouTubeSettings => {
   return {
     liveVideoId: settings.youtubeLiveId,
     isLive: settings.isLive,
+    channelId: settings.channelId,
+    channelTitle: settings.channelTitle || "Lakhara News",
     favoriteVideos: (settings as any).favoriteVideos || []
   };
 };
