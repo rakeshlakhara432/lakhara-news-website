@@ -2,27 +2,38 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── CLASSIC NEWS PORTAL (IMAGE REPLICATION) ── */
+/* ── HINDU RASHTRA NEWS (MODERN INDIAN THEME) ── */
 
 :root {
-  --news-blue: #003366; /* Deep Header Blue */
-  --news-red: #cc0000; /* Primary Action Red */
-  --news-black: #1a1a1a;
-  --news-gray: #f2f2f2;
-  --border-color: #dddddd;
+  --saffron: #FF9933;
+  --indian-green: #138808;
+  --charcoal: #222222;
+  --bg-light: #F5F5F5;
+  --white: #FFFFFF;
+  
+  /* System Tokens */
+  --primary: 33 100% 60%; /* Saffron */
+  --secondary: 125 94% 28%; /* Indian Green */
+  --background: 0 0% 96%;
+  --foreground: 0 0% 13%;
+  --card: 0 0% 100%;
+  --border: 0 0% 90%;
 }
 
 @theme {
-  --font-main: "Inter", system-ui, sans-serif;
-  --font-hindi: "Noto Sans Devanagari", sans-serif;
+  --font-main: "Noto Sans Devanagari", "Mukta", sans-serif;
+  --font-display: "Mukta", sans-serif;
 
-  --color-primary: var(--news-red);
-  --color-secondary: var(--news-blue);
-  --color-background: #ffffff;
-  --color-surface: var(--news-gray);
-  --color-border: var(--border-color);
-  --color-news-black: var(--news-black);
-  --color-news-gray: var(--news-gray);
+  --color-saffron: var(--saffron);
+  --color-accent: var(--indian-green);
+  --color-charcoal: var(--charcoal);
+  --color-white: var(--white);
+  --color-background: var(--bg-light);
+  --color-border: #e2e2e2;
+
+  /* Custom Gradients */
+  --saffron-gradient: linear-gradient(135deg, #FF9933 0%, #FFCC33 100%);
+  --tricolor-gradient: linear-gradient(to right, #FF9933, #FFFFFF, #138808);
 }
 
 @layer base {
@@ -30,31 +41,43 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-news-black font-main antialiased selection:bg-primary/20;
+    @apply bg-background text-charcoal font-main antialiased selection:bg-saffron/30;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-black text-charcoal leading-tight;
   }
 }
 
-/* ── UI UTILITIES ── */
+/* ── MODERN INDIAN UTILITIES ── */
 
-@utility nav-item {
-  @apply px-4 py-2 text-white font-bold text-sm hover:bg-white/10 transition-colors uppercase cursor-pointer;
+@utility btn-saffron {
+  @apply px-6 py-2.5 bg-saffron text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-md active:scale-95 uppercase text-sm tracking-wider;
 }
 
-@utility section-heading {
-  @apply text-lg font-black text-gray-900 border-b-2 border-primary pb-2 mb-6 uppercase flex items-center justify-between;
+@utility card-modern {
+  @apply bg-white border border-border shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden cursor-pointer;
 }
 
-@utility card-shadow {
-  @apply shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-shadow;
+@utility badge-cultural {
+  @apply px-3 py-1 bg-saffron/10 text-saffron text-[10px] font-black uppercase rounded-lg border border-saffron/20;
 }
 
-/* Clear Scrollbar */
+@utility bottom-nav-item {
+  @apply flex flex-col items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-saffron transition-colors cursor-pointer;
+}
+
+/* Newspaper Style Divider */
+.hr-divider {
+  @apply w-full h-1 bg-gradient-to-r from-saffron via-white to-accent my-8 opacity-30;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-surface;
+  @apply bg-gray-100;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full hover:bg-gray-400;
+  @apply bg-saffron/40 rounded-full hover:bg-saffron/60 transition-colors;
 }
