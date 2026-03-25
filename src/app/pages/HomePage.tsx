@@ -3,7 +3,7 @@ import { categories, getYouTubeSettings } from "../data/mockData";
 import { ArticleCard } from "../components/ArticleCard";
 import { BreakingNews } from "../components/BreakingNews";
 import { Newsletter } from "../components/Newsletter";
-import { TrendingUp, Loader2, Play, ChevronRight, Zap, Tv, Eye, Sparkles, Flame, ArrowRight, Signal, Globe, Radio, ShieldCheck, Activity, Landmark, Newspaper, Calendar, Menu, Search, User, Home, Compass, Film, UserCircle, Bell, Moon, Sun, Upload, MoreVertical, Share2 } from "lucide-react";
+import { TrendingUp, Loader2, Play, ChevronRight, Zap, Tv, Eye, Sparkles, Flame, ArrowRight, Signal, Globe, Radio, ShieldCheck, Activity, Landmark, Newspaper, Calendar, Menu, Search, User, Home, Compass, Film, UserCircle, Bell, Moon, Sun, Upload, MoreVertical, Share2, Cpu } from "lucide-react";
 import { Link } from "react-router";
 import { newsService, Article } from "../services/newsService";
 
