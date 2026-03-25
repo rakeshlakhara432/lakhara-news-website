@@ -22,14 +22,14 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: '1', name: 'ब्रेकिंग न्यूज़', slug: 'breaking', color: '#ef4444' },
-  { id: '2', name: 'राजनीति', slug: 'politics', color: '#3b82f6' },
-  { id: '3', name: 'खेल', slug: 'sports', color: '#10b981' },
-  { id: '4', name: 'मनोरंजन', slug: 'entertainment', color: '#f59e0b' },
-  { id: '5', name: 'बिज़नेस', slug: 'business', color: '#6366f1' },
-  { id: '6', name: 'टेक्नोलॉजी', slug: 'technology', color: '#8b5cf6' },
-  { id: '7', name: 'स्वास्थ्य', slug: 'health', color: '#ec4899' },
-  { id: '8', name: 'दुनिया', slug: 'world', color: '#14b8a6' },
+  { id: '1', name: 'ब्रेकिंग न्यूज़', slug: 'breaking', color: '#CC0000' },
+  { id: '2', name: 'राजनीति', slug: 'politics', color: '#002B5B' },
+  { id: '3', name: 'खेल', slug: 'sports', color: '#004225' },
+  { id: '4', name: 'मनोरंजन', slug: 'entertainment', color: '#800020' },
+  { id: '5', name: 'बिज़नेस', slug: 'business', color: '#333333' },
+  { id: '6', name: 'टेक्नोलॉजी', slug: 'technology', color: '#483D8B' },
+  { id: '7', name: 'स्वास्थ्य', slug: 'health', color: '#701C1C' },
+  { id: '8', name: 'दुनिया', slug: 'world', color: '#2F4F4F' },
 ];
 
 export const articles: Article[] = [
@@ -208,29 +208,6 @@ export const articles: Article[] = [
     tags: ['शिक्षा', 'AI', 'टेक्नोलॉजी', 'स्कूल'],
   },
 ];
-
-export interface Article {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
-  category: string;
-  author: string;
-  publishedAt: string;
-  imageUrl: string;
-  isBreaking: boolean;
-  isTrending: boolean;
-  views: number;
-  tags: string[];
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-}
 
 export interface YouTubeVideo {
   id: string;

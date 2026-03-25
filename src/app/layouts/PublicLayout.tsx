@@ -8,263 +8,206 @@ export function PublicLayout() {
   const { user } = useAuth();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isHomePage = location.pathname === "/";
+  const navItems = [
+    { path: "/", icon: Home, label: "Home" },
+    { path: "/explore", icon: Compass, label: "Explore" },
+    { path: "/reels", icon: Film, label: "Reels" },
+    { path: "/live", icon: Tv, label: "Live TV" },
+    { path: "/profile", icon: User, label: "Profile" },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      {/* 💻 DESKTOP HEADER */}
-      <header className={`hidden md:block bg-white shadow-sm sticky top-0 z-50 transition-all ${isScrolled ? 'py-2' : 'py-4'}`}>
-        <div className="container mx-auto px-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="bg-red-600 text-white px-5 py-2 rounded-lg font-black text-2xl tracking-tighter">
-              लखारा <span className="text-yellow-400 font-bold">न्यूज़</span>
-            </div>
-          </Link>
-
-          <nav className="flex items-center gap-8 ml-10 overflow-x-auto no-scrollbar">
-            <Link to="/" className={`font-bold hover:text-red-600 transition-colors ${location.pathname === "/" ? "text-red-600" : "text-gray-700"}`}>होम</Link>
-            {categories.slice(0, 6).map((cat) => (
-              <Link key={cat.id} to={`/category/${cat.slug}`} className={`whitespace-nowrap font-bold hover:text-red-600 transition-colors ${location.pathname.includes(cat.slug) ? "text-red-600" : "text-gray-700"}`}>
-                {cat.name}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3 ml-auto">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="खबरें खोजें..."
-                className="bg-gray-100 border-none rounded-full px-5 py-2 w-48 focus:ring-2 focus:ring-red-500 transition-all outline-none text-sm"
-              />
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-gray-500" />
-            </div>
-            <Link to="/reels" className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-bold transition-all ${location.pathname === '/reels' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-              <Film className="size-4" />
-              <span>Reels</span>
-            </Link>
-            <Link to="/explore" className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-bold transition-all ${location.pathname === '/explore' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-              <Compass className="size-4" />
-              <span>Explore</span>
-            </Link>
-            <Link to="/live" className="flex items-center gap-2 bg-red-600 text-white px-5 py-2 rounded-full font-bold hover:bg-red-700 transition-all shadow-md shadow-red-200">
-              <Tv className="size-4" />
-              <span>Live</span>
-            </Link>
-            <Link to="/notifications" className={`relative p-2 rounded-full transition-all ${location.pathname === '/notifications' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-              <Bell className="size-5" />
-            </Link>
-            <Link 
-              to="/profile" 
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all ${
-                isScrolled ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-red-50 text-red-600 hover:bg-red-100'
-              }`}
-            >
-              <User className="size-4" />
-              <span>{user ? (user.displayName?.split(' ')[0] || "Profile") : "Login"}</span>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* 📱 MOBILE TOP HEADER */}
-      <header className={`md:hidden sticky top-0 z-50 bg-white px-4 py-3 flex items-center justify-between border-b border-gray-100 transition-all ${isScrolled ? 'shadow-md' : ''}`}>
-        <div className="flex items-center gap-2">
-           <div className="bg-red-600 text-white px-3 py-1.5 rounded-md font-black text-lg tracking-tighter">
-              L <span className="text-yellow-400">N</span>
-           </div>
-           <span className="font-black text-xl text-gray-900 tracking-tight">लखारा न्यूज़</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-            <Search className="size-5 text-gray-700" />
-          </button>
-          <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-            <Bell className="size-5 text-gray-700" />
-          </button>
-        </div>
-      </header>
-
-      {/* 📱 MOBILE CATEGORY BAR */}
-      {isHomePage && (
-        <div className="md:hidden bg-white border-b border-gray-100 py-1 sticky top-[57px] z-40 overflow-x-auto no-scrollbar scroll-smooth">
-          <div className="flex items-center px-4 gap-4">
-            <Link to="/" className={`whitespace-nowrap py-2 text-sm font-bold border-b-2 transition-all ${location.pathname === '/' ? 'border-red-600 text-red-600' : 'border-transparent text-gray-600'}`}>सब खबरें</Link>
-            {categories.map((cat) => (
-              <Link key={cat.id} to={`/category/${cat.slug}`} className={`whitespace-nowrap py-2 text-sm font-bold border-b-2 transition-all ${location.pathname.includes(cat.slug) ? 'border-red-600 text-red-600' : 'border-transparent text-gray-600'}`}>
-                {cat.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* MAIN CONTENT */}
-      <main className="flex-grow">
-        <div className="container mx-auto">
-          <div className="flex flex-col lg:flex-row gap-8 py-0 md:py-8 md:px-6">
-            <div className="flex-grow w-full">
-              <Outlet />
-            </div>
-
-            {/* 💻 DESKTOP SIDEBAR */}
-            <aside className="hidden lg:block w-80 space-y-8">
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <h3 className="font-black text-xl mb-6 flex items-center gap-2">
-                  <div className="w-1.5 h-6 bg-red-600 rounded-full"></div>
-                  ट्रेंडिंग टॉपिक्स
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map(cat => (
-                    <Link key={cat.id} to={`/category/${cat.slug}`} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-xs font-bold hover:bg-red-50 hover:text-red-600 transition-all border border-transparent hover:border-red-100">
-                      #{cat.name}
-                    </Link>
-                  ))}
-                </div>
+    <div className="min-h-screen bg-[#f8f9fa] flex flex-col font-sans selection:bg-primary/20">
+      
+      {/* ── Unique Floating Header (Desktop & Mobile) ── */}
+      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled ? 'py-2' : 'py-4'}`}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`glass rounded-[2rem] px-4 md:px-8 py-3 md:py-4 flex items-center justify-between shadow-2xl transition-all ${isScrolled ? 'shadow-primary/5 border-primary/10' : 'border-transparent'}`}>
+            
+            <Link to="/" className="flex items-center gap-2 group transition-transform active:scale-95">
+              <div className="size-10 md:size-12 bg-lakhara rounded-2xl flex items-center justify-center shadow-lakhara rotate-[-5deg] group-hover:rotate-0 transition-all duration-500">
+                <span className="text-white font-black text-xl italic leading-none">L</span>
               </div>
+              <div className="hidden sm:block">
+                <span className="font-black text-xl italic tracking-tighter text-gray-900 leading-none block">LAKHARA</span>
+                <span className="text-gradient font-black text-[10px] uppercase tracking-[0.4em] leading-none">News Network</span>
+              </div>
+            </Link>
+
+            {/* Desktop Center Nav */}
+            <nav className="hidden lg:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-2xl">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const active = location.pathname === item.path;
+                return (
+                  <Link key={item.path} to={item.path} className={`px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all ${active ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-900'}`}>
+                    <Icon className={`size-4 ${active ? 'animate-pulse' : ''}`} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2 bg-gray-100/50 px-4 py-2.5 rounded-2xl border border-transparent focus-within:border-primary/20 focus-within:bg-white transition-all group">
+                <Search className="size-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+                <input type="text" placeholder="Search news..." className="bg-transparent border-none outline-none text-sm font-bold text-gray-900 w-32 focus:w-48 transition-all" />
+              </div>
+
+              <Link to="/upload" className="hidden md:flex btn-lakhara !px-5 !py-2.5 !text-[10px] !rounded-xl items-center gap-2">
+                <Upload className="size-3.5" />
+                Post
+              </Link>
               
-              <div className="sticky top-24">
-                 <div className="bg-gradient-to-br from-red-600 to-red-700 p-8 rounded-2xl text-white shadow-xl shadow-red-100 overflow-hidden relative group">
-                    <div className="relative z-10">
-                      <h4 className="font-black text-2xl mb-2">लाइव टीवी देखें</h4>
-                      <p className="text-red-100 text-sm mb-6 leading-relaxed">देश-दुनिया की खबरें देखें पल-पल, बिना रुके।</p>
-                      <Link to="/live" className="inline-flex items-center gap-2 bg-white text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all group/btn">
-                         <PlaySquare className="size-5 group-hover/btn:scale-110 transition-transform" />
-                         अभी जुड़ें
-                      </Link>
-                    </div>
-                    <div className="absolute -right-10 -bottom-10 size-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform"></div>
-                 </div>
-              </div>
-            </aside>
+              <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden p-3 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors"
+              >
+                <Menu className="size-6 text-gray-900" />
+              </button>
+            </div>
           </div>
+        </div>
+      </header>
+
+      {/* ── Main Content Area ── */}
+      <main className="flex-grow pt-32 pb-32 md:pb-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <Outlet />
         </div>
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-gray-900 text-white mt-12 pb-24 md:pb-12">
-        <div className="container mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-             <div className="space-y-6">
-                <div className="bg-red-600 text-white inline-block px-4 py-2 rounded-lg font-black text-xl tracking-tighter">
-                   लखारा न्यूज़
-                </div>
-               <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                  भारत का सबसे तेज़ी से बढ़ता डिजिटल न्यूज़ नेटवर्क। हम लाते हैं आप तक सच्ची और सटीक खबरें सबसे पहले।
-               </p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-bold text-lg mb-6 text-white/50 uppercase text-xs tracking-widest">त्वरित लिंक</h4>
-                <ul className="space-y-3 text-gray-400 font-medium">
-                  <li><Link to="/" className="hover:text-red-500 transition-colors">होम</Link></li>
-                  <li><Link to="/live" className="hover:text-red-500 transition-colors">लाइव टीवी</Link></li>
-                  <li><a href="#" className="hover:text-red-500 transition-colors">हमारे बारे में</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg mb-6 text-white/50 uppercase text-xs tracking-widest">श्रेणियां</h4>
-                <ul className="space-y-3 text-gray-400 font-medium">
-                  {categories.slice(0, 3).map(cat => (
-                    <li key={cat.id}><Link to={`/category/${cat.slug}`} className="hover:text-red-500 transition-colors">{cat.name}</Link></li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+      {/* ── Dynamic Bottom App Nav (PWA Style) ── */}
+      <nav className="fixed md:hidden bottom-4 left-4 right-4 z-[100]">
+        <div className="glass rounded-[2.5rem] p-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/40">
+           {navItems.slice(0, 2).map(item => {
+             const Icon = item.icon;
+             const active = location.pathname === item.path;
+             return (
+               <Link key={item.path} to={item.path} className={`flex flex-col items-center py-3 px-5 transition-all ${active ? 'text-primary' : 'text-gray-400'}`}>
+                 <Icon className={`size-6 ${active ? 'fill-primary/10' : ''}`} />
+               </Link>
+             );
+           })}
 
-            <div className="space-y-6">
-              <h4 className="font-bold text-lg text-white/50 uppercase text-xs tracking-widest">जुड़े रहें</h4>
-              <div className="flex gap-4">
-                 <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-red-600 transition-all cursor-pointer">F</div>
-                 <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-red-600 transition-all cursor-pointer">X</div>
-                 <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-red-600 transition-all cursor-pointer">I</div>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm text-gray-500">
-            © 2026 लखारा डिजिटल न्यूज़ नेटवर्क। सर्वाधिकार सुरक्षित।
-          </div>
+           <Link to="/upload" className="relative -top-8 transition-transform active:scale-90">
+             <div className="size-20 bg-lakhara rounded-[2rem] flex items-center justify-center shadow-[0_15px_30px_rgba(255,49,49,0.4)] rotate-45">
+               <Upload className="size-8 text-white -rotate-45" />
+             </div>
+           </Link>
+
+           {navItems.slice(3, 5).map(item => {
+             const Icon = item.icon;
+             const active = location.pathname === item.path;
+             return (
+               <Link key={item.path} to={item.path} className={`flex flex-col items-center py-3 px-5 transition-all ${active ? 'text-primary' : 'text-gray-400'}`}>
+                 <Icon className={`size-6 ${active ? 'fill-primary/10' : ''}`} />
+               </Link>
+             );
+           })}
         </div>
-      </footer>
-
-      {/* 📱 MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 pt-2 pb-safe z-[60] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
-        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/' ? 'text-red-600' : 'text-gray-400'}`}>
-          <Home className="size-6" />
-          <span className="text-[9px] font-black mt-0.5">होम</span>
-        </Link>
-        <Link to="/reels" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/reels' ? 'text-red-600' : 'text-gray-400'}`}>
-          <Film className="size-6" />
-          <span className="text-[9px] font-black mt-0.5">Reels</span>
-        </Link>
-        <Link to="/upload" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-1 px-2 transition-all`}>
-          <div className={`size-12 rounded-2xl flex items-center justify-center shadow-lg transition-all ${location.pathname === '/upload' ? 'bg-red-700 scale-95' : 'bg-red-600 hover:bg-red-700'}`}>
-            <Upload className="size-6 text-white" />
-          </div>
-        </Link>
-        <Link to="/notifications" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/notifications' ? 'text-red-600' : 'text-gray-400'}`}>
-          <Bell className="size-6" />
-          <span className="text-[9px] font-black mt-0.5">Notif</span>
-        </Link>
-        <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center py-2 px-2 transition-all ${location.pathname === '/profile' ? 'text-red-600' : 'text-gray-400'}`}>
-          <User className="size-6" />
-          <span className="text-[9px] font-black mt-0.5">Profile</span>
-        </Link>
       </nav>
 
-      {/* 📱 MOBILE MENU PANEL */}
+      {/* ── Unique News Footer ── */}
+      <footer className="hidden md:block bg-gray-950 text-white border-t-8 border-primary">
+         <div className="container mx-auto px-8 py-20">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
+               <div className="col-span-2 space-y-10">
+                  <div className="flex items-center gap-3">
+                    <div className="size-16 bg-lakhara rounded-3xl flex items-center justify-center shadow-lakhara rotate-[-10deg]">
+                      <span className="text-white font-black text-3xl italic">L</span>
+                    </div>
+                    <div>
+                       <span className="font-black text-3xl italic tracking-tighter block">LAKHARA NEWS</span>
+                       <span className="text-gradient font-black text-xs uppercase tracking-[0.4em]">Digital News Network</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-500 font-medium leading-[2.2] text-lg max-w-xl italic">
+                    Pushing the boundaries of digital journalism. Lakhara News delivers independent, data-driven, and hyper-local updates with a global perspective.
+                  </p>
+                  <div className="flex gap-4">
+                     {['Fb', 'Tw', 'Ig', 'Yt', 'Wa'].map(s => (
+                       <button key={s} className="size-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-lakhara hover:scale-110 active:scale-95 transition-all font-black text-[10px] uppercase">{s}</button>
+                     ))}
+                  </div>
+               </div>
+
+               <div>
+                 <h4 className="text-gradient font-black uppercase tracking-[0.3em] text-xs mb-10">Broadcast</h4>
+                 <ul className="space-y-6 text-gray-500 font-black text-xs uppercase tracking-widest">
+                    <li><Link to="/live" className="hover:text-white transition-all hover:translate-x-2 inline-block">Live TV</Link></li>
+                    <li><Link to="/reels" className="hover:text-white transition-all hover:translate-x-2 inline-block">Flash Reels</Link></li>
+                    <li><Link to="/explore" className="hover:text-white transition-all hover:translate-x-2 inline-block">Global Feed</Link></li>
+                 </ul>
+               </div>
+
+               <div>
+                 <h4 className="text-gradient font-black uppercase tracking-[0.3em] text-xs mb-10">Network</h4>
+                 <ul className="space-y-6 text-gray-500 font-black text-xs uppercase tracking-widest">
+                    <li><a href="#" className="hover:text-white transition-all hover:translate-x-2 inline-block">About Network</a></li>
+                    <li><a href="#" className="hover:text-white transition-all hover:translate-x-2 inline-block">Privacy Protocol</a></li>
+                    <li><a href="#" className="hover:text-white transition-all hover:translate-x-2 inline-block">Contact HQ</a></li>
+                 </ul>
+               </div>
+            </div>
+            
+            <div className="mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+              <span className="text-[10px] font-black text-gray-600 uppercase tracking-[0.5em]">
+                © 2026 Lakhara Network. The future is digital.
+              </span>
+              <div className="flex gap-10">
+                 {['Advert', 'Legal', 'Press'].map(l => (
+                   <a key={l} href="#" className="text-[10px] font-black text-gray-600 uppercase tracking-widest hover:text-white transition-colors">{l}</a>
+                 ))}
+              </div>
+            </div>
+         </div>
+      </footer>
+
+      {/* ── Unique Full-Screen Mobile Menu ── */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[100] animate-in fade-in duration-300">
-           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
-           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[40px] p-8 pb-12 max-h-[85vh] overflow-y-auto shadow-2xl">
-              <div className="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-8"></div>
-              
-              <div className="flex items-center justify-between mb-8">
-                 <h2 className="text-3xl font-black text-gray-900">मेनू</h2>
-                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-3 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors">
-                    <X className="size-6 text-gray-900" />
-                 </button>
-              </div>
-
-              <div className="mb-10">
-                 <div className="relative">
-                    <input autoFocus type="text" placeholder="खबरें खोजें..." className="w-full bg-gray-100 border-none rounded-2xl px-12 py-5 text-lg font-bold focus:ring-4 focus:ring-red-500/10 transition-all outline-none" />
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-6 text-gray-400" />
+        <div className="fixed inset-0 z-[200] animate-in fade-in duration-500">
+           <div className="absolute inset-0 bg-gray-950/95 backdrop-blur-2xl" onClick={() => setIsMobileMenuOpen(false)}></div>
+           <div className="absolute inset-0 flex flex-col p-8 bg-black/40">
+              <div className="flex justify-between items-center mb-16">
+                 <div className="flex items-center gap-2">
+                    <div className="size-10 bg-lakhara rounded-xl flex items-center justify-center shadow-lakhara">
+                      <span className="text-white font-black text-xl italic">L</span>
+                    </div>
+                    <span className="font-black text-2xl text-white tracking-tighter">LAKHARA</span>
                  </div>
-              </div>
-
-              <div className="space-y-6">
-                <h3 className="text-gray-400 uppercase text-xs font-black tracking-widest px-2">सभी श्रेणियां</h3>
-                <div className="grid grid-cols-1 gap-3">
-                   {categories.map(cat => (
-                     <Link key={cat.id} to={`/category/${cat.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-red-50 hover:scale-[1.02] transition-all group">
-                        <div className="flex items-center gap-4">
-                           <div className="size-3 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                           <span className="text-xl font-bold text-gray-800">{cat.name}</span>
-                        </div>
-                        <ChevronRight className="size-5 text-gray-300 group-hover:text-red-500 transition-colors" />
-                     </Link>
-                   ))}
-                </div>
-              </div>
-
-              <div className="mt-10 pt-10 border-t border-gray-100 flex gap-4">
-                 <button className="flex-1 py-5 bg-gray-100 rounded-2xl font-bold text-gray-600 hover:bg-gray-200 transition-colors">डार्क मोड</button>
-                 <button className="flex-1 py-5 bg-gray-100 rounded-2xl font-bold text-gray-600 hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-                    <History className="size-5" /> इतिहास
+                 <button onClick={() => setIsMobileMenuOpen(false)} className="size-14 bg-white/10 rounded-3xl flex items-center justify-center text-white active:scale-90 transition-all border border-white/10">
+                    <X className="size-8" />
                  </button>
+              </div>
+
+              <div className="space-y-8 overflow-y-auto no-scrollbar pb-20">
+                 <h3 className="text-gradient font-black uppercase tracking-[0.3em] text-[10px]">Categories</h3>
+                 <div className="grid grid-cols-2 gap-4">
+                    {categories.map(cat => (
+                      <Link key={cat.id} to={`/category/${cat.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="p-6 bg-white/5 border border-white/5 rounded-[2rem] flex flex-col gap-4 items-center group active:bg-lakhara transition-all">
+                         <div className="size-3 rounded-full shadow-lg" style={{ backgroundColor: cat.color }}></div>
+                         <span className="font-black text-sm text-white uppercase tracking-widest">{cat.name}</span>
+                      </Link>
+                    ))}
+                 </div>
+                 
+                 <div className="grid grid-cols-1 gap-4 pt-10 border-t border-white/5">
+                    <Link to="/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between p-6 bg-white/5 rounded-3xl text-white font-bold">
+                       App Settings <ChevronRight className="size-5 text-gray-500" />
+                    </Link>
+                    <button className="flex items-center justify-between p-6 bg-white/5 rounded-3xl text-white font-bold">
+                       Dark Mode Protocol <div className="w-12 h-6 bg-primary rounded-full"></div>
+                    </button>
+                 </div>
               </div>
            </div>
         </div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Clock, Eye } from "lucide-react";
+import { Eye, ChevronRight } from "lucide-react";
 import { Article } from "../services/newsService";
 
 interface ArticleCardProps {
@@ -9,18 +9,18 @@ interface ArticleCardProps {
 
 export function ArticleCard({ article, variant = "default" }: ArticleCardProps) {
   const formatDate = (date: any) => {
-    if (!date) return "Just now";
+    if (!date) return "Momentum";
     const d = date.toDate ? date.toDate() : new Date(date);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60));
 
-    if (diffInHours < 1) return "अभी-अभी";
-    if (diffInHours < 24) return `${diffInHours} घंटे पहले`;
-    return d.toLocaleDateString("hi-IN", { day: "numeric", month: "short", year: "numeric" });
+    if (diffInHours < 1) return "Just In";
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
   };
 
   const formatViews = (views: number = 0) => {
-    if (views >= 100000) return `${(views / 100000).toFixed(1)}L`;
+    if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
     if (views >= 1000) return `${(views / 1000).toFixed(1)}K`;
     return views.toString();
   };
@@ -29,38 +29,34 @@ export function ArticleCard({ article, variant = "default" }: ArticleCardProps) 
 
   if (variant === "horizontal") {
     return (
-      <Link to={`/article/${article.slug}`} className="group">
-        <div className="flex gap-4 bg-white rounded-[32px] overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-50">
-          <div className="w-48 h-32 flex-shrink-0 overflow-hidden">
+      <Link to={`/article/${article.slug}`} className="group block mb-8 active:scale-[0.98] transition-all">
+        <div className="flex gap-6 items-center">
+          <div className="w-32 md:w-56 aspect-[4/3] flex-shrink-0 overflow-hidden relative rounded-[2rem] shadow-lg">
             <img
               src={article.imageUrl}
               alt={article.title}
               className="size-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
+            {article.isBreaking && (
+              <div className="absolute top-4 left-4 bg-lakhara text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lakhara">
+                LIVE
+              </div>
+            )}
           </div>
-          <div className="flex-1 p-5 pr-6">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">
-                {article.category}
-              </span>
-              {article.isBreaking && (
-                <span className="text-[10px] font-black text-white bg-red-600 px-3 py-1 rounded-full animate-pulse uppercase tracking-tighter">
-                  BREAKING
-                </span>
-              )}
+          <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex items-center gap-3">
+               <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">{article.category}</span>
+               <div className="size-1 bg-gray-200 rounded-full"></div>
+               <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{formatDate(articleDate)}</span>
             </div>
-            <h3 className="font-black text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mb-3 leading-tight">
+            <h3 className="font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2 leading-tight text-xl md:text-2xl italic tracking-tighter">
               {article.title}
             </h3>
-            <div className="flex items-center gap-5 text-[11px] font-bold text-gray-400">
-              <span className="flex items-center gap-1.5">
-                <Clock className="size-3.5 text-red-500" />
-                {formatDate(articleDate)}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Eye className="size-3.5 text-blue-500" />
-                {formatViews(article.views)}
-              </span>
+            <div className="flex items-center gap-4">
+               <div className="flex items-center gap-1.5 glass bg-gray-100 px-3 py-1 rounded-full border-none">
+                  <Eye className="size-3 text-primary" />
+                  <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">{formatViews(article.views)}</span>
+               </div>
             </div>
           </div>
         </div>
@@ -70,68 +66,73 @@ export function ArticleCard({ article, variant = "default" }: ArticleCardProps) 
 
   if (variant === "small") {
     return (
-      <Link to={`/article/${article.slug}`} className="group flex gap-4 items-center">
-        <div className="w-24 h-20 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
+      <Link to={`/article/${article.slug}`} className="group flex gap-5 items-center py-5 active:scale-[0.98] transition-all">
+        <div className="w-24 h-24 flex-shrink-0 bg-gray-100 overflow-hidden rounded-[2rem] shadow-sm">
           <img
             src={article.imageUrl}
             alt={article.title}
             className="size-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-black text-sm text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mb-1.5 leading-snug">
+        <div className="flex-1 min-w-0 space-y-1">
+          <h4 className="font-black text-lg text-gray-900 group-hover:text-primary transition-colors line-clamp-2 leading-tight italic tracking-tighter">
             {article.title}
           </h4>
-          <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5">
-            <Clock className="size-3 text-red-500" />
-            {formatDate(articleDate)}
-          </span>
+          <div className="flex items-center gap-2">
+             <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">{article.category}</span>
+             <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">• {formatDate(articleDate)}</span>
+          </div>
         </div>
       </Link>
     );
   }
 
   return (
-    <Link to={`/article/${article.slug}`} className="group">
-      <div className="bg-white rounded-[40px] overflow-hidden hover:shadow-2xl transition-all duration-700 border border-gray-50 flex flex-col h-full">
-        <div className="relative overflow-hidden aspect-video">
+    <Link to={`/article/${article.slug}`} className="group block h-full active:scale-[0.98] transition-all">
+      <div className="bg-white rounded-[3rem] overflow-hidden shadow-sm hover:shadow-2xl hover:border-primary/5 border border-gray-100 transition-all duration-500 flex flex-col h-full">
+        <div className="relative overflow-hidden aspect-[4/3]">
           <img
             src={article.imageUrl}
             alt={article.title}
-            className="size-full object-cover group-hover:scale-110 transition-transform duration-1000"
+            className="size-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale-[0.1] group-hover:grayscale-0"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           
-          <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          <div className="absolute top-6 left-6 flex flex-col items-start gap-2">
             {article.isBreaking && (
-              <div className="bg-red-600 text-white px-4 py-1.5 text-[10px] font-black rounded-full animate-pulse uppercase tracking-widest shadow-xl">
-                BREAKING
+              <div className="bg-lakhara text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lakhara border border-white/20">
+                CRITICAL
               </div>
             )}
             {article.isTrending && (
-              <div className="bg-yellow-400 text-gray-900 px-4 py-1.5 text-[10px] font-black rounded-full uppercase tracking-widest shadow-xl">
-                TRENDING
+              <div className="glass px-4 py-1.5 rounded-full text-white text-[9px] font-black uppercase tracking-widest border border-white/20 backdrop-blur-md">
+                VIRAL
               </div>
             )}
           </div>
         </div>
-        <div className="p-6 flex flex-col flex-1">
-          <span className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-3 inline-block bg-red-50 self-start px-3 py-1 rounded-full">
-            {article.category}
-          </span>
-          <h3 className="font-black text-xl text-gray-900 group-hover:text-red-600 transition-colors mb-3 line-clamp-2 leading-tight">
+        
+        <div className="p-10 flex flex-col flex-grow">
+          <div className="flex items-center justify-between mb-6">
+             <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">{article.category}</span>
+             <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">{formatDate(articleDate)}</span>
+          </div>
+          
+          <h3 className="font-black text-2xl text-gray-900 group-hover:text-primary transition-colors mb-6 line-clamp-3 leading-[1.2] italic tracking-tighter">
             {article.title}
           </h3>
-          <p className="text-sm font-bold text-gray-500 line-clamp-2 mb-6 leading-relaxed">{article.excerpt}</p>
-          <div className="mt-auto pt-5 border-t border-gray-50 flex items-center justify-between text-[11px] font-black text-gray-400 uppercase tracking-wider">
-            <span className="flex items-center gap-1.5">
-              <Clock className="size-3.5 text-red-500" />
-              {formatDate(articleDate)}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Eye className="size-3.5 text-blue-500" />
-              {formatViews(article.views)} व्यूज
-            </span>
+          
+          <div className="mt-auto pt-8 border-t border-gray-50 flex items-center justify-between">
+             <div className="flex items-center gap-3">
+                <div className="size-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                   <Eye className="size-4" />
+                </div>
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{formatViews(article.views)} Views</span>
+             </div>
+             
+             <div className="size-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-45">
+                <ChevronRight className="size-5" />
+             </div>
           </div>
         </div>
       </div>
