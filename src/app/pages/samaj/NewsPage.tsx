@@ -78,7 +78,7 @@ export function NewsPage() {
               </h2>
            </div>
 
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:p-10">
               {/* MAIN VIDEO PLAYER */}
               <div className="lg:col-span-2 relative aspect-video bg-gray-950 md:rounded-[4rem] rounded-none overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
                  <iframe 
@@ -91,7 +91,7 @@ export function NewsPage() {
                   ></iframe>
                  
                  {activeVideo.isLive && (
-                    <div className="absolute top-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20 pointer-events-none">
+                    <div className="absolute top-6 md:p-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20 pointer-events-none">
                       <Radio className="size-4" /> LIVE NOW
                     </div>
                  )}
@@ -133,7 +133,7 @@ export function NewsPage() {
             </h2>
          </div>
 
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-10">
             {news.map((item) => (
                <div key={item.id} className="group flex flex-col bg-white md:rounded-[4rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden h-full">
                   <div className="aspect-[16/10] bg-gray-100 relative overflow-hidden">
@@ -149,7 +149,7 @@ export function NewsPage() {
                      </div>
                   </div>
 
-                  <div className="p-10 flex flex-col flex-grow space-y-6">
+                  <div className="p-6 md:p-10 flex flex-col flex-grow space-y-6">
                      <div className="flex items-center gap-3 text-gray-400">
                         <Calendar className="size-4" />
                         <span className="text-[10px] font-black uppercase tracking-widest italic">

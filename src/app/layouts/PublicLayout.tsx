@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation } from "react-router";
 import { Search, Home, Bell, User, History, ChevronRight, Film, PlusCircle, Compass, Globe, Info, Menu, X, ArrowRight, Flag, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, BookOpen, ShieldCheck, GraduationCap, Mail, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { ScrollToTop } from "../components/ScrollToTop";
 
 export function PublicLayout() {
   const { user } = useAuth();
@@ -32,6 +33,7 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen bg-[#FFFDFB] flex flex-col font-main selection:bg-primary/20 transition-all duration-500">
+      <ScrollToTop />
       
       {/* 🔴 WHATSAPP FLOATING BUTTON */}
       <a 

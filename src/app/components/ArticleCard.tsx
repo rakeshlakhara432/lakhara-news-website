@@ -37,7 +37,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
 
   if (variant === 'horizontal') {
     return (
-      <Link to={`/article/${article.slug}`} className="group flex flex-col md:flex-row gap-6 bg-white p-5 rounded-[2.5rem] border border-gray-100 shadow-traditional hover:shadow-bhagva transition-all duration-700">
+      <Link to={`/article/${article.slug}`} className="group flex flex-col md:flex-row gap-6 bg-white p-4 md:p-5 md:rounded-[2.5rem] rounded-none border border-gray-100 shadow-traditional hover:shadow-bhagva transition-all duration-700">
         <div className="w-full md:w-56 h-48 md:h-40 flex-shrink-0 bg-gray-50 rounded-[2rem] overflow-hidden relative shadow-lg">
           <img src={article.imageUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
           <div className="absolute top-4 left-4 bg-primary text-white px-5 py-2 rounded-full text-[8px] font-black uppercase tracking-widest shadow-xl border border-white/20 skew-x-[-12deg]">
@@ -70,7 +70,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
 
   return (
     <Link to={`/article/${article.slug}`} className="group block space-y-6 animate-traditional">
-      <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-traditional group-hover:shadow-bhagva transition-all duration-700 border-[6px] border-white ring-1 ring-primary/5">
+      <div className="relative aspect-[4/3] md:rounded-[3rem] rounded-none overflow-hidden shadow-traditional group-hover:shadow-bhagva transition-all duration-700 border-[6px] border-white ring-1 ring-primary/5">
         <img src={article.imageUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-[3s]" alt="" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-gray-950/80 to-transparent"></div>
         
