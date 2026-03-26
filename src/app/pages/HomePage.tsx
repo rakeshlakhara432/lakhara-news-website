@@ -3,14 +3,15 @@ import {
   TrendingUp, Radio, ChevronRight, Flag, Users, Heart, 
   Calendar, Image as ImageIcon, Phone, Info, MessageCircle, 
   Star, Sparkles, LayoutGrid, Clock, MapPin, ArrowRight,
-  Megaphone, ShieldCheck, Bookmark, Loader2
+  Megaphone, ShieldCheck, Bookmark, Loader2, Play, Video
 } from "lucide-react";
 import { Link } from "react-router";
-import { samajService, NewsPost, Member, SamajEvent } from "../services/samajService";
+import { samajService, NewsPost, Member, SamajEvent, VideoPost } from "../services/samajService";
 
 export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [news, setNews] = useState<NewsPost[]>([]);
+  const [videos, setVideos] = useState<VideoPost[]>([]);
   const [memberCount, setMemberCount] = useState(0);
   const [eventCount, setEventCount] = useState(0);
 
@@ -18,12 +19,13 @@ export function HomePage() {
     const unsub1 = samajService.subscribeToSamajNews(data => setNews(data.slice(0, 3)));
     const unsub2 = samajService.subscribeToMembers(data => setMemberCount(data.length));
     const unsub3 = samajService.subscribeToEvents(data => setEventCount(data.length));
+    const unsub4 = samajService.subscribeToVideos(data => setVideos(data));
     
     // Simulating loading state
     const timer = setTimeout(() => setIsLoading(false), 800);
     
     return () => {
-      unsub1(); unsub2(); unsub3();
+      unsub1(); unsub2(); unsub3(); unsub4();
       clearTimeout(timer);
     };
   }, []);
@@ -45,6 +47,8 @@ export function HomePage() {
     { label: "सदस्य सूची", slug: "directory", icon: Users, color: "bg-blue-50 text-blue-600" },
     { label: "सहायता", slug: "support", icon: Star, color: "bg-amber-50 text-amber-600" },
   ];
+
+  const liveVideo = videos.find(v => v.isLive) || videos[0];
 
   const latestAnnouncement = news[0] || {
     title: "लखारा समाज का आगामी वार्षिक मिलन समारोह और सांस्कृतिक कार्यक्रम 2026 की घोषणा",
@@ -95,17 +99,56 @@ export function HomePage() {
          ))}
       </section>
 
+      {/* 📺 LIVE BROADCAST SECTION (NEW) */}
+      {liveVideo && (
+        <section className="space-y-12">
+           <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
+               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+                  लाइव <span className="text-primary">प्रसारण</span>
+               </h2>
+               <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">डिजिटल स्टूडियो <Play className="size-4" /></Link>
+            </div>
+
+            <div className="relative aspect-[21/9] bg-gray-950 rounded-[4rem] overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
+                <img 
+                  src={liveVideo.thumbnailUrl || "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&q=80&w=2000"} 
+                  className="size-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[10s]" 
+                  alt="Live Stream" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent"></div>
+                
+                <div className="absolute top-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20">
+                   <Radio className="size-4" /> LIVE
+                </div>
+
+                <div className="absolute bottom-12 left-12 right-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                   <div className="space-y-4 max-w-2xl">
+                      <h3 className="text-2xl md:text-4xl font-black text-white italic tracking-tighter uppercase leading-tight drop-shadow-2xl">
+                         {liveVideo.title}
+                      </h3>
+                      <p className="text-white/60 font-bold italic text-sm md:text-md line-clamp-2">
+                         {liveVideo.description}
+                      </p>
+                   </div>
+                   <button className="shrink-0 px-12 py-5 bg-primary text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center gap-4">
+                      अभी देखें <Play className="size-5 fill-current" />
+                   </button>
+                </div>
+            </div>
+        </section>
+      )}
+
       {/* 📢 LATEST UPDATES & ANNOUNCEMENTS */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-12">
          <div className="lg:col-span-2 space-y-12">
             <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
                <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
-                  नवीनतम <span className="text-primary">अपडेट</span>
+                  ताज़ा <span className="text-primary">सुर्खियाँ</span>
                </h2>
                <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">सभी देखें <ChevronRight className="size-4" /></Link>
             </div>
             
-            <div className="bg-white rounded-[4rem] border border-gray-100 p-10 shadow-sm space-y-10 relative overflow-hidden group">
+            <div className="bg-white rounded-[4rem] border border-gray-100 p-10 shadow-sm space-y-10 relative overflow-hidden group h-full">
                <div className="absolute top-0 right-0 size-40 bg-primary/5 rounded-bl-[10rem] group-hover:bg-primary/10 transition-all"></div>
                <div className="relative z-10 space-y-8">
                   <div className="flex items-center gap-4 text-primary">
@@ -130,7 +173,7 @@ export function HomePage() {
             <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
                सांख्यिकी <span className="text-primary">नेटवर्क</span>
             </h2>
-            <div className="p-10 bg-gray-950 text-white rounded-[4rem] shadow-bhagva-lg space-y-10 relative overflow-hidden border border-white/5">
+            <div className="p-10 bg-gray-950 text-white rounded-[4rem] shadow-bhagva-lg space-y-10 relative overflow-hidden border border-white/5 h-full flex flex-col justify-center">
                 <div className="absolute top-0 right-0 size-20 bg-primary opacity-20 blur-3xl"></div>
                 <div className="space-y-8 relative z-10">
                    <div className="flex items-center gap-6">
@@ -139,7 +182,7 @@ export function HomePage() {
                       </div>
                       <div>
                          <p className="text-[32px] font-black italic tracking-tighter leading-none">{memberCount}+</p>
-                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">कुल सदस्य</p>
+                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">कुल सद्स्य</p>
                       </div>
                    </div>
                    <div className="flex items-center gap-6">
