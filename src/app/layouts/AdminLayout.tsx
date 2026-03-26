@@ -28,7 +28,10 @@ import {
   Calendar,
   Image,
   Users,
-  MessageCircle
+  MessageCircle,
+  GraduationCap,
+  Megaphone,
+  Briefcase
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -124,15 +127,15 @@ export function AdminLayout() {
 
   const menuItems = [
     { path: "/admin", label: "Overview", icon: LayoutDashboard },
-    { path: "/admin/articles", label: "Article Flow", icon: FileText },
-    { path: "/admin/categories", label: "Node Groups", icon: FolderOpen },
-    { path: "/admin/members", label: "Directory", icon: Users },
+    { path: "/admin/committee", label: "Executive", icon: ShieldCheck },
+    { path: "/admin/members", label: "Members", icon: Users },
     { path: "/admin/matrimonial", label: "Matrimonial", icon: Heart },
     { path: "/admin/events", label: "Events", icon: Calendar },
     { path: "/admin/gallery", label: "Archive", icon: Image },
+    { path: "/admin/news", label: "Samaj News", icon: Megaphone },
+    { path: "/admin/support", label: "Education", icon: GraduationCap },
     { path: "/admin/messages", label: "Messages", icon: MessageCircle },
-    { path: "/admin/videos", label: "Broadcast", icon: Radio },
-    { path: "/admin/settings", label: "Core Control", icon: Settings },
+    { path: "/admin/settings", label: "About Settings", icon: Settings },
   ];
 
   const isActive = (path: string) => {

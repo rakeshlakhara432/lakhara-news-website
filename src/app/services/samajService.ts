@@ -91,6 +91,34 @@ export interface ContactMessage {
   createdAt: any;
 }
 
+export interface CommitteeMember {
+  id?: string;
+  name: string;
+  designation: string;
+  city: string;
+  phone: string;
+  photoUrl?: string;
+  order: number;
+}
+
+export interface NewsPost {
+  id?: string;
+  title: string;
+  content: string;
+  category: string;
+  imageUrl?: string;
+  createdAt: any;
+}
+
+export interface SupportPost {
+  id?: string;
+  title: string;
+  description: string;
+  type: "शिक्षा" | "सहायता" | "अन्य";
+  contact: string;
+  createdAt: any;
+}
+
 class SamajService {
   // Members / Directory
   subscribeToMembers(callback: (members: Member[]) => void) {
@@ -225,6 +253,54 @@ class SamajService {
 
   async deleteMessage(id: string) {
     return deleteDoc(doc(db, "messages", id));
+  }
+
+  // Committee
+  subscribeToCommittee(callback: (members: CommitteeMember[]) => void) {
+    const q = query(collection(db, "committee"), orderBy("order", "asc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CommitteeMember[]);
+    });
+  }
+
+  async addCommittee(member: Omit<CommitteeMember, "id">) {
+    return addDoc(collection(db, "committee"), member);
+  }
+
+  async deleteCommittee(id: string) {
+    return deleteDoc(doc(db, "committee", id));
+  }
+
+  // News (Samaj Announcements)
+  subscribeToSamajNews(callback: (news: NewsPost[]) => void) {
+    const q = query(collection(db, "samaj_news"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as NewsPost[]);
+    });
+  }
+
+  async addSamajNews(news: Omit<NewsPost, "id" | "createdAt">) {
+    return addDoc(collection(db, "samaj_news"), { ...news, createdAt: serverTimestamp() });
+  }
+
+  async deleteSamajNews(id: string) {
+    return deleteDoc(doc(db, "samaj_news", id));
+  }
+
+  // Support / Education
+  subscribeToSupport(callback: (posts: SupportPost[]) => void) {
+    const q = query(collection(db, "support"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SupportPost[]);
+    });
+  }
+
+  async addSupport(post: Omit<SupportPost, "id" | "createdAt">) {
+    return addDoc(collection(db, "support"), { ...post, createdAt: serverTimestamp() });
+  }
+
+  async deleteSupport(id: string) {
+    return deleteDoc(doc(db, "support", id));
   }
 }
 

@@ -12,6 +12,9 @@ import { ManageMatrimonial } from "./pages/admin/ManageMatrimonial";
 import { ManageEvents } from "./pages/admin/ManageEvents";
 import { ManageGallery } from "./pages/admin/ManageGallery";
 import { ManageMessages } from "./pages/admin/ManageMessages";
+import { ManageCommittee } from "./pages/admin/ManageCommittee";
+import { ManageSamajNews } from "./pages/admin/ManageSamajNews";
+import { ManageSupport } from "./pages/admin/ManageSupport";
 import { AdminSettings } from "./pages/admin/Settings";
 import { ProfilePage } from "./pages/ProfilePage";
 import { NotFound } from "./pages/NotFound";
@@ -58,15 +61,15 @@ export const router = createHashRouter([
     Component: AdminLayout,
     children: [
       { index: true, Component: AdminDashboard },
-      { path: "articles", Component: ManageArticles },
-      { path: "articles/create", Component: CreateArticle },
-      { path: "articles/edit/:id", Component: EditArticle },
-      { path: "categories", Component: ManageCategories },
       { path: "members", Component: ManageMembers },
       { path: "matrimonial", Component: ManageMatrimonial },
+      { path: "committee", Component: ManageCommittee },
       { path: "events", Component: ManageEvents },
       { path: "gallery", Component: ManageGallery },
+      { path: "news", Component: ManageSamajNews },
+      { path: "support", Component: ManageSupport },
       { path: "messages", Component: ManageMessages },
+      { path: "settings", Component: AdminSettings },
       { path: "settings", Component: AdminSettings },
     ],
   },
