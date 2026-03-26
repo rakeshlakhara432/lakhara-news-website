@@ -27,10 +27,24 @@ export function NewsPage() {
   const getEmbedUrl = (url: string) => {
     if (!url) return "";
     let vidId = "";
-    if (url.includes("v=")) vidId = url.split("v=")[1].split("&")[0];
-    else if (url.includes("youtu.be/")) vidId = url.split("youtu.be/")[1].split("?")[0];
-    else return url;
-    return `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`;
+    try {
+      if (url.includes("v=")) {
+        vidId = url.split("v=")[1].split("&")[0];
+      } else if (url.includes("youtu.be/")) {
+        vidId = url.split("youtu.be/")[1].split("?")[0];
+      } else if (url.includes("/shorts/")) {
+        vidId = url.split("/shorts/")[1].split("?")[0];
+      } else if (url.includes("/live/")) {
+        vidId = url.split("/live/")[1].split("?")[0];
+      } else if (url.includes("/embed/")) {
+        return `${url}${url.includes("?") ? "&" : "?"}autoplay=1&mute=1&rel=0`;
+      } else {
+        return url;
+      }
+      return `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`;
+    } catch (e) {
+      return url;
+    }
   };
 
   if (isLoading) {
