@@ -2,73 +2,104 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── LAKHARA MISSION CONTROL DESIGN SYSTEM ── */
-
 :root {
-  --background: #05080f;
-  --foreground: #ffffff;
-  --card: #0a0f1a;
-  --primary: #ff003c; /* High-velocity Crimson */
-  --secondary: #00f2ff; /* Data Blue */
-  --accent: #ff003c;
-  --muted: #1a1f2e;
-  --border: #1a1f2e;
+  --background: #ffffff;
+  --foreground: #1c1c1c;
   
-  --radius: 1rem;
+  /* BHAGVA (SAFFRON) THEME */
+  --primary: #FF7722; /* Deep Saffron */
+  --primary-foreground: #ffffff;
+  
+  --secondary: #FFD700; /* Gold */
+  --secondary-foreground: #1c1c1c;
+  
+  --accent: #FFF5E6; /* Light Creamy Saffron */
+  --muted: #f9f9f9;
+  --muted-foreground: #666666;
+  --border: #f0f0f0;
+  --card: #ffffff;
+  --card-foreground: #1c1c1c;
+  
+  /* Traditional Gradient */
+  --gradient-bhagva: linear-gradient(135deg, #FF7722 0%, #FF9933 100%);
+  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
 }
 
 @theme {
-  --font-main: "Plus Jakarta Sans", sans-serif;
-  --font-display: "Plus Jakarta Sans", sans-serif;
-
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
   --color-border: var(--border);
   --color-muted: var(--muted);
-
-  /* Cinematic Effects */
-  --shadow-glow: 0 0 20px rgba(255, 0, 60, 0.3);
-  --glass-bg: rgba(10, 15, 26, 0.8);
+  --color-accent: var(--accent);
+  
+  --font-main: "Noto Sans Devanagari", "Outfit", "Inter", sans-serif;
+  
+  --shadow-bhagva: 0 10px 30px -5px rgba(255, 119, 34, 0.2);
+  --shadow-traditional: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground font-main antialiased selection:bg-primary/30;
-    background-image: radial-gradient(circle at 50% 50%, rgba(255, 0, 60, 0.05) 0%, transparent 70%);
+    @apply bg-background text-foreground font-main antialiased selection:bg-primary/20 selection:text-primary;
   }
 }
 
-/* ── SYSTEM UI COMPONENTS ── */
-
-@utility nav-pill {
-  @apply bg-card/50 backdrop-blur-xl border border-white/10 px-6 py-2 rounded-full flex items-center gap-6 shadow-2xl;
+/* TRADITIONAL UTILITIES */
+@utility traditional-header {
+  @apply text-4xl font-extrabold uppercase tracking-tight text-primary flex items-center gap-4 relative pb-4;
 }
 
-@utility btn-action {
-  @apply px-6 py-2.5 bg-primary text-white font-bold rounded-xl hover:shadow-glow transition-all active:scale-95 uppercase text-xs tracking-widest;
+@utility traditional-header-after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-24 h-1.5 bg-primary rounded-full;
 }
 
-@utility card-magnetic {
-  @apply bg-card border border-white/5 hover:border-primary/30 transition-all duration-500 rounded-2xl p-6 shadow-xl relative overflow-hidden;
+@utility card-traditional {
+  @apply bg-white rounded-3xl border border-border shadow-traditional hover:shadow-bhagva hover:-translate-y-1 transition-all duration-500 overflow-hidden;
 }
 
-@utility text-glow {
-  text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+@utility bhagva-gradient {
+  @apply bg-gradient-to-br from-[#FF7722] to-[#FF9933] text-white;
 }
 
-/* Scrollbar Mission Control */
+@utility gold-border {
+  @apply border-b-4 border-secondary;
+}
+
+/* ANIMATIONS */
+@keyframes traditional-fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes traditional-draw {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-traditional {
+  animation: traditional-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.draw-underline::after {
+  animation: traditional-draw 1s ease-out forwards;
+}
+
+/* Decorative Mandala-like Accents */
+@utility mandala-bg {
+  background-image: radial-gradient(circle, var(--primary) 1px, transparent 1px);
+  background-size: 24px 24px;
+  @apply opacity-[0.03];
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-background;
+  @apply bg-gray-50;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+  @apply bg-primary/30 rounded-full hover:bg-primary/50;
 }

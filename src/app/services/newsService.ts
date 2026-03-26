@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc, query, orderBy, where, limit, Timestamp, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc, query, orderBy, where, limit, Timestamp, onSnapshot, increment } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "../data/firebase";
 
@@ -59,6 +59,14 @@ export const newsService = {
         // const storageRef = ref(storage, imageUrl);
         // await deleteObject(storageRef).catch(console.error);
     }
+  },
+
+  // Increment Views
+  async incrementViews(id: string) {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    await updateDoc(docRef, {
+      views: increment(1)
+    });
   },
 
   // Get Articles

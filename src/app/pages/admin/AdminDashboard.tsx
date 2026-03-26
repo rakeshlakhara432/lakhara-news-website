@@ -1,5 +1,5 @@
 import { getArticles, getCategories } from "../../data/mockData";
-import { FileText, Eye, TrendingUp, FolderOpen, Users } from "lucide-react";
+import { FileText, Eye, TrendingUp, FolderOpen, Users, Activity, Zap, Shield, Network, Globe } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 export function AdminDashboard() {
@@ -11,7 +11,6 @@ export function AdminDashboard() {
   const breakingNews = articles.filter((a) => a.isBreaking).length;
   const trendingArticles = articles.filter((a) => a.isTrending).length;
   const communityUsers = JSON.parse(localStorage.getItem("community_users") || "[]");
-  const totalUsers = communityUsers.length;
 
   // Category distribution
   const categoryData = categories.map((cat) => ({
@@ -34,169 +33,157 @@ export function AdminDashboard() {
     .slice(0, 5);
 
   const formatViews = (views: number) => {
-    if (views >= 10000) return `${(views / 10000).toFixed(1)}W`; // Hindi Style W (Wan)
+    if (views >= 10000) return `${(views / 10000).toFixed(1)}W`; 
     if (views >= 1000) return `${(views / 1000).toFixed(1)}K`;
     return views.toString();
   };
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard Overview</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+         <div className="flex items-center gap-4 border-l-4 border-primary pl-6">
+            <h1 className="text-2xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Dashboard <span className="text-primary opacity-50">Overview</span></h1>
+         </div>
+         <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border border-primary/10">
+            <Activity className="size-3 text-primary animate-pulse" />
+            <span className="text-[8px] font-black text-primary uppercase tracking-widest">System Realtime</span>
+         </div>
+      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-blue-50 p-3 rounded-xl text-blue-600">
-              <FileText className="size-6" />
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {[
+          { label: "Total Articles", val: totalArticles, icon: FileText, color: "bg-orange-50 text-orange-600" },
+          { label: "Total Views", val: formatViews(totalViews), icon: Eye, color: "bg-amber-50 text-amber-600" },
+          { label: "Trending Now", val: trendingArticles, icon: TrendingUp, color: "bg-red-50 text-red-600" },
+          { label: "Node Groups", val: categories.length, icon: FolderOpen, color: "bg-primary/10 text-primary" },
+          { label: "Network Users", val: communityUsers.length, icon: Users, color: "bg-gray-100 text-gray-600" }
+        ].map((stat, i) => (
+          <div key={i} className="bg-white rounded-[1.5rem] border border-gray-100 p-5 shadow-sm hover:shadow-bhagva transition-all group overflow-hidden relative">
+            <div className="absolute top-0 right-0 size-16 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className={`size-10 ${stat.color} rounded-xl flex items-center justify-center mb-4 shadow-sm`}>
+              <stat.icon className="size-5" />
             </div>
+            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5">{stat.label}</p>
+            <p className="text-2xl font-black text-gray-950 tracking-tight leading-none italic">{stat.val}</p>
           </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Total Articles</p>
-          <p className="text-3xl font-black text-gray-900">{totalArticles}</p>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Chart */}
+        <div className="lg:col-span-2 bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm">
+           <div className="flex items-center justify-between mb-8">
+              <h2 className="text-sm font-black text-gray-950 uppercase tracking-widest flex items-center gap-3 italic">
+                 <Zap className="size-4 text-primary" /> Reach by Intelligence Segment
+              </h2>
+              <div className="flex gap-2">
+                 <div className="h-1.5 w-6 bg-primary rounded-full"></div>
+                 <div className="h-1.5 w-2 bg-gray-100 rounded-full"></div>
+              </div>
+           </div>
+           <ResponsiveContainer width="100%" height={260}>
+             <BarChart data={viewsByCategory}>
+               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f8fafc" />
+               <XAxis dataKey="name" angle={-15} textAnchor="end" height={60} stroke="#cbd5e1" fontSize={9} fontWeight="bold" />
+               <YAxis stroke="#cbd5e1" fontSize={9} fontWeight="bold" />
+               <Tooltip 
+                 cursor={{fill: '#FFFDFB'}} 
+                 contentStyle={{borderRadius: '16px', border: '1px solid #f1f5f9', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)', fontSize: '10px', fontWeight: 'bold'}}
+               />
+               <Bar dataKey="views" fill="#FF7722" radius={[6, 6, 0, 0]} barSize={24} />
+             </BarChart>
+           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-green-50 p-3 rounded-xl text-green-600">
-              <Eye className="size-6" />
-            </div>
-          </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Total Views</p>
-          <p className="text-3xl font-black text-gray-900">{formatViews(totalViews)}</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-red-50 p-3 rounded-xl text-red-600">
-              <TrendingUp className="size-6" />
-            </div>
-          </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Trending News</p>
-          <p className="text-3xl font-black text-gray-900">{trendingArticles}</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
-              <FolderOpen className="size-6" />
-            </div>
-          </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Categories</p>
-          <p className="text-3xl font-black text-gray-900">{categories.length}</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 group">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-blue-600 p-3 rounded-xl text-white shadow-lg shadow-blue-100">
-              <TrendingUp className="size-6" />
-            </div>
-            <button 
-              onClick={() => {
-                import("../../data/database").then(m => {
-                  m.db.save(m.db.get()); // Trigger cloud upload
-                  alert("Cloud Sync Triggered! Check your Firebase Console.");
-                });
-              }}
-              className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline"
-            >
-              Sync Now
-            </button>
-          </div>
-          <p className="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Database Server</p>
-          <div className="flex items-center gap-2">
-            <div className="size-2 bg-green-500 rounded-full animate-pulse"></div>
-            <p className="text-xl font-black text-gray-900">Connected</p>
-          </div>
-          <p className="text-[10px] text-blue-500 font-bold mt-2">Status: Firebase Real-time</p>
+        {/* Database Status */}
+        <div className="bg-gray-950 text-white rounded-[2rem] border border-white/5 p-8 relative overflow-hidden group">
+           <div className="absolute inset-0 mandala-bg opacity-5 group-hover:scale-110 transition-transform duration-[10s]"></div>
+           <div className="relative z-10 space-y-8">
+              <div className="flex items-center justify-between">
+                 <div className="size-12 bg-white/10 rounded-2xl flex items-center justify-center text-primary shadow-2xl">
+                    <Shield className="size-6" />
+                 </div>
+                 <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-[7px] font-black tracking-widest border border-green-500/20">
+                    <span className="size-1 bg-green-400 rounded-full animate-ping"></span> SECURE
+                 </div>
+              </div>
+              <div className="space-y-4">
+                 <div>
+                    <h3 className="text-xl font-black italic tracking-tighter text-white">CORE DATABASE</h3>
+                    <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Firebase Real-time Bridge</p>
+                 </div>
+                 <div className="p-4 bg-white/5 rounded-2xl border border-white/5 space-y-3">
+                    <div className="flex items-center justify-between text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                       <span>Connection Pulse</span>
+                       <span className="text-primary italic">Excellent</span>
+                    </div>
+                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                       <div className="h-full w-[92%] bg-primary rounded-full"></div>
+                    </div>
+                 </div>
+              </div>
+              <div className="pt-4 space-y-3">
+                 <button className="w-full py-3.5 bg-white text-gray-950 font-black rounded-xl hover:bg-primary hover:text-white transition-all text-[9px] uppercase tracking-widest flex items-center justify-center gap-2">
+                    <Network className="size-3" /> Sync Infrastructure
+                 </button>
+              </div>
+           </div>
         </div>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Views by Category</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={viewsByCategory}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
-              <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-              <Bar dataKey="views" fill="#ef4444" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Article Distribution</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={categoryData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {categoryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Top Performing Articles</h2>
-          <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Performers */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm relative overflow-hidden">
+          <div className="flex items-center gap-3 mb-8">
+             <div className="size-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+                <TrendingUp className="size-4" />
+             </div>
+             <h2 className="text-[10px] font-black text-gray-950 uppercase tracking-widest italic">Intelligence Priority</h2>
+          </div>
+          <div className="space-y-3">
             {topArticles.map((article, index) => (
-              <div key={article.id} className="flex items-center justify-between pb-4 border-b border-gray-50 last:border-0">
+              <div key={article.id} className="flex items-center justify-between p-4 bg-gray-50/30 rounded-2xl border border-transparent hover:border-primary/10 hover:bg-white transition-all group">
                 <div className="flex items-center gap-4">
-                  <div className="size-8 bg-red-50 text-red-600 rounded-lg flex items-center justify-center font-black text-sm">
+                  <div className="size-8 bg-white border border-gray-100 text-gray-400 group-hover:text-primary group-hover:border-primary/20 rounded-lg flex items-center justify-center font-black text-xs transition-colors">
                     {index + 1}
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-gray-900 line-clamp-1">{article.title}</p>
-                    <p className="text-xs text-gray-500">{article.category}</p>
+                    <p className="font-black text-[11px] text-gray-950 line-clamp-1 italic tracking-tight uppercase leading-none mb-1">{article.title}</p>
+                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{article.category} Sector</p>
                   </div>
                 </div>
                 <div className="text-right">
-                   <p className="font-black text-sm text-gray-900">{formatViews(article.views)}</p>
-                   <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest">Views</p>
+                   <p className="font-black text-xs text-gray-950 leading-none mb-1 italic tracking-tight">{formatViews(article.views)}</p>
+                   <p className="text-[7px] uppercase font-black text-primary tracking-widest opacity-50">Impact</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Latest Community Members</h2>
-          <div className="space-y-4">
+        {/* Community */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-8">
+             <div className="size-8 bg-gray-100 text-gray-400 rounded-lg flex items-center justify-center">
+                <Globe className="size-4" />
+             </div>
+             <h2 className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Global Network Personnel</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {communityUsers.length === 0 ? (
-              <div className="text-center py-10">
-                 <p className="text-gray-400 font-bold italic">No users registered yet.</p>
+              <div className="col-span-2 text-center py-20 border-2 border-dashed border-gray-100 rounded-[2.5rem]">
+                 <p className="text-[9px] text-gray-300 font-black uppercase tracking-[0.4em] italic">No active personnel detected</p>
               </div>
             ) : (
-              communityUsers.slice(-5).reverse().map((u: any, i: number) => (
-                <div key={i} className="flex items-center justify-between pb-4 border-b border-gray-50 last:border-0">
-                  <div className="flex items-center gap-4">
-                    <div className="size-10 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-400 text-lg uppercase">
-                      {u.name[0]}
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm text-gray-900">{u.name}</p>
-                      <p className="text-[10px] text-gray-400 font-bold">{u.email}</p>
-                    </div>
+              communityUsers.slice(-4).reverse().map((u: any, i: number) => (
+                <div key={i} className="flex items-center gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                  <div className="size-9 bg-white border border-gray-200 rounded-xl flex items-center justify-center font-black text-gray-300 text-base uppercase shadow-sm">
+                    {u.name[0]}
                   </div>
-                  <div className="text-right">
-                     <span className="text-[10px] font-black bg-green-50 text-green-600 px-3 py-1.5 rounded-lg uppercase tracking-wider">
-                        Active
-                     </span>
+                  <div className="min-w-0">
+                    <p className="font-black text-[10px] text-gray-950 uppercase tracking-tighter truncate leading-none mb-1">{u.name}</p>
+                    <p className="text-[8px] text-primary font-black uppercase tracking-widest truncate">{u.email.split('@')[0]}</p>
                   </div>
                 </div>
               ))

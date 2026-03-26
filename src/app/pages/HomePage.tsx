@@ -1,290 +1,178 @@
-import { useState, useEffect, useRef } from "react";
-import { categories, getYouTubeSettings } from "../data/mockData";
-import { ArticleCard } from "../components/ArticleCard";
-import { BreakingNews } from "../components/BreakingNews";
-import { Newsletter } from "../components/Newsletter";
-import { TrendingUp, Loader2, Play, ChevronRight, Zap, Tv, Eye, Sparkles, Flame, ArrowRight, Signal, Globe, Radio, ShieldCheck, Activity, Landmark, Newspaper, Calendar, Menu, Search, User, Home, Compass, Film, UserCircle, Bell, Moon, Sun, Upload, MoreVertical, Share2, Cpu } from "lucide-react";
+import { useState, useEffect } from "react";
+import { TrendingUp, Radio, ChevronRight, Flag, Users, Heart, Calendar, Image, Phone, Info, MessageCircle, Star, Sparkles, LayoutGrid, Clock, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
-import { newsService, Article } from "../services/newsService";
 
 export function HomePage() {
-  const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("ALL");
 
   useEffect(() => {
-    const unsubscribe = newsService.subscribeToArticles((data) => {
-      setArticles(data);
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
+    // Minimal delay for entrance animations
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) return (
-    <div className="min-h-screen bg-[#05080f] flex flex-col items-center justify-center gap-6">
-       <div className="size-24 border-t-4 border-primary rounded-full animate-spin shadow-glow"></div>
-       <p className="font-black text-[10px] text-primary uppercase tracking-[0.5em] animate-pulse">LAKHARA NETWORK INITIALIZING...</p>
-    </div>
-  );
+  if (isLoading) {
+    return (
+      <div className="flex h-[80vh] items-center justify-center bg-white/50 backdrop-blur-3xl">
+        <div className="flex flex-col items-center gap-6 animate-pulse">
+          <Flag className="size-12 text-primary" />
+          <p className="text-[10px] font-black text-primary uppercase tracking-[0.8em] italic">लखारा समाज पोर्टल</p>
+        </div>
+      </div>
+    );
+  }
 
-  const heroArticle = articles[0];
-  const sideArticles = articles.slice(1, 5);
-  const breakingNews = articles.filter(a => a.isBreaking);
+  const quickLinks = [
+    { label: "पंजीकरण", slug: "register", icon: Radio, color: "bg-primary text-white" },
+    { label: "विवाह मंच", slug: "matrimonial", icon: Heart, color: "bg-red-50 text-red-600" },
+    { label: "सदस्य सूची", slug: "directory", icon: Users, color: "bg-blue-50 text-blue-600" },
+    { label: "सहायता", slug: "support", icon: Star, color: "bg-amber-50 text-amber-600" },
+  ];
 
   return (
-    <div className="bg-[#05080f] min-h-screen font-main text-white relative selection:bg-primary/40 selection:text-white">
+    <div className="space-y-24 pb-32 animate-in fade-in duration-1000">
       
-      {/* ── MISSION CONTROL HEADER (FLOATING BAR) ── */}
-      <header className="fixed top-8 inset-x-0 h-16 flex items-center justify-center z-[100] px-4">
-        <div className="container mx-auto max-w-7xl h-full flex items-center justify-between bg-[#0a0f1a]/80 backdrop-blur-3xl border border-white/5 rounded-full px-8 shadow-2xl">
-          
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="size-8 bg-black rounded-lg flex items-center justify-center border border-white/10 group-hover:border-primary/50 transition-all font-black italic">L</div>
-            <div className="flex flex-col">
-              <span className="text-sm font-black tracking-tighter italic leading-none uppercase group-hover:text-primary transition-colors">LAKHARA</span>
-              <span className="text-[7px] font-black text-gray-500 uppercase tracking-widest leading-none mt-1">NEWS NETWORK</span>
+      {/* 🏛️ SAMAJ INTRODUCTION HERO */}
+      <section className="relative h-[500px] md:h-[600px] rounded-[4rem] overflow-hidden group shadow-bhagva border-[6px] border-white ring-1 ring-primary/5">
+         <img 
+           src="https://images.unsplash.com/photo-1590133322241-8c9356ff5668?auto=format&fit=crop&q=80&w=2000" 
+           className="size-full object-cover group-hover:scale-110 transition-transform duration-[10s]" 
+           alt="Temple/Community" 
+         />
+         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent"></div>
+         <div className="absolute inset-0 mandala-bg opacity-10"></div>
+         
+         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 space-y-6">
+            <div className="bg-primary/20 backdrop-blur-3xl text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-white/20 mb-8">
+               ॥ संघे शक्तिः कलौ युगे ॥
             </div>
-          </Link>
+            <h1 className="text-4xl md:text-7xl font-black text-white italic tracking-tighter drop-shadow-2xl leading-tight">
+               स्वागत है <span className="text-primary group-hover:text-secondary transition-colors duration-1000">लखारा समाज</span> <br/> डिजिटल पोर्टल पर
+            </h1>
+            <p className="text-white/70 max-w-2xl text-sm md:text-lg font-bold italic drop-shadow-lg">
+               “एकता, संस्कृति और प्रगति का नया डिजिटल मंच। समाज के विकास और संगठन को डिजिटल धागे से जोड़ने का संकल्प।”
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 mt-12">
+               <Link to="/about" className="px-10 py-4 bg-white text-gray-950 font-black rounded-2xl hover:bg-primary hover:text-white transition-all text-xs tracking-widest uppercase shadow-2xl">हमारा इतिहास</Link>
+               <Link to="/register" className="px-10 py-4 bg-primary text-white font-black rounded-2xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl">समाज से जुड़ें</Link>
+            </div>
+         </div>
+      </section>
 
-          <nav className="hidden lg:flex items-center gap-8 h-full">
-            {[
-              { label: "HOME", icon: Home, active: true },
-              { label: "EXPLORE", icon: Compass },
-              { label: "REELS", icon: Film },
-              { label: "LIVE TV", icon: Tv },
-              { label: "PROFILE", icon: UserCircle },
-            ].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div 
-                  key={idx} 
-                  className={`flex items-center gap-3 px-6 h-10 rounded-full transition-all cursor-pointer font-black text-[10px] uppercase tracking-widest ${item.active ? 'bg-white text-black shadow-xl ring-4 ring-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                >
-                  <Icon className="size-4" />
-                  {item.label}
-                </div>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center gap-6">
-             <div className="hidden xl:flex items-center bg-black/40 border border-white/5 rounded-full px-5 py-2 group-focus-within:border-primary/50 transition-all">
-                <Search className="size-3.5 text-gray-500" />
-                <input type="text" placeholder="Search network..." className="bg-transparent border-none outline-none text-[10px] w-32 placeholder:text-gray-600 font-bold ml-3" />
-             </div>
-             <button className="p-2.5 bg-black/40 border border-white/5 rounded-full hover:bg-primary/10 hover:border-primary/50 transition-all group shadow-inner">
-                <Moon className="size-4 text-gray-400 group-hover:text-primary" />
-             </button>
-             <button className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2.5 rounded-xl text-[10px] font-black hover:bg-primary hover:text-white transition-all active:scale-95 shadow-xl">
-                <Upload className="size-4" />
-                POST
-             </button>
-          </div>
-        </div>
-      </header>
-
-      {/* ── CINEMATIC MAIN CONTENT ── */}
-      <div className="container mx-auto px-4 max-w-7xl pt-44 pb-20 space-y-24 relative z-10">
-        
-        {/* Ticker Below Nav */}
-        <div className="bg-white/5 border border-white/5 rounded-2xl h-14 flex items-center px-6 backdrop-blur-3xl">
-           <div className="container mx-auto flex items-center gap-10">
-              <div className="flex-shrink-0 flex items-center gap-3">
-                 <div className="size-2 bg-primary rounded-full animate-ping"></div>
-                 <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] italic">REAL-TIME SIGNAL</span>
+      {/* ⚡ QUICK ACTIONS (SAMAJ FEATURES) */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-6">
+         {quickLinks.map((link, i) => (
+           <Link key={i} to={`/${link.slug}`} className="group p-8 bg-white rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 text-center space-y-4">
+              <div className={`size-16 mx-auto ${link.color} rounded-[2rem] flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500`}>
+                 <link.icon className="size-8" />
               </div>
-              <div className="w-px h-6 bg-white/5"></div>
-              <BreakingNews items={breakingNews.map(a => ({ title: a.title, slug: a.slug }))} />
-           </div>
-        </div>
+              <div>
+                 <h3 className="text-lg font-black text-gray-950 tracking-tighter uppercase italic">{link.label}</h3>
+                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">शुरू करें</p>
+              </div>
+           </Link>
+         ))}
+      </section>
 
-        {/* ── HERO MISSION CONTROL GRID ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
-          {/* Featured Visual Feed (Hero) */}
-          <main className="lg:col-span-8 space-y-10 group">
-             {heroArticle && (
-                <Link to={`/article/${heroArticle.slug}`} className="block relative rounded-[2.5rem] overflow-hidden bg-black aspect-video shadow-2xl hover:shadow-primary/20 transition-all duration-700">
-                   <img 
-                      src={heroArticle.imageUrl} 
-                      alt="" 
-                      className="size-full object-cover group-hover:scale-110 transition-transform duration-[4s] opacity-70 group-hover:opacity-90" 
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-t from-[#05080f] via-transparent to-transparent"></div>
-                   <div className="absolute top-10 left-10 scale-125 md:scale-100">
-                      <div className="flex items-center gap-4 bg-primary px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.3em] shadow-glow">
-                         <Signal className="size-4" /> PRIORITY CONTENT
-                      </div>
-                   </div>
-                   <div className="absolute bottom-12 left-12 right-12 space-y-4">
-                      <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter leading-[0.9] text-glow line-clamp-2">
-                         {heroArticle.title}
-                      </h2>
-                      <p className="text-gray-400 text-sm md:text-lg font-bold leading-relaxed max-w-xl group-hover:text-white transition-colors duration-500 italic">
-                         {heroArticle.excerpt}
-                      </p>
-                   </div>
-                </Link>
-             )}
-
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {articles.slice(5, 11).map(article => (
-                   <ArticleCard key={article.id} article={article} />
-                ))}
-             </div>
-          </main>
-
-          {/* Data Log Sidebar */}
-          <aside className="lg:col-span-4 space-y-10">
-             <div className="bg-[#0a0f1a] p-10 rounded-[2.5rem] border border-white/5 relative overflow-hidden shadow-2xl">
-                <div className="absolute top-0 right-0 size-40 bg-primary/10 rounded-full blur-[60px] pointer-events-none"></div>
-                <h3 className="text-xl font-black text-white mb-10 flex items-center gap-4 italic tracking-widest">
-                   <Activity className="size-6 text-primary" /> NETWORK TRAFFIC
-                </h3>
-                <div className="space-y-10">
-                   {sideArticles.map((article, idx) => (
-                      <Link key={idx} to={`/article/${article.slug}`} className="flex gap-6 items-start group">
-                         <span className="text-5xl font-black text-white/5 group-hover:text-primary transition-colors italic leading-none">0{idx + 1}</span>
-                         <div className="space-y-2 pt-1">
-                            <h4 className="text-sm font-black text-gray-400 group-hover:text-white transition-colors uppercase italic tracking-tighter leading-tight">
-                               {article.title}
-                            </h4>
-                            <div className="flex items-center gap-3 text-[8px] font-black text-gray-600 uppercase tracking-widest">
-                               <span className="text-primary">{article.category}</span>
-                               <span className="w-1 h-1 bg-white/20 rounded-full"></span>
-                               <span>{new Date().getHours() - idx}H AGO</span>
-                            </div>
-                         </div>
-                      </Link>
-                   ))}
-                </div>
-                <button className="w-full mt-10 py-5 bg-black/40 rounded-2xl border border-white/5 font-black text-[9px] uppercase tracking-[0.4em] text-gray-500 hover:text-white hover:bg-white/5 transition-all active:scale-95">
-                   LOAD MORE DATA
-                </button>
-             </div>
-
-             <div className="bg-primary p-12 rounded-[2.5rem] text-white shadow-glow relative overflow-hidden group border-4 border-white/5">
-                <Tv className="absolute -bottom-10 -right-10 size-64 opacity-10 group-hover:rotate-12 transition-transform duration-1000" />
-                <h3 className="text-2xl font-black mb-4 uppercase tracking-tighter">LIVE FEED</h3>
-                <p className="text-white/80 text-sm font-bold leading-relaxed mb-8 italic">
-                   Direct downlink from global servers. Real-time news production active.
-                </p>
-                <Link to="/live" className="inline-flex items-center gap-4 bg-white text-primary px-8 py-3 rounded-xl font-black text-[10px] shadow-2xl hover:scale-105 active:scale-95 transition-transform uppercase tracking-widest">
-                   <Radio className="size-4 animate-pulse" /> ACTIVATE TRANSMISSION
-                </Link>
-             </div>
-          </aside>
-        </section>
-
-        {/* ── SECTOR GRIDS ── */}
-        {categories.slice(0, 3).map((cat, idx) => {
-           const catArticles = articles.filter(a => a.category === cat.slug).slice(0, 4);
-           if (catArticles.length === 0) return null;
-           return (
-              <section key={cat.id} className="space-y-12">
-                 <div className="flex items-center justify-between border-b border-white/5 pb-8">
-                    <div className="flex items-center gap-6">
-                       <div className="size-14 bg-black rounded-2xl border border-white/10 flex items-center justify-center text-primary shadow-inner">
-                          <Landmark className="size-7" />
-                       </div>
-                       <div>
-                          <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">SECTOR {idx + 1}</h2>
-                          <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.5em] mt-1">{cat.name} OPERATIONS</p>
-                       </div>
-                    </div>
-                    <button className="p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-primary transition-all text-gray-500 hover:text-white">
-                       <MoreVertical className="size-6" />
-                    </button>
-                 </div>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    {catArticles.map(article => (
-                       <ArticleCard key={article.id} article={article} />
-                    ))}
-                 </div>
-              </section>
-           );
-        })}
-
-        <section className="bg-white/5 p-16 rounded-[2.5rem] border border-white/5 backdrop-blur-3xl text-center space-y-10 relative overflow-hidden">
-           <Zap className="absolute top-10 left-10 size-10 text-primary opacity-20" />
-           <div className="space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-glow">RECV: PATRIKA DATA</h2>
-              <p className="text-gray-400 max-w-lg mx-auto leading-relaxed font-bold italic">
-                 Subscribe to our high-frequency data burst. Guaranteed 99.9% insight uptime.
-              </p>
-           </div>
-           <Newsletter />
-        </section>
-
-      </div>
-
-      {/* ── CINEMATIC FOOTER ── */}
-      <footer className="footer-control bg-[#0a0f1a] pt-32 pb-16 border-t border-white/5">
-         <div className="container mx-auto px-4 max-w-7xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32 text-center md:text-left">
-               <div className="space-y-10">
-                  <Link to="/" className="flex items-center gap-4 justify-center md:justify-start">
-                     <div className="size-12 bg-black border border-primary/40 rounded-xl flex items-center justify-center text-primary shadow-glow">
-                        <Radio className="size-7" />
-                     </div>
-                     <span className="text-2xl font-black italic tracking-tighter uppercase text-glow">LAKHARA HQ</span>
-                  </Link>
-                  <p className="text-gray-500 text-xs font-bold leading-relaxed italic pr-10 uppercase tracking-widest">
-                     Lakhara News Network represents the cutting edge of digital news delivery. Global. Instant. Objective.
-                  </p>
-               </div>
-               
-               <div className="space-y-8">
-                  <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">OPERATIONS</h4>
-                  <ul className="space-y-6 text-gray-500 text-[10px] font-black uppercase tracking-widest">
-                     <li className="hover:text-primary transition-colors cursor-pointer">• CENTRAL HUB</li>
-                     <li className="hover:text-primary transition-colors cursor-pointer">• SATELLITE COMMS</li>
-                     <li className="hover:text-primary transition-colors cursor-pointer">• DATA PRIVACY</li>
-                     <li className="hover:text-primary transition-colors cursor-pointer">• TRANSMISSION LOGS</li>
-                  </ul>
-               </div>
-
-               <div className="space-y-8">
-                  <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">CONNECT</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                     {["FB-DATA", "YT-LIVE", "TW-FEED", "IG-IMG"].map(sm => (
-                        <div key={sm} className="bg-black/50 border border-white/5 p-3 rounded-lg text-center text-[8px] font-black text-gray-600 hover:text-white hover:border-primary/40 transition-all cursor-pointer">
-                           {sm}
-                        </div>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="space-y-8">
-                  <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">SYSTRAY</h4>
-                  <div className="p-6 bg-black border border-white/10 rounded-2xl flex items-center gap-4">
-                     <Cpu className="size-6 text-primary" />
-                     <div className="flex flex-col">
-                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">CORE TEMP</span>
-                        <span className="text-[14px] font-black text-white italic">NORMAL - 42°C</span>
-                     </div>
-                  </div>
-               </div>
+      {/* 📢 LATEST UPDATES & ANNOUNCEMENTS */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+         <div className="lg:col-span-2 space-y-12">
+            <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
+               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+                  नवीनतम <span className="text-primary">अपडेट</span>
+               </h2>
+               <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">सभी देखें <ChevronRight className="size-4" /></Link>
             </div>
-
-            <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-10">
-               <div className="flex items-center gap-4">
-                  <div className="size-2 bg-primary rounded-full animate-pulse shadow-glow"></div>
-                  <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.4em]">HQ LOCATION: UDAIPUR, IN</span>
-               </div>
-               <p className="text-gray-700 text-[8px] font-black uppercase tracking-[1em]">© 2024 LAKHARA NEWS NETWORK</p>
-               <div className="flex items-center gap-4 text-[9px] font-black text-gray-600">
-                  <button className="hover:text-white">EN</button>
-                  <div className="w-1 h-1 bg-white/10 rounded-full"></div>
-                  <button className="hover:text-white">HI</button>
+            
+            <div className="bg-white rounded-[4rem] border border-gray-100 p-10 shadow-sm space-y-10 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 size-40 bg-primary/5 rounded-bl-[10rem] group-hover:bg-primary/10 transition-all"></div>
+               <div className="relative z-10 space-y-8">
+                  <div className="flex items-center gap-4 text-primary">
+                     <Clock className="size-5" />
+                     <span className="text-[10px] font-black uppercase tracking-widest italic font-bold">आज की मुख्य सूचना</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-black text-gray-950 tracking-tighter italic leading-tight">
+                     लखारा समाज का आगामी वार्षिक मिलन समारोह और सांस्कृतिक कार्यक्रम 2026 की घोषणा
+                  </h3>
+                  <p className="text-gray-500 font-bold italic leading-relaxed text-sm">
+                     समाज के सभी बंधुओं को सूचित किया जाता है कि आगामी मास में होने वाले 'महासम्मेलन' की तैयारियां शुरू हो चुकी हैं। अधिक जानकारी के लिए नोटिस बोर्ड देखें।
+                  </p>
+                  <Link to="/events" className="inline-flex items-center gap-4 bg-gray-950 text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-primary transition-all">
+                     पूर्ण विवरण पढ़ें <ArrowRight className="size-4" />
+                  </Link>
                </div>
             </div>
          </div>
-      </footer>
 
-      {/* Background Cinematic Orbs */}
-      <div className="fixed top-[-20%] right-[-10%] size-[800px] bg-primary/5 rounded-full blur-[200px] pointer-events-none -z-10 animate-pulse"></div>
-      <div className="fixed bottom-[-10%] left-[-5%] size-[600px] bg-secondary/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+         {/* 🗓️ HIGHLIGHT EVENTS (Old material renamed) */}
+         <div className="space-y-12">
+            <div className="flex items-center gap-6 border-l-[8px] border-primary pl-8">
+               <h2 className="text-2xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+                  आगामी <span className="text-primary">आयोजन</span>
+               </h2>
+            </div>
+            
+            <div className="space-y-6">
+               {[
+                 { title: "समाज की आम बैठक", date: "28 मार्च", type: "बैठक" },
+                 { title: "मेगा रक्तदान शिविर", date: "02 अप्रैल", type: "सेवा" },
+                 { title: "महासभा चुनाव 2026", date: "15 अप्रैल", type: "संगठन" }
+               ].map((ev, i) => (
+                 <div key={i} className="group flex items-center gap-6 p-6 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all cursor-pointer">
+                    <div className="size-16 bg-primary/5 text-primary rounded-2xl flex flex-col items-center justify-center font-black transition-colors group-hover:bg-primary group-hover:text-white">
+                       <span className="text-lg leading-none">{ev.date.split(' ')[0]}</span>
+                       <span className="text-[8px] uppercase">{ev.date.split(' ')[1]}</span>
+                    </div>
+                    <div>
+                       <h4 className="text-sm font-black text-gray-950 leading-tight italic tracking-tight">{ev.title}</h4>
+                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{ev.type}</p>
+                    </div>
+                 </div>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* 🖼️ SAMAJ GALLERY (Preview) */}
+      <section className="space-y-12">
+         <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+               स्मृति <span className="text-primary">कलश</span>
+            </h2>
+            <Link to="/gallery" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">गैलरी देखें <ChevronRight className="size-4" /></Link>
+         </div>
+         
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="aspect-square bg-gray-100 rounded-[3rem] overflow-hidden group relative shadow-sm border-4 border-white">
+                 <img src={`https://picsum.photos/seed/samaj${i}/500/500`} className="size-full object-cover group-hover:scale-125 transition-transform duration-[4s]" alt="" />
+                 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </div>
+            ))}
+         </div>
+      </section>
+
+      {/* 🤝 CONTACT QUICK LINK */}
+      <section className="bg-primary rounded-[5rem] p-12 md:p-24 text-center text-white relative overflow-hidden group shadow-bhagva border-[8px] border-white">
+         <div className="absolute inset-0 mandala-bg opacity-10 group-hover:scale-110 transition-transform duration-[10s]"></div>
+         <div className="relative z-10 space-y-10">
+            <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter leading-tight drop-shadow-2xl">
+               क्या आपको किसी सहायता की <br/> आवश्यकता है?
+            </h2>
+            <p className="text-white/80 font-bold italic max-w-xl mx-auto text-sm md:text-lg">
+               समाज की सहायता डेस्क 24/7 उपलब्ध है। किसी भी सवाल या सुझाव के लिए हमसे संपर्क करें।
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 pt-10">
+               <a href="tel:+91XXXXXXXXXX" className="px-10 py-5 bg-white text-primary font-black rounded-3xl hover:bg-gray-100 transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center gap-4">
+                  <Phone className="size-5" /> कॉल करें
+               </a>
+               <Link to="/contact" className="px-10 py-5 bg-gray-950 text-white font-black rounded-3xl hover:bg-black transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center gap-4">
+                  <MapPin className="size-5" /> संपर्क सूत्र
+               </Link>
+            </div>
+         </div>
+      </section>
+
     </div>
   );
 }
