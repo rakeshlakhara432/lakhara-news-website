@@ -88,10 +88,10 @@ export function ContactPage() {
          <section className="space-y-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                {[
-                 { label: "ईमेल", val: "contact@lakharasamaj.org", icon: Mail, color: "bg-blue-50 text-blue-600" },
-                 { label: "फोन", val: "+91-98XXXXXXXX", icon: Phone, color: "bg-green-50 text-green-600" },
-                 { label: "स्थान", val: "नई दिल्ली, भारत", icon: MapPin, color: "bg-red-50 text-red-600" },
-                 { label: "वेबसाइट", val: "lakharasamaj.org", icon: Globe, color: "bg-amber-50 text-amber-600" }
+                { label: "ईमेल", val: "rakeshlakhara432@gmail.com", icon: Mail, color: "bg-blue-50 text-blue-600" },
+                { label: "फोन", val: "+91-9636691724", icon: Phone, color: "bg-green-50 text-green-600" },
+                { label: "स्थान", val: "पली, राजस्थान", icon: MapPin, color: "bg-red-50 text-red-600" },
+                { label: "वेबसाइट", val: "lakhara-news-website.web.app", icon: Globe, color: "bg-amber-50 text-amber-600" }
                ].map((item, i) => (
                  <div key={i} className="group p-8 bg-white rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-1 text-center space-y-4">
                     <div className={`size-14 mx-auto ${item.color} rounded-2xl flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform`}>

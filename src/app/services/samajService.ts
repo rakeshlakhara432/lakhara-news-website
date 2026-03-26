@@ -119,6 +119,16 @@ export interface SupportPost {
   createdAt: any;
 }
 
+export interface VideoPost {
+  id?: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  thumbnailUrl?: string;
+  isLive?: boolean;
+  createdAt: any;
+}
+
 class SamajService {
   // Members / Directory
   subscribeToMembers(callback: (members: Member[]) => void) {
@@ -301,6 +311,22 @@ class SamajService {
 
   async deleteSupport(id: string) {
     return deleteDoc(doc(db, "support", id));
+  }
+
+  // Videos
+  subscribeToVideos(callback: (videos: VideoPost[]) => void) {
+    const q = query(collection(db, "samaj_videos"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as VideoPost[]);
+    });
+  }
+
+  async addVideo(video: Omit<VideoPost, "id" | "createdAt">) {
+    return addDoc(collection(db, "samaj_videos"), { ...video, createdAt: serverTimestamp() });
+  }
+
+  async deleteVideo(id: string) {
+    return deleteDoc(doc(db, "samaj_videos", id));
   }
 }
 

@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Search, Home, Bell, User, History, ChevronRight, Film, PlusCircle, Compass, Globe, Info, Menu, X, ArrowRight, Flag, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, BookOpen, ShieldCheck, GraduationCap } from "lucide-react";
+import { Search, Home, Bell, User, History, ChevronRight, Film, PlusCircle, Compass, Globe, Info, Menu, X, ArrowRight, Flag, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, BookOpen, ShieldCheck, GraduationCap, Mail, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
@@ -151,18 +151,18 @@ export function PublicLayout() {
                </ul>
             </div>
 
-            <div className="space-y-6">
-               <div className="flex items-center gap-2.5 text-primary">
-                  <div className="size-1 bg-primary rounded-full"></div>
-                  <h4 className="text-[9px] font-black uppercase tracking-[0.2em]">संपर्क एवं जानकारी</h4>
-               </div>
-               <ul className="space-y-2 text-[12px] font-bold text-gray-400 italic">
-                  <li><Link to="/support" className="hover:text-primary text-[12px]">शिक्षा सहायता</Link></li>
-                  <li><Link to="/rules" className="hover:text-primary text-[12px]">नियम एवं कानून</Link></li>
-                  <li><Link to="/contact" className="hover:text-primary text-[12px]">संपर्क सूत्र</Link></li>
-                  <li><Link to="/donate" className="hover:text-primary text-[12px]">दान (Donation)</Link></li>
-               </ul>
-            </div>
+             <div className="space-y-6">
+                <div className="flex items-center gap-2.5 text-primary">
+                   <div className="size-1 bg-primary rounded-full"></div>
+                   <h4 className="text-[9px] font-black uppercase tracking-[0.2em]">संपर्क एवं जानकारी</h4>
+                </div>
+                <ul className="space-y-3 text-[11px] font-bold text-gray-400 italic">
+                   <li className="flex items-center gap-3"><Phone className="size-3 text-primary" /> +91 9636691724</li>
+                   <li className="flex items-center gap-3"><Mail className="size-3 text-primary" /> rakeshlakhara432@gmail.com</li>
+                   <li className="flex items-center gap-3"><MapPin className="size-3 text-primary" /> पाली, राजस्थान</li>
+                   <li><Link to="/contact" className="hover:text-primary underline decoration-primary/20">विस्तृत संपर्क</Link></li>
+                </ul>
+             </div>
           </div>
           <div className="mt-16 pt-10 border-t border-white/5 text-center">
              <div className="text-primary font-black text-lg italic tracking-tighter mb-2">॥ संघे शक्तिः कलौ युगे ॥</div>

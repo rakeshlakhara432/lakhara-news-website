@@ -3,10 +3,6 @@ import { HomePage } from "./pages/HomePage";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
-import { ManageArticles } from "./pages/admin/ManageArticles";
-import { CreateArticle } from "./pages/admin/CreateArticle";
-import { EditArticle } from "./pages/admin/EditArticle";
-import { ManageCategories } from "./pages/admin/ManageCategories";
 import { ManageMembers } from "./pages/admin/ManageMembers";
 import { ManageMatrimonial } from "./pages/admin/ManageMatrimonial";
 import { ManageEvents } from "./pages/admin/ManageEvents";
@@ -15,6 +11,7 @@ import { ManageMessages } from "./pages/admin/ManageMessages";
 import { ManageCommittee } from "./pages/admin/ManageCommittee";
 import { ManageSamajNews } from "./pages/admin/ManageSamajNews";
 import { ManageSupport } from "./pages/admin/ManageSupport";
+import { ManageVideos } from "./pages/admin/ManageVideos";
 import { AdminSettings } from "./pages/admin/Settings";
 import { ProfilePage } from "./pages/ProfilePage";
 import { NotFound } from "./pages/NotFound";
@@ -67,6 +64,7 @@ export const router = createHashRouter([
       { path: "events", Component: ManageEvents },
       { path: "gallery", Component: ManageGallery },
       { path: "news", Component: ManageSamajNews },
+      { path: "videos", Component: ManageVideos },
       { path: "support", Component: ManageSupport },
       { path: "messages", Component: ManageMessages },
       { path: "settings", Component: AdminSettings },

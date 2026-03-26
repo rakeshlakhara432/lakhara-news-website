@@ -31,7 +31,8 @@ import {
   MessageCircle,
   GraduationCap,
   Megaphone,
-  Briefcase
+  Briefcase,
+  Play
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -133,6 +134,7 @@ export function AdminLayout() {
     { path: "/admin/events", label: "Events", icon: Calendar },
     { path: "/admin/gallery", label: "Archive", icon: Image },
     { path: "/admin/news", label: "Samaj News", icon: Megaphone },
+    { path: "/admin/videos", label: "Broadcasts", icon: Play },
     { path: "/admin/support", label: "Education", icon: GraduationCap },
     { path: "/admin/messages", label: "Messages", icon: MessageCircle },
     { path: "/admin/settings", label: "About Settings", icon: Settings },
