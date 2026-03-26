@@ -21,7 +21,6 @@ export function HomePage() {
     const unsub3 = samajService.subscribeToEvents(data => setEventCount(data.length));
     const unsub4 = samajService.subscribeToVideos(data => setVideos(data));
     
-    // Simulating loading state
     const timer = setTimeout(() => setIsLoading(false), 800);
     
     return () => {
@@ -29,6 +28,15 @@ export function HomePage() {
       clearTimeout(timer);
     };
   }, []);
+
+  const getEmbedUrl = (url: string) => {
+    if (!url) return "";
+    let vidId = "";
+    if (url.includes("v=")) vidId = url.split("v=")[1].split("&")[0];
+    else if (url.includes("youtu.be/")) vidId = url.split("youtu.be/")[1].split("?")[0];
+    else return url;
+    return `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`;
+  };
 
   if (isLoading) {
     return (
@@ -42,7 +50,7 @@ export function HomePage() {
   }
 
   const quickLinks = [
-    { label: "पजीकरण", slug: "register", icon: Radio, color: "bg-primary text-white" },
+    { label: "पंजीकरण", slug: "register", icon: Radio, color: "bg-primary text-white" },
     { label: "विवाह मंच", slug: "matrimonial", icon: Heart, color: "bg-red-50 text-red-600" },
     { label: "सदस्य सूची", slug: "directory", icon: Users, color: "bg-blue-50 text-blue-600" },
     { label: "सहायता", slug: "support", icon: Star, color: "bg-amber-50 text-amber-600" },
@@ -99,7 +107,7 @@ export function HomePage() {
          ))}
       </section>
 
-      {/* 📺 LIVE BROADCAST SECTION (NEW) */}
+      {/* 📺 LIVE BROADCAST (AUTOPLAY EMBEDDED) */}
       {liveVideo && (
         <section className="space-y-12">
            <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
@@ -109,31 +117,21 @@ export function HomePage() {
                <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">डिजिटल स्टूडियो <Play className="size-4" /></Link>
             </div>
 
-            <div className="relative aspect-[21/9] bg-gray-950 rounded-[4rem] overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
-                <img 
-                  src={liveVideo.thumbnailUrl || "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&q=80&w=2000"} 
-                  className="size-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[10s]" 
-                  alt="Live Stream" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent"></div>
+            <div className="relative aspect-video lg:aspect-[21/9] bg-gray-950 rounded-[4rem] overflow-hidden shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
+                <iframe 
+                  className="size-full"
+                  src={getEmbedUrl(liveVideo.videoUrl)}
+                  title={liveVideo.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowFullScreen
+                ></iframe>
                 
-                <div className="absolute top-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20">
-                   <Radio className="size-4" /> LIVE
-                </div>
-
-                <div className="absolute bottom-12 left-12 right-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                   <div className="space-y-4 max-w-2xl">
-                      <h3 className="text-2xl md:text-4xl font-black text-white italic tracking-tighter uppercase leading-tight drop-shadow-2xl">
-                         {liveVideo.title}
-                      </h3>
-                      <p className="text-white/60 font-bold italic text-sm md:text-md line-clamp-2">
-                         {liveVideo.description}
-                      </p>
-                   </div>
-                   <button className="shrink-0 px-12 py-5 bg-primary text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center gap-4">
-                      अभी देखें <Play className="size-5 fill-current" />
-                   </button>
-                </div>
+                {liveVideo.isLive && (
+                  <div className="absolute top-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20 pointer-events-none">
+                    <Radio className="size-4" /> LIVE NOW
+                  </div>
+                )}
             </div>
         </section>
       )}
@@ -182,7 +180,7 @@ export function HomePage() {
                       </div>
                       <div>
                          <p className="text-[32px] font-black italic tracking-tighter leading-none">{memberCount}+</p>
-                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">कुल सद्स्य</p>
+                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">कुल सदस्य</p>
                       </div>
                    </div>
                    <div className="flex items-center gap-6">

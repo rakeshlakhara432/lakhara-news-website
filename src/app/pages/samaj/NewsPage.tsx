@@ -6,10 +6,14 @@ export function NewsPage() {
   const [news, setNews] = useState<NewsPost[]>([]);
   const [videos, setVideos] = useState<VideoPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeVideo, setActiveVideo] = useState<VideoPost | null>(null);
 
   useEffect(() => {
     const unsub1 = samajService.subscribeToSamajNews(setNews);
-    const unsub2 = samajService.subscribeToVideos(setVideos);
+    const unsub2 = samajService.subscribeToVideos((data) => {
+       setVideos(data);
+       if (!activeVideo) setActiveVideo(data.find(v => v.isLive) || data[0]);
+    });
     
     // Slight delay to ensure data load
     const timer = setTimeout(() => setIsLoading(false), 800);
@@ -20,6 +24,15 @@ export function NewsPage() {
     };
   }, []);
 
+  const getEmbedUrl = (url: string) => {
+    if (!url) return "";
+    let vidId = "";
+    if (url.includes("v=")) vidId = url.split("v=")[1].split("&")[0];
+    else if (url.includes("youtu.be/")) vidId = url.split("youtu.be/")[1].split("?")[0];
+    else return url;
+    return `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-20">
@@ -27,9 +40,6 @@ export function NewsPage() {
       </div>
     );
   }
-
-  const liveVideo = videos.find(v => v.isLive);
-  const otherVideos = videos.filter(v => v.id !== liveVideo?.id);
 
   return (
     <div className="space-y-24 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">
@@ -45,57 +55,57 @@ export function NewsPage() {
          </div>
       </section>
 
-      {/* 📺 LIVE / FEATURED VIDEO SECTION */}
-      {(liveVideo || videos.length > 0) && (
+      {/* 📺 DIGITAL STUDIO (LIVE / FEATURED VIDEO) */}
+      {activeVideo && (
         <section className="max-w-6xl mx-auto px-6">
            <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8 mb-12">
               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
-                 लाइव <span className="text-primary italic">प्रसारण</span>
+                 डिजिटल <span className="text-primary italic">स्टूडियो</span>
               </h2>
            </div>
 
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-              {/* MAIN VIDEO */}
-              <div className="lg:col-span-2 relative aspect-video bg-gray-950 rounded-[4rem] overflow-hidden group shadow-bhagva-lg border-[6px] border-white">
-                 <img src={liveVideo?.thumbnailUrl || "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&q=80&w=2000"} className="size-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[10s]" />
-                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent p-12 space-y-6">
-                    {liveVideo?.isLive && (
-                      <div className="inline-flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse">
-                        <Radio className="size-4" /> LIVE NOW
-                      </div>
-                    )}
-                    <h3 className="text-3xl font-black text-white italic tracking-tighter leading-tight uppercase">{liveVideo?.title || "समीक्षा एवं विशेष चर्चा"}</h3>
-                    <p className="text-white/60 font-bold italic text-sm line-clamp-2">{liveVideo?.description || "समाज के विकास की नई दिशा और आगामी योजनाओं पर एक विशेष चर्चा।"}</p>
-                 </div>
-                 <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="size-24 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-125 transition-transform border-[6px] border-white/20">
-                       <Play className="size-10 fill-current" />
-                    </button>
-                 </div>
+              {/* MAIN VIDEO PLAYER */}
+              <div className="lg:col-span-2 relative aspect-video bg-gray-950 rounded-[4rem] overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
+                 <iframe 
+                    className="size-full"
+                    src={getEmbedUrl(activeVideo.videoUrl)}
+                    title={activeVideo.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  ></iframe>
+                 
+                 {activeVideo.isLive && (
+                    <div className="absolute top-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20 pointer-events-none">
+                      <Radio className="size-4" /> LIVE NOW
+                    </div>
+                 )}
               </div>
 
               {/* VIDEO PLAYLIST */}
               <div className="space-y-6 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
-                 {otherVideos.map((v, i) => (
-                   <div key={v.id || i} className="group/item flex items-center gap-6 p-4 bg-white rounded-3xl border border-gray-100 hover:shadow-bhagva transition-all cursor-pointer">
+                 <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic mb-6">Archive Broadcasts</h4>
+                 {videos.map((v) => (
+                   <div 
+                    key={v.id} 
+                    onClick={() => setActiveVideo(v)}
+                    className={`group/item flex items-center gap-6 p-4 rounded-3xl border transition-all cursor-pointer ${activeVideo.id === v.id ? 'bg-primary/5 border-primary shadow-bhagva-sm' : 'bg-white border-gray-100 hover:shadow-bhagva'}`}
+                   >
                       <div className="relative size-24 shrink-0 rounded-2xl overflow-hidden bg-gray-900 shadow-lg">
                          <img src={v.thumbnailUrl || "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=500"} className="size-full object-cover opacity-70 group-hover/item:scale-110 transition-transform" />
                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Play className="size-4 text-white fill-current opacity-60 group-hover/item:opacity-100" />
+                            <Play className={`size-4 fill-current ${activeVideo.id === v.id ? 'text-primary' : 'text-white'}`} />
                          </div>
                       </div>
                       <div className="space-y-2">
                          <h4 className="text-[12px] font-black text-gray-950 uppercase italic leading-tight line-clamp-2">{v.title}</h4>
-                         <p className="text-[9px] font-black text-primary uppercase tracking-widest italic opacity-60">BROADCAST</p>
+                         <p className="text-[9px] font-black text-primary uppercase tracking-widest italic opacity-60">
+                           {v.isLive ? 'LIVE STREAM' : 'BROADCAST'}
+                         </p>
                       </div>
                    </div>
                  ))}
-                 {otherVideos.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center text-center p-10 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100 italic">
-                       <Video className="size-10 text-gray-200 mb-4" />
-                       <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest italic">More videos coming soon</p>
-                    </div>
-                 )}
               </div>
            </div>
         </section>
