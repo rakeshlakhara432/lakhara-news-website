@@ -1,5 +1,6 @@
 import { Search, Filter, User, MapPin, Phone, Mail, ChevronRight, Users, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 
 export function DirectoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
