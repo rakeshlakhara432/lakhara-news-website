@@ -184,7 +184,7 @@ export function PublicLayout() {
            <span className="text-[8px] font-black uppercase tracking-widest">परिचय</span>
         </Link>
         <Link to="/register" className="flex flex-col items-center -mt-8 relative group">
-           <div className="size-16 bg-gradient-to-tr from-primary to-secondary text-white rounded-[2rem] flex items-center justify-center shadow-bhagva active:scale-90 transition-all transform rotate-[-12deg] group-hover:rotate-0 group-hover:scale-110 border-[3px] border-white">
+           <div className="size-16 bg-gradient-to-tr from-primary to-secondary text-white md:rounded-[2rem] rounded-none flex items-center justify-center shadow-bhagva active:scale-90 transition-all transform rotate-[-12deg] group-hover:rotate-0 group-hover:scale-110 border-[3px] border-white">
               <PlusCircle className="size-8" />
            </div>
            <span className="text-[8px] font-black uppercase tracking-widest mt-2 text-primary">जुड़ें</span>

@@ -32,11 +32,11 @@ export function GalleryPage() {
       
       {/* 🖼️ HEADER */}
       <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
             <Camera className="size-10" />
          </div>
          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">स्मृति <span className="text-primary underline underline-offset-8 decoration-primary/20">कलश</span></h1>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">स्मृति <span className="text-primary underline underline-offset-8 decoration-primary/20">कलश</span></h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">OUR MEMORIES • PHOTOS • VIDEOS</p>
          </div>
       </section>
@@ -44,13 +44,13 @@ export function GalleryPage() {
       {/* 🎞️ VIDEO SECTION (Dynamic Slider Style) */}
       <section className="space-y-12">
          <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">वीडियो <span className="text-primary opacity-50 underline decoration-primary/20">संग्रह</span></h2>
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">वीडियो <span className="text-primary opacity-50 underline decoration-primary/20">संग्रह</span></h2>
             <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">सभी वीडियो <ArrowRight className="size-4" /></button>
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {videos.map((vid, i) => (
-               <div key={i} className="group aspect-video bg-gray-950 rounded-[4rem] overflow-hidden relative shadow-bhagva border-[6px] border-white ring-1 ring-primary/5 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+               <div key={i} className="group aspect-video bg-gray-950 md:rounded-[4rem] rounded-none overflow-hidden relative shadow-bhagva border-[6px] border-white ring-1 ring-primary/5 transition-all hover:scale-105 active:scale-95 cursor-pointer">
                   <img src={vid.image} className="size-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 group-hover:scale-125" alt="" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent"></div>
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -68,7 +68,7 @@ export function GalleryPage() {
       {/* 📸 PHOTO ARCHIVE GRID (From Firebase) */}
       <section className="space-y-12">
          <div className="flex items-center gap-6 border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">डिजिटल <span className="text-primary font-black opacity-40">आरकाइव</span></h2>
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">डिजिटल <span className="text-primary font-black opacity-40">आरकाइव</span></h2>
          </div>
          
          {isLoading ? (
@@ -78,12 +78,12 @@ export function GalleryPage() {
          ) : (
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
               {galleryImages.map((img, i) => (
-                <div key={i} className="group aspect-square bg-white rounded-[2rem] border-4 border-white shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
+                <div key={i} className="group aspect-square bg-white md:rounded-[2rem] rounded-none border-4 border-white shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
                    <img src={img.url} className="size-full object-cover grayscale group-hover:grayscale-0 transition-all group-hover:scale-125 duration-700" alt={img.caption} title={img.caption} />
                 </div>
               ))}
               {galleryImages.length === 0 && (
-                <div className="col-span-full py-20 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100 text-center">
+                <div className="col-span-full py-20 bg-gray-50 md:rounded-[3rem] rounded-none border-2 border-dashed border-gray-100 text-center">
                   <p className="text-gray-400 font-black italic uppercase tracking-widest text-[10px]">No archive assets detected</p>
                 </div>
               )}
@@ -94,13 +94,13 @@ export function GalleryPage() {
       {/* 📸 OLD ALBUMS GRID */}
       <section className="space-y-12">
          <div className="flex items-center gap-6 border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">पुराने <span className="text-primary font-black opacity-40">एलबम</span></h2>
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">पुराने <span className="text-primary font-black opacity-40">एलबम</span></h2>
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {albums.map((alb, i) => (
-              <div key={i} className="group bg-white p-8 rounded-[4rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 relative overflow-hidden text-center space-y-6">
-                 <div className="aspect-square bg-gray-50 rounded-[3rem] overflow-hidden relative border-4 border-white shadow-lg shadow-gray-200 group-hover:rotate-6 transition-all duration-700">
+              <div key={i} className="group bg-white p-8 md:rounded-[4rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 relative overflow-hidden text-center space-y-6">
+                 <div className="aspect-square bg-gray-50 md:rounded-[3rem] rounded-none overflow-hidden relative border-4 border-white shadow-lg shadow-gray-200 group-hover:rotate-6 transition-all duration-700">
                     <img src={alb.image} className="size-full object-cover grayscale group-hover:grayscale-0 transition-all group-hover:scale-125" alt="" />
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div className="absolute top-4 right-4 size-10 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white scale-0 group-hover:scale-100 transition-transform">
@@ -117,7 +117,7 @@ export function GalleryPage() {
       </section>
 
       {/* 🏛️ MEMORY WALL BANNER (Polaroids Style) */}
-      <section className="bg-gray-950 text-white rounded-[5rem] p-16 md:p-24 space-y-16 relative overflow-hidden group border-[10px] border-white shadow-2xl">
+      <section className="bg-gray-950 text-white md:rounded-[5rem] rounded-none p-8 md:p-24 space-y-16 relative overflow-hidden group border-[10px] border-white shadow-2xl">
          <div className="absolute inset-0 mandala-bg opacity-10 group-hover:scale-125 transition-transform duration-[20s]"></div>
          <div className="absolute -top-40 -left-40 size-96 bg-primary/20 blur-[15rem]"></div>
          <div className="absolute -bottom-40 -right-40 size-96 bg-secondary/10 blur-[15rem]"></div>

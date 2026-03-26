@@ -69,12 +69,12 @@ export function RegistrationPage() {
     <div className="space-y-16 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">
       
       {/* 📝 HEADER */}
-      <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
+      <section className="text-center space-y-10 pt-12 px-6">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
             <PlusCircle className="size-10" />
          </div>
-         <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">समाज <span className="text-primary underline decoration-primary/10">पंजीकरण</span></h1>
+         <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-tight md:leading-none">समाज <span className="text-primary underline decoration-primary/10">पंजीकरण</span></h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">ORGANIZE • CONNECT • GROW</p>
          </div>
       </section>
@@ -92,7 +92,7 @@ export function RegistrationPage() {
       {/* 📋 FORM AREA */}
       <section className="max-w-4xl mx-auto px-6">
          {step < 4 ? (
-           <div className="bg-white rounded-[4rem] border border-gray-100 shadow-bhagva p-12 md:p-20 space-y-12 relative overflow-hidden group">
+           <div className="bg-white md:rounded-[4rem] rounded-none border border-gray-100 shadow-bhagva p-8 md:p-20 space-y-12 relative overflow-hidden group">
               <div className="absolute top-0 right-0 size-40 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
               
               {/* STEP 1: BASIC INFO */}
@@ -152,7 +152,7 @@ export function RegistrationPage() {
                       </div>
                    </div>
 
-                   <button onClick={nextStep} className="w-full py-6 bg-primary text-white font-black rounded-[2rem] hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group">
+                   <button onClick={nextStep} className="w-full py-6 bg-primary text-white font-black md:rounded-[2rem] rounded-none hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group">
                       अगला चरण <ArrowRight className="size-5 group-hover:translate-x-3 transition-transform" />
                    </button>
                 </div>
@@ -185,8 +185,8 @@ export function RegistrationPage() {
                    </div>
 
                    <div className="flex gap-4">
-                      <button onClick={() => setStep(1)} className="px-12 py-5 bg-gray-100 text-gray-400 font-black rounded-[2rem] hover:bg-gray-200 transition-all text-xs tracking-widest uppercase italic">पीछे</button>
-                      <button onClick={nextStep} className="flex-grow py-5 bg-primary text-white font-black rounded-[2rem] hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group">
+                      <button onClick={() => setStep(1)} className="px-12 py-5 bg-gray-100 text-gray-400 font-black md:rounded-[2rem] rounded-none hover:bg-gray-200 transition-all text-xs tracking-widest uppercase italic">पीछे</button>
+                      <button onClick={nextStep} className="flex-grow py-5 bg-primary text-white font-black md:rounded-[2rem] rounded-none hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group">
                          अंतिम विवरण <ArrowRight className="size-5 group-hover:translate-x-3 transition-transform" />
                       </button>
                    </div>
@@ -201,7 +201,7 @@ export function RegistrationPage() {
                       <p className="text-gray-400 font-bold italic text-[10px] uppercase tracking-widest">Verfying Identity</p>
                    </div>
 
-                   <div className="bg-amber-50 rounded-[2rem] p-10 border border-amber-100 space-y-6">
+                   <div className="bg-amber-50 md:rounded-[2rem] rounded-none p-10 border border-amber-100 space-y-6">
                       <div className="flex items-center gap-4 text-amber-600">
                          <ShieldAlert className="size-6 shrink-0" />
                          <span className="text-sm font-black uppercase italic tracking-tighter">महत्वपूर्ण सूचना</span>
@@ -220,11 +220,11 @@ export function RegistrationPage() {
                    </div>
 
                    <div className="flex gap-4">
-                      <button onClick={() => setStep(2)} className="px-12 py-5 bg-gray-100 text-gray-400 font-black rounded-[2rem] hover:bg-gray-200 transition-all text-xs tracking-widest uppercase italic border-none outline-none">पीछे</button>
+                      <button onClick={() => setStep(2)} className="px-12 py-5 bg-gray-100 text-gray-400 font-black md:rounded-[2rem] rounded-none hover:bg-gray-200 transition-all text-xs tracking-widest uppercase italic border-none outline-none">पीछे</button>
                       <button 
                         onClick={handleSubmit} 
                         disabled={isSubmitting}
-                        className="flex-grow py-5 bg-gray-950 text-white font-black rounded-[2rem] hover:bg-primary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group disabled:opacity-50 border-none outline-none"
+                        className="flex-grow py-5 bg-gray-950 text-white font-black md:rounded-[2rem] rounded-none hover:bg-primary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 group disabled:opacity-50 border-none outline-none"
                       >
                          {isSubmitting ? <Loader2 className="size-5 animate-spin" /> : <>पंजीकरण समाप्त करें <Send className="size-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" /></>}
                       </button>
@@ -234,7 +234,7 @@ export function RegistrationPage() {
            </div>
          ) : (
            /* SUCCESS STEP */
-           <div className="bg-white rounded-[4rem] p-12 md:p-24 text-center space-y-10 shadow-bhagva-lg border border-primary/5 animate-in zoom-in-95 duration-1000">
+           <div className="bg-white md:rounded-[4rem] rounded-none p-12 md:p-24 text-center space-y-10 shadow-bhagva-lg border border-primary/5 animate-in zoom-in-95 duration-1000">
               <div className="size-32 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto shadow-inner shadow-green-100 mb-8">
                  <CheckCircle className="size-16" />
               </div>
@@ -245,8 +245,8 @@ export function RegistrationPage() {
                  </p>
               </div>
               <div className="pt-10 flex flex-wrap justify-center gap-6">
-                 <button onClick={() => navigate("/")} className="px-16 py-6 bg-gray-950 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-xl">होम पेज पर जाएं</button>
-                 <button onClick={() => navigate("/news")} className="px-16 py-6 bg-primary/5 text-primary border border-primary/10 rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-primary/10 transition-all italic">समाज समाचार देखें</button>
+                 <button onClick={() => navigate("/")} className="px-16 py-6 bg-gray-950 text-white md:rounded-[2rem] rounded-none font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-xl">होम पेज पर जाएं</button>
+                 <button onClick={() => navigate("/news")} className="px-16 py-6 bg-primary/5 text-primary border border-primary/10 md:rounded-[2rem] rounded-none font-black text-[10px] uppercase tracking-widest hover:bg-primary/10 transition-all italic">समाज समाचार देखें</button>
               </div>
            </div>
          )}

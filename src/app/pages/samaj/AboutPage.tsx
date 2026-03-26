@@ -6,11 +6,11 @@ export function AboutPage() {
       
       {/* 📜 HERO / TITLE */}
       <section className="text-center space-y-8 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-bounce">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-bounce">
             <Flag className="size-10" />
          </div>
          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">लखारा समाज का <span className="text-primary">गौरवशाली</span> इतिहास</h1>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">लखारा समाज का <span className="text-primary">गौरवशाली</span> इतिहास</h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">OUR HISTORY • VISION • MISSION</p>
          </div>
       </section>
@@ -34,7 +34,7 @@ export function AboutPage() {
          </div>
          <div className="relative group">
             <div className="absolute inset-x-0 -bottom-10 h-2 bg-primary/20 blur-2xl"></div>
-            <img src="https://images.unsplash.com/photo-1548013146-72479768b921?auto=format&fit=crop&q=80&w=1000" className="w-full h-[400px] object-cover rounded-[4rem] shadow-bhagva border-[8px] border-white group-hover:scale-105 transition-all duration-700" alt="Cultural Heritage" />
+            <img src="https://images.unsplash.com/photo-1548013146-72479768b921?auto=format&fit=crop&q=80&w=1000" className="w-full h-[400px] object-cover md:rounded-[4rem] rounded-none shadow-bhagva border-[8px] border-white group-hover:scale-105 transition-all duration-700" alt="Cultural Heritage" />
          </div>
       </section>
 
@@ -54,7 +54,7 @@ export function AboutPage() {
              color: "bg-amber-50 text-amber-600 border-amber-100" 
            }
          ].map((item, i) => (
-           <div key={i} className={`p-10 border rounded-[3rem] shadow-sm space-y-6 hover:shadow-bhagva transition-all hover:-translate-y-2 ${item.color}`}>
+           <div key={i} className={`p-10 border md:rounded-[3rem] rounded-none shadow-sm space-y-6 hover:shadow-bhagva transition-all hover:-translate-y-2 ${item.color}`}>
               <item.icon className="size-10" />
               <h3 className="text-2xl font-black italic tracking-tighter text-gray-950 uppercase">{item.title}</h3>
               <p className="font-bold text-gray-500 italic text-sm leading-relaxed">{item.desc}</p>
@@ -73,7 +73,7 @@ export function AboutPage() {
               { label: "सहयोग", icon: Target }
             ].map((v, i) => (
               <div key={i} className="flex flex-col items-center gap-4 group">
-                 <div className="size-16 bg-white border border-gray-100 rounded-[2rem] flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all transform rotate-[-8deg] group-hover:rotate-0">
+                 <div className="size-16 bg-white border border-gray-100 md:rounded-[2rem] rounded-none flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all transform rotate-[-8deg] group-hover:rotate-0">
                     <v.icon className="size-8" />
                  </div>
                  <span className="font-black text-[10px] uppercase tracking-widest text-gray-950 italic">{v.label}</span>

@@ -30,11 +30,11 @@ export function CommitteePage() {
       
       {/* 🏛️ COMMITTEE TITLE */}
       <section className="text-center space-y-8 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse">
             <Shield className="size-10" />
          </div>
          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">कार्यकारिणी <span className="text-primary text-2xl opacity-50 block mt-2">समिति सद्स्य</span></h1>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">कार्यकारिणी <span className="text-primary text-2xl opacity-50 block mt-2">समिति सद्स्य</span></h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">OUR STRENGTH • OUR LEADERS</p>
          </div>
       </section>
@@ -42,15 +42,15 @@ export function CommitteePage() {
       {/* 🏢 PRESIDENT PROFILE (Focus Area) */}
       {president && (
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="bg-gray-950 text-white rounded-[4rem] p-12 md:p-20 relative overflow-hidden group shadow-bhagva border-[8px] border-white ring-1 ring-primary/10">
+          <div className="bg-gray-950 text-white md:rounded-[4rem] rounded-none p-8 md:p-20 relative overflow-hidden group shadow-bhagva border-[8px] border-white ring-1 ring-primary/10">
               <div className="absolute inset-x-0 -bottom-1/2 h-full bg-primary/10 blur-[10rem] group-hover:bg-primary/20 transition-all"></div>
               <div className="absolute top-10 left-10 text-primary">
                 <Star className="size-10 fill-current animate-spin-slow" />
               </div>
               <div className="relative z-10 space-y-10">
-                <div className="size-40 mx-auto bg-white rounded-[3rem] p-3 shadow-2xl overflow-hidden transform rotate-[-12deg] group-hover:rotate-0 transition-all duration-700">
+                <div className="size-40 mx-auto bg-white md:rounded-[3rem] rounded-none p-3 shadow-2xl overflow-hidden transform rotate-[-12deg] group-hover:rotate-0 transition-all duration-700">
                     {president.photoUrl ? (
-                      <img src={president.photoUrl} className="size-full object-cover rounded-[2.5rem]" alt={president.name} />
+                      <img src={president.photoUrl} className="size-full object-cover md:rounded-[2.5rem] rounded-none" alt={president.name} />
                     ) : (
                       <div className="size-full bg-gray-100 flex items-center justify-center text-gray-400 text-6xl font-black">{president.name[0]}</div>
                     )}
@@ -78,7 +78,7 @@ export function CommitteePage() {
               <h2 className="text-3xl font-black text-gray-950 tracking-tighter italic leading-tight uppercase">समाज के <span className="text-primary opacity-50">प्रमुख चेहरे</span></h2>
               <div className="space-y-6">
                 {others.slice(0, 3).map((m, i) => (
-                  <div key={i} className="group flex items-center justify-between p-6 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:bg-primary/5 cursor-pointer">
+                  <div key={i} className="group flex items-center justify-between p-6 bg-white md:rounded-[2.5rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:bg-primary/5 cursor-pointer">
                       <div className="flex items-center gap-6">
                         <div className="size-14 bg-gray-50 border border-gray-100 text-gray-400 rounded-2xl flex items-center justify-center font-black group-hover:bg-primary group-hover:text-white group-hover:border-transparent transition-all">
                             {m.name[0]}
@@ -101,16 +101,16 @@ export function CommitteePage() {
       {/* 📋 FULL COMMITTEE LIST TABLE / GRID */}
       <section className="space-y-12">
          <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
                समिति <span className="text-primary">सदस्य गण</span>
             </h2>
          </div>
          
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {others.map((m, i) => (
-                <div key={i} className="group p-8 bg-white rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all text-center space-y-4 relative overflow-hidden">
+                <div key={i} className="group p-8 bg-white md:rounded-[3rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all text-center space-y-4 relative overflow-hidden">
                   <div className="absolute top-0 right-0 size-16 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
-                  <div className="size-16 mx-auto bg-gray-50 text-gray-300 rounded-[2rem] flex items-center justify-center shadow-inner group-hover:bg-primary/5 transition-colors">
+                  <div className="size-16 mx-auto bg-gray-50 text-gray-300 md:rounded-[2rem] rounded-none flex items-center justify-center shadow-inner group-hover:bg-primary/5 transition-colors">
                       <User className="size-8" />
                   </div>
                   <div>

@@ -19,17 +19,17 @@ export function EventsPage() {
       
       {/* 🎉 HEADER */}
       <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-bounce border border-primary/10">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-bounce border border-primary/10">
             <Calendar className="size-10" />
          </div>
          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">समाज के <span className="text-primary underline decoration-primary/10 underline-offset-8">कार्यक्रम</span></h1>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">समाज के <span className="text-primary underline decoration-primary/10 underline-offset-8">कार्यक्रम</span></h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">EVENTS • CELEBRATION • UNITY</p>
          </div>
       </section>
 
       {/* 📅 FEATURED EVENT (Largest) */}
-      <section className="relative h-[400px] md:h-[500px] bg-gray-950 text-white rounded-[5rem] overflow-hidden group shadow-bhagva border-[10px] border-white ring-1 ring-primary/20">
+      <section className="relative h-[400px] md:h-[500px] bg-gray-950 text-white md:rounded-[5rem] rounded-none overflow-hidden group shadow-bhagva border-[10px] border-white ring-1 ring-primary/20">
          <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=2000" className="size-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-[10s]" alt="Main Event" />
          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent"></div>
          <div className="absolute inset-x-12 bottom-12 space-y-8 animate-in fade-in slide-in-from-bottom-10 delay-500">
@@ -58,14 +58,14 @@ export function EventsPage() {
       {/* 🗓️ UPCOMING LIST */}
       <section className="space-y-12">
          <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
                आगामी <span className="text-primary font-black">कैलेंडर</span>
             </h2>
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {upcomingEvents.map((ev, i) => (
-              <div key={i} className="group bg-white p-10 rounded-[4rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 relative overflow-hidden">
+              <div key={i} className="group bg-white p-10 md:rounded-[4rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 relative overflow-hidden">
                  <div className="absolute -top-10 -right-10 size-32 bg-primary/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                  
                  <div className="space-y-6 relative z-10">
@@ -101,15 +101,15 @@ export function EventsPage() {
       </section>
 
       {/* 📸 PAST EVENTS SNEAK PEEK */}
-      <section className="bg-gray-50 rounded-[5rem] p-16 md:p-24 space-y-16">
+      <section className="bg-gray-50 md:rounded-[5rem] rounded-none p-8 md:p-24 space-y-16">
          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-black italic tracking-tighter uppercase text-gray-950 leading-none">विगत आयोजन <span className="text-primary opacity-50 underline underline-offset-8">यादें</span></h2>
+            <h2 className="text-3xl font-black italic tracking-tighter uppercase text-gray-950 leading-tight md:leading-none">विगत आयोजन <span className="text-primary opacity-50 underline underline-offset-8">यादें</span></h2>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">MEMORIES OF PAST UNITY</p>
          </div>
          
          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[1,2,3,4].map(i => (
-              <div key={i} className="aspect-video bg-white rounded-[3rem] overflow-hidden group shadow-lg border-[6px] border-white transform rotate-[-3deg] hover:rotate-0 transition-all duration-700">
+              <div key={i} className="aspect-video bg-white md:rounded-[3rem] rounded-none overflow-hidden group shadow-lg border-[6px] border-white transform rotate-[-3deg] hover:rotate-0 transition-all duration-700">
                  <img src={`https://picsum.photos/seed/event${i}/600/400`} className="size-full object-cover grayscale group-hover:grayscale-0 transition-all" alt="" />
                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>

@@ -57,11 +57,11 @@ export function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
          <div className="flex items-center gap-6 border-l-[10px] border-primary pl-10 py-2">
             <div>
-               <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Samaj <span className="text-primary italic">Control</span> Hub</h1>
+               <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">Samaj <span className="text-primary italic">Control</span> Hub</h1>
                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2 italic shadow-inner">Real-time Community Intelligence v4.0</p>
             </div>
          </div>
-         <div className="flex items-center gap-4 px-8 py-3 bg-gray-950 text-white rounded-[2rem] shadow-2xl border border-white/5">
+         <div className="flex items-center gap-4 px-8 py-3 bg-gray-950 text-white md:rounded-[2rem] rounded-none shadow-2xl border border-white/5">
             <Activity className="size-4 text-primary animate-pulse" />
             <span className="text-[9px] font-black uppercase tracking-[0.3em] italic">System Active &bull; Verified</span>
          </div>
@@ -75,13 +75,13 @@ export function AdminDashboard() {
           { label: "Live Events", val: stats.events, icon: Calendar, color: "bg-amber-50 text-amber-600" },
           { label: "Executive Council", val: stats.committee, icon: ShieldCheck, color: "bg-gray-100 text-gray-950" }
         ].map((stat, i) => (
-          <div key={i} className="group bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
+          <div key={i} className="group bg-white md:rounded-[2.5rem] rounded-none border border-gray-100 p-8 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg] scale-150 group-hover:scale-175 transition-transform duration-700"></div>
             <div className={`size-14 ${stat.color} rounded-[1.5rem] flex items-center justify-center mb-6 shadow-md shadow-black/5`}>
               <stat.icon className="size-7" />
             </div>
             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">{stat.label}</p>
-            <p className="text-4xl font-black text-gray-950 tracking-tighter leading-none italic">{stat.val}</p>
+            <p className="text-4xl font-black text-gray-950 tracking-tighter leading-tight md:leading-none italic">{stat.val}</p>
           </div>
         ))}
       </div>
@@ -90,7 +90,7 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
          
          {/* GROWTH TREND */}
-         <div className="xl:col-span-2 bg-white rounded-[3.5rem] border border-gray-100 p-10 shadow-sm relative overflow-hidden">
+         <div className="xl:col-span-2 bg-white md:rounded-[3.5rem] rounded-none border border-gray-100 p-6 md:p-10 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between mb-12">
                <h2 className="text-sm font-black text-gray-950 uppercase tracking-widest flex items-center gap-4 italic">
                   <TrendingUp className="size-5 text-primary" /> Community Growth Analytics
@@ -121,7 +121,7 @@ export function AdminDashboard() {
          </div>
 
          {/* 🎯 DISTRIBUTION PIE */}
-         <div className="bg-white rounded-[3.5rem] border border-gray-100 p-10 shadow-sm flex flex-col items-center">
+         <div className="bg-white md:rounded-[3.5rem] rounded-none border border-gray-100 p-6 md:p-10 shadow-sm flex flex-col items-center">
             <h2 className="text-sm font-black text-gray-950 uppercase tracking-widest mb-10 italic text-center">Entity Distribution</h2>
             <div className="flex-grow w-full h-[240px]">
                <ResponsiveContainer width="100%" height="100%">
@@ -161,12 +161,12 @@ export function AdminDashboard() {
           { label: "Archived Media", val: stats.gallery, icon: ImageIcon, color: "text-indigo-500 bg-indigo-50" },
           { label: "Total Queries", val: stats.messages, icon: MessageCircle, color: "text-emerald-500 bg-emerald-50" }
         ].map((stat, i) => (
-          <div key={i} className="flex items-center gap-6 p-6 bg-white rounded-[2rem] border border-gray-100 hover:border-primary/20 transition-all cursor-default">
+          <div key={i} className="flex items-center gap-6 p-6 bg-white md:rounded-[2rem] rounded-none border border-gray-100 hover:border-primary/20 transition-all cursor-default">
              <div className={`size-12 ${stat.color} rounded-2xl flex items-center justify-center shadow-inner`}>
                 <stat.icon className="size-6" />
              </div>
              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">{stat.label}</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-tight md:leading-none mb-1.5">{stat.label}</p>
                 <p className="text-xl font-black text-gray-950 italic">{stat.val}</p>
              </div>
           </div>

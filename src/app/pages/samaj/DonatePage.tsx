@@ -6,18 +6,18 @@ export function DonatePage() {
       
       {/* 💰 HEADER */}
       <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
             <Heart className="size-10 fill-current" />
          </div>
          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">समाज <span className="text-primary underline underline-offset-8 decoration-primary/20">सहयोग</span> निधि</h1>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">समाज <span className="text-primary underline underline-offset-8 decoration-primary/20">सहयोग</span> निधि</h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">GIVE BACK • GROW TOGETHER</p>
          </div>
       </section>
 
       {/* 🏗️ DONATION CAMPAIGNS (Bhagva Highlight) */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-         <div className="bg-gray-950 text-white rounded-[5rem] p-16 md:p-24 relative overflow-hidden group shadow-bhagva border-[10px] border-white ring-1 ring-primary/20">
+         <div className="bg-gray-950 text-white md:rounded-[5rem] rounded-none p-8 md:p-24 relative overflow-hidden group shadow-bhagva border-[10px] border-white ring-1 ring-primary/20">
             <div className="absolute inset-0 mandala-bg opacity-5 group-hover:scale-125 transition-transform duration-[15s]"></div>
             <div className="relative z-10 space-y-10">
                <div className="inline-flex items-center gap-4 bg-primary text-white px-8 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic shadow-2xl">
@@ -47,7 +47,7 @@ export function DonatePage() {
          {/* 💳 PAYMENT METHODS */}
          <div className="space-y-10">
             <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8">
-               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">सहयोग <span className="text-primary font-black opacity-30">तरीके</span></h2>
+               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">सहयोग <span className="text-primary font-black opacity-30">तरीके</span></h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -57,10 +57,10 @@ export function DonatePage() {
                  { label: "समाज कार्यालय (नगद)", val: "कार्यालय रसीद अनिवार्य", icon: MapPin, color: "bg-red-50 text-red-600 border-red-100" },
                  { label: "ऑनलाइन डिजिटल पेमेंट", val: "वेबसाइट पेमेंट गेटवे", icon: Network, color: "bg-green-50 text-green-600 border-green-100" }
                ].map((item, i) => (
-                 <div key={i} className={`group p-10 border rounded-[4rem] shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 text-center space-y-6 ${item.color}`}>
+                 <div key={i} className={`group p-10 border md:rounded-[4rem] rounded-none shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 text-center space-y-6 ${item.color}`}>
                     <item.icon className="size-12 mx-auto" />
                     <div>
-                       <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-2">{item.label}</h3>
+                       <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-tight md:leading-none mb-2">{item.label}</h3>
                        <p className="text-sm font-black text-gray-950 italic tracking-tighter truncate">{item.val}</p>
                     </div>
                  </div>
@@ -70,7 +70,7 @@ export function DonatePage() {
       </section>
 
       {/* 🛡️ TRANSPARENCY SHIELD */}
-      <section className="bg-gray-50 rounded-[5rem] p-16 md:p-24 flex flex-col md:flex-row items-center gap-16 relative overflow-hidden group border-4 border-white shadow-lg">
+      <section className="bg-gray-50 md:rounded-[5rem] rounded-none p-8 md:p-24 flex flex-col md:flex-row items-center gap-16 relative overflow-hidden group border-4 border-white shadow-lg">
          <div className="size-40 bg-white rounded-[3rem] p-4 shadow-2xl shrink-0 group-hover:rotate-12 transition-transform duration-700 relative overflow-hidden">
             <ShieldCheck className="size-full text-primary" />
             <div className="absolute inset-0 mandala-bg opacity-10"></div>

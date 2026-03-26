@@ -60,11 +60,11 @@ export function NewsPage() {
       
       {/* 📢 NEWS HEADER */}
       <section className="text-center space-y-8 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
             <Megaphone className="size-10" />
          </div>
-         <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">समाज <span className="text-primary underline decoration-primary/10 italic">समाचार</span></h1>
+         <div className="space-y-4 px-6 md:px-0">
+            <h1 className="text-4xl md:text-6xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-tight md:leading-none">समाज <span className="text-primary underline decoration-primary/10 italic">समाचार</span></h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">COMMUNITY UPDATES • OFFICIAL NOTICES</p>
          </div>
       </section>
@@ -73,14 +73,14 @@ export function NewsPage() {
       {activeVideo && (
         <section className="max-w-6xl mx-auto px-6">
            <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8 mb-12">
-              <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+              <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
                  डिजिटल <span className="text-primary italic">स्टूडियो</span>
               </h2>
            </div>
 
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               {/* MAIN VIDEO PLAYER */}
-              <div className="lg:col-span-2 relative aspect-video bg-gray-950 rounded-[4rem] overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
+              <div className="lg:col-span-2 relative aspect-video bg-gray-950 md:rounded-[4rem] rounded-none overflow-hidden group shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
                  <iframe 
                     className="size-full"
                     src={getEmbedUrl(activeVideo.videoUrl)}
@@ -128,14 +128,14 @@ export function NewsPage() {
       {/* 📰 NEWS FEED SECTION */}
       <section className="max-w-6xl mx-auto px-6">
          <div className="flex items-center gap-4 border-l-[8px] border-primary pl-8 mb-12">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
                ताज़ा <span className="text-primary italic">सुर्खियाँ</span>
             </h2>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {news.map((item) => (
-               <div key={item.id} className="group flex flex-col bg-white rounded-[4rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden h-full">
+               <div key={item.id} className="group flex flex-col bg-white md:rounded-[4rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden h-full">
                   <div className="aspect-[16/10] bg-gray-100 relative overflow-hidden">
                      {item.imageUrl ? (
                         <img src={item.imageUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.title} />
@@ -174,7 +174,7 @@ export function NewsPage() {
          </div>
 
          {news.length === 0 && (
-            <div className="text-center py-40 bg-gray-50 rounded-[4rem] border-4 border-dashed border-gray-100">
+            <div className="text-center py-40 bg-gray-50 md:rounded-[4rem] rounded-none border-4 border-dashed border-gray-100">
                <p className="text-gray-300 font-black italic uppercase tracking-widest text-sm">अभी कोई नया समाचार उपलब्ध नहीं है</p>
             </div>
          )}

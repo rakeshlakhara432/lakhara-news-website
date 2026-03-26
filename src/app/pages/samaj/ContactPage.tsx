@@ -29,18 +29,18 @@ export function ContactPage() {
       
       {/* 📞 HEADER */}
       <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
+         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
             <Phone className="size-10" />
          </div>
-         <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">हमसे <span className="text-primary underline decoration-primary/10 underline-offset-8">संपर्क</span> सूत्र</h1>
+         <div className="space-y-4 px-6">
+            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">हमसे <span className="text-primary underline decoration-primary/10 underline-offset-8">संपर्क</span> सूत्र</h1>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">GET IN TOUCH • WE ARE HERE</p>
          </div>
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
          {/* 📝 CONTACT FORM */}
-         <section className="bg-white p-12 md:p-20 rounded-[4rem] border border-gray-100 shadow-bhagva space-y-12 relative overflow-hidden group">
+         <section className="bg-white p-8 md:p-20 md:rounded-[4rem] rounded-none border border-gray-100 shadow-bhagva space-y-12 relative overflow-hidden group">
             <div className="absolute top-0 right-0 size-40 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
             
             <div className="space-y-4">
@@ -93,7 +93,7 @@ export function ContactPage() {
                 { label: "स्थान", val: "पली, राजस्थान", icon: MapPin, color: "bg-red-50 text-red-600" },
                 { label: "वेबसाइट", val: "lakhara-news-website.web.app", icon: Globe, color: "bg-amber-50 text-amber-600" }
                ].map((item, i) => (
-                 <div key={i} className="group p-8 bg-white rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-1 text-center space-y-4">
+                 <div key={i} className="group p-8 bg-white md:rounded-[3rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-1 text-center space-y-4">
                     <div className={`size-14 mx-auto ${item.color} rounded-2xl flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform`}>
                        <item.icon className="size-6" />
                     </div>
@@ -106,7 +106,7 @@ export function ContactPage() {
             </div>
             
             {/* 📍 MAP PLACEHOLDER */}
-            <div className="bg-gray-100 h-[300px] md:h-[400px] rounded-[5rem] overflow-hidden relative group border-[10px] border-white shadow-2xl transition-all">
+            <div className="bg-gray-100 h-[300px] md:h-[400px] md:rounded-[5rem] rounded-none overflow-hidden relative group border-[10px] border-white shadow-2xl transition-all">
                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000" className="size-full object-cover group-hover:scale-110 transition-transform duration-[10s]" alt="Map" />
                <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 bg-white/95 backdrop-blur-3xl px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-[0.3em] text-primary shadow-2xl italic border border-primary/20">
@@ -114,7 +114,7 @@ export function ContactPage() {
                </div>
             </div>
             
-            <div className="bg-gray-950 text-white rounded-[4rem] p-10 flex flex-col md:flex-row items-center gap-10 shadow-2xl relative overflow-hidden group">
+            <div className="bg-gray-950 text-white md:rounded-[4rem] rounded-none p-10 flex flex-col md:flex-row items-center gap-10 shadow-2xl relative overflow-hidden group">
                <div className="absolute inset-0 mandala-bg opacity-5 group-hover:scale-125 transition-transform duration-[10s]"></div>
                <div className="size-20 bg-primary/20 text-primary rounded-3xl flex items-center justify-center shrink-0 border border-primary/20 group-hover:scale-110 transition-transform">
                   <Flag className="size-10 fill-current" />
