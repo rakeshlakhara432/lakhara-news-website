@@ -1,6 +1,29 @@
-import { Phone, Mail, MapPin, Globe, Flag, Heart, MessageCircle, Send, ArrowRight } from "lucide-react";
+import { Phone, Mail, MapPin, Globe, Flag, Heart, MessageCircle, Send, ArrowRight, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { samajService } from "../../services/samajService";
+import { toast } from "sonner";
 
 export function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    subject: "सामान्य पूछताछ",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await samajService.addMessage(formData);
+      toast.success("आपका संदेश भेज दिया गया है। हम जल्द ही आपसे संपर्क करेंगे।");
+      setFormData({ name: "", subject: "सामान्य पूछताछ", message: "" });
+    } catch (err) {
+      toast.error("संदेश भेजने में त्रुटि हुई।");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="space-y-24 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">
       
@@ -25,12 +48,12 @@ export function ContactPage() {
                <p className="text-gray-400 font-bold italic text-[10px] uppercase tracking-widest">हम आपके सुझावों का स्वागत करते हैं</p>
             </div>
 
-            <form className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8">
                <div className="space-y-3">
                   <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">पूरा नाम</label>
                   <div className="flex items-center gap-4 px-8 py-5 bg-gray-50/50 rounded-2xl border border-gray-100 focus-within:border-primary transition-all">
                      <Mail className="size-5 text-gray-300" />
-                     <input type="text" placeholder="नाम..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic" />
+                     <input required type="text" placeholder="नाम..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                   </div>
                </div>
                
@@ -38,7 +61,7 @@ export function ContactPage() {
                   <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">आपका विषय</label>
                   <div className="flex items-center gap-4 px-8 py-5 bg-gray-50/50 rounded-2xl border border-gray-100 focus-within:border-primary transition-all">
                      <Heart className="size-5 text-gray-300" />
-                     <select className="bg-transparent border-none outline-none w-full font-bold text-xs italic text-gray-500">
+                     <select required className="bg-transparent border-none outline-none w-full font-bold text-xs italic text-gray-500" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})}>
                         <option>सामान्य पूछताछ</option>
                         <option>पंजीकरण सहायता</option>
                         <option>सुझाव</option>
@@ -51,12 +74,12 @@ export function ContactPage() {
                   <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">विस्तृत संदेश</label>
                   <div className="flex items-start gap-4 px-8 py-6 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 focus-within:border-primary transition-all">
                      <MessageCircle className="size-6 text-gray-300 mt-1" />
-                     <textarea rows={4} placeholder="अपना संदेश यहाँ लिखें..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic resize-none"></textarea>
+                     <textarea required rows={4} placeholder="अपना संदेश यहाँ लिखें..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic resize-none" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
                   </div>
                </div>
 
-               <button type="submit" className="w-full py-6 bg-primary text-white font-black rounded-3xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-6 group">
-                  संदेश भेजें <Send className="size-5 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform" />
+               <button type="submit" disabled={isSubmitting} className="w-full py-6 bg-primary text-white font-black rounded-3xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-6 group disabled:opacity-50">
+                  {isSubmitting ? <Loader2 className="size-5 animate-spin" /> : <>संदेश भेजें <Send className="size-5 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform" /></>}
                </button>
             </form>
          </section>

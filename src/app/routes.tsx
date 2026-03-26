@@ -7,6 +7,11 @@ import { ManageArticles } from "./pages/admin/ManageArticles";
 import { CreateArticle } from "./pages/admin/CreateArticle";
 import { EditArticle } from "./pages/admin/EditArticle";
 import { ManageCategories } from "./pages/admin/ManageCategories";
+import { ManageMembers } from "./pages/admin/ManageMembers";
+import { ManageMatrimonial } from "./pages/admin/ManageMatrimonial";
+import { ManageEvents } from "./pages/admin/ManageEvents";
+import { ManageGallery } from "./pages/admin/ManageGallery";
+import { ManageMessages } from "./pages/admin/ManageMessages";
 import { AdminSettings } from "./pages/admin/Settings";
 import { ProfilePage } from "./pages/ProfilePage";
 import { NotFound } from "./pages/NotFound";
@@ -16,6 +21,7 @@ import { AboutPage } from "./pages/samaj/AboutPage";
 import { CommitteePage } from "./pages/samaj/CommitteePage";
 import { DirectoryPage } from "./pages/samaj/DirectoryPage";
 import { MatrimonialPage } from "./pages/samaj/MatrimonialPage";
+import { MatrimonialRegistrationPage } from "./pages/samaj/MatrimonialRegistrationPage";
 import { RegistrationPage } from "./pages/samaj/RegistrationPage";
 import { EventsPage } from "./pages/samaj/EventsPage";
 import { ContactPage } from "./pages/samaj/ContactPage";
@@ -35,6 +41,7 @@ export const router = createHashRouter([
       { path: "committee", Component: CommitteePage },
       { path: "directory", Component: DirectoryPage },
       { path: "matrimonial", Component: MatrimonialPage },
+      { path: "matrimonial/register", Component: MatrimonialRegistrationPage },
       { path: "events", Component: EventsPage },
       { path: "gallery", Component: GalleryPage },
       { path: "news", Component: NewsPage },
@@ -55,6 +62,11 @@ export const router = createHashRouter([
       { path: "articles/create", Component: CreateArticle },
       { path: "articles/edit/:id", Component: EditArticle },
       { path: "categories", Component: ManageCategories },
+      { path: "members", Component: ManageMembers },
+      { path: "matrimonial", Component: ManageMatrimonial },
+      { path: "events", Component: ManageEvents },
+      { path: "gallery", Component: ManageGallery },
+      { path: "messages", Component: ManageMessages },
       { path: "settings", Component: AdminSettings },
     ],
   },

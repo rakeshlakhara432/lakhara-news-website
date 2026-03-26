@@ -1,17 +1,22 @@
 import { Search, Filter, User, MapPin, Phone, Mail, ChevronRight, Users, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
+import { samajService, Member } from "../../services/samajService";
 
 export function DirectoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const members = [
-    { name: "अजय लखारा", city: "जयपुर", occupation: "व्यवसाय", phone: "982XXXXXXX" },
-    { name: "दिनेश लखारा", city: "जोधपुर", occupation: "इंजीनियर", phone: "941XXXXXXX" },
-    { name: "रामेश्वर लखारा", city: "बीकानेर", occupation: "शिक्षक", phone: "978XXXXXXX" },
-    { name: "कविराज लखारा", city: "अजमेर", occupation: "डॉक्टर", phone: "889XXXXXXX" },
-    { name: "सुरेश लखारा", city: "चित्तौड़गढ़", occupation: "अधिवक्ता", phone: "702XXXXXXX" },
-  ];
+  const [members, setMembers] = useState<Member[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = samajService.subscribeToMembers((data) => {
+      // Only show approved members on public page
+      setMembers(data.filter(m => m.isApproved));
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const filteredMembers = members.filter(m => 
     m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 

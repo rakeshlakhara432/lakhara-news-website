@@ -1,8 +1,18 @@
-import { Image, Video, Camera, LayoutGrid, Maximize2, Flag, ArrowRight, PlayCircle, Star, History, Calendar } from "lucide-react";
-import { useState } from "react";
+import { Image, Video, Camera, LayoutGrid, Maximize2, Flag, ArrowRight, PlayCircle, Star, History, Calendar, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { samajService, GalleryImage } from "../../services/samajService";
 
 export function GalleryPage() {
-  const [filter, setFilter] = useState("all");
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = samajService.subscribeToGallery((data) => {
+      setGalleryImages(data);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const albums = [
     { title: "महासम्मेलन 2025", count: "120 फोटो", image: "https://picsum.photos/seed/alb1/800/600", category: "event" },
@@ -55,10 +65,36 @@ export function GalleryPage() {
          </div>
       </section>
 
-      {/* 📸 PHOTO ALBUMS GRID */}
+      {/* 📸 PHOTO ARCHIVE GRID (From Firebase) */}
       <section className="space-y-12">
          <div className="flex items-center gap-6 border-l-[8px] border-primary pl-8">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">फोटो <span className="text-primary font-black opacity-40">एलबम</span></h2>
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">डिजिटल <span className="text-primary font-black opacity-40">आरकाइव</span></h2>
+         </div>
+         
+         {isLoading ? (
+           <div className="flex justify-center py-20">
+             <Loader2 className="size-10 text-primary animate-spin" />
+           </div>
+         ) : (
+           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              {galleryImages.map((img, i) => (
+                <div key={i} className="group aspect-square bg-white rounded-[2rem] border-4 border-white shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
+                   <img src={img.url} className="size-full object-cover grayscale group-hover:grayscale-0 transition-all group-hover:scale-125 duration-700" alt={img.caption} title={img.caption} />
+                </div>
+              ))}
+              {galleryImages.length === 0 && (
+                <div className="col-span-full py-20 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100 text-center">
+                  <p className="text-gray-400 font-black italic uppercase tracking-widest text-[10px]">No archive assets detected</p>
+                </div>
+              )}
+           </div>
+         )}
+      </section>
+
+      {/* 📸 OLD ALBUMS GRID */}
+      <section className="space-y-12">
+         <div className="flex items-center gap-6 border-l-[8px] border-primary pl-8">
+            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">पुराने <span className="text-primary font-black opacity-40">एलबम</span></h2>
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

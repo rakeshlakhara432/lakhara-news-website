@@ -1,11 +1,18 @@
-import { Calendar, MapPin, Clock, ArrowRight, Flag, Star, Users, History, LayoutGrid } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight, Flag, Star, Users, History, LayoutGrid, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { samajService, SamajEvent } from "../../services/samajService";
 
 export function EventsPage() {
-  const upcomingEvents = [
-    { title: "महासभा वार्षिक मिलन", date: "25 मार्च 2026", time: "10:00 AM", location: "समाज भवन, दिल्ली" },
-    { title: "सांस्कृतिक संध्या", date: "05 अप्रैल 2026", time: "06:00 PM", location: "सामुदायिक केंद्र, जयपुर" },
-    { title: "युवा प्रतिभा सम्मान", date: "15 मई 2026", time: "11:00 AM", location: "ऑनलाइन (डिजिटल ज़ूम)" },
-  ];
+  const [upcomingEvents, setUpcomingEvents] = useState<SamajEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = samajService.subscribeToEvents((data) => {
+      setUpcomingEvents(data);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="space-y-24 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">

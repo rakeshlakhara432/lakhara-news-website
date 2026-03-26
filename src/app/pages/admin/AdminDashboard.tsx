@@ -1,15 +1,28 @@
+import { useState, useEffect } from "react";
 import { getArticles, getCategories } from "../../data/mockData";
-import { FileText, Eye, TrendingUp, FolderOpen, Users, Activity, Zap, Shield, Network, Globe } from "lucide-react";
+import { FileText, Eye, TrendingUp, FolderOpen, Users, Activity, Zap, Shield, Network, Globe, Heart, Calendar, MessageCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { samajService, Member, MatrimonialProfile, SamajEvent, ContactMessage } from "../../services/samajService";
 
 export function AdminDashboard() {
+  const [samajStats, setSamajStats] = useState({
+    members: 0,
+    profiles: 0,
+    events: 0,
+    messages: 0
+  });
+
+  useEffect(() => {
+    const unsub1 = samajService.subscribeToMembers(data => setSamajStats(prev => ({...prev, members: data.length})));
+    const unsub2 = samajService.subscribeToMatrimonial(data => setSamajStats(prev => ({...prev, profiles: data.length})));
+    const unsub3 = samajService.subscribeToEvents(data => setSamajStats(prev => ({...prev, events: data.length})));
+    const unsub4 = samajService.subscribeToMessages(data => setSamajStats(prev => ({...prev, messages: data.length})));
+    return () => { unsub1(); unsub2(); unsub3(); unsub4(); };
+  }, []);
+
   const articles = getArticles();
   const categories = getCategories();
-
   const totalArticles = articles.length;
-  const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
-  const breakingNews = articles.filter((a) => a.isBreaking).length;
-  const trendingArticles = articles.filter((a) => a.isTrending).length;
   const communityUsers = JSON.parse(localStorage.getItem("community_users") || "[]");
 
   // Category distribution
@@ -54,10 +67,10 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {[
           { label: "Total Articles", val: totalArticles, icon: FileText, color: "bg-orange-50 text-orange-600" },
-          { label: "Total Views", val: formatViews(totalViews), icon: Eye, color: "bg-amber-50 text-amber-600" },
-          { label: "Trending Now", val: trendingArticles, icon: TrendingUp, color: "bg-red-50 text-red-600" },
-          { label: "Node Groups", val: categories.length, icon: FolderOpen, color: "bg-primary/10 text-primary" },
-          { label: "Network Users", val: communityUsers.length, icon: Users, color: "bg-gray-100 text-gray-600" }
+          { label: "Community Members", val: samajStats.members, icon: Users, color: "bg-blue-50 text-blue-600" },
+          { label: "Matrimonial", val: samajStats.profiles, icon: Heart, color: "bg-pink-50 text-pink-600" },
+          { label: "Samaj Events", val: samajStats.events, icon: Calendar, color: "bg-amber-50 text-amber-600" },
+          { label: "Messages", val: samajStats.messages, icon: MessageCircle, color: "bg-primary/10 text-primary" }
         ].map((stat, i) => (
           <div key={i} className="bg-white rounded-[1.5rem] border border-gray-100 p-5 shadow-sm hover:shadow-bhagva transition-all group overflow-hidden relative">
             <div className="absolute top-0 right-0 size-16 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
