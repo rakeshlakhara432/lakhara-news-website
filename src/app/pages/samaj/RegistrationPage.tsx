@@ -5,6 +5,7 @@ import {
   Briefcase, ShieldAlert, CheckCircle2, Send
 } from "lucide-react";
 import { samajService } from "../../services/samajService";
+import { telegramService } from "../../services/telegramService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
@@ -52,6 +53,18 @@ export function RegistrationPage() {
         email: formData.email,
         familyType: formData.familyType,
       });
+
+      // Send Telegram Notification
+      try {
+        await telegramService.sendRegistrationNotification({
+          ...formData,
+          occupation: formData.occupation || "व्यवसाय"
+        });
+        console.log("Telegram notification sent successfully.");
+      } catch (tgErr) {
+        console.error("Failed to send telegram notification:", tgErr);
+        // We don't want to stop the registration process if Telegram fails
+      }
 
       // Simulation of Success Email
       console.log("Sending verification email to:", formData.email);

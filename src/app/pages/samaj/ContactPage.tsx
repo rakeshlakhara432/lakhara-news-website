@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Globe, Flag, Heart, MessageCircle, Send, ArrowRight, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { samajService } from "../../services/samajService";
+import { telegramService } from "../../services/telegramService";
 import { toast } from "sonner";
 
 export function ContactPage() {
@@ -16,6 +17,14 @@ export function ContactPage() {
     setIsSubmitting(true);
     try {
       await samajService.addMessage(formData);
+      
+      // Send Telegram Notification
+      try {
+        await telegramService.sendContactNotification(formData);
+      } catch (tgErr) {
+        console.error("Failed to send telegram notification:", tgErr);
+      }
+
       toast.success("आपका संदेश भेज दिया गया है। हम जल्द ही आपसे संपर्क करेंगे।");
       setFormData({ name: "", subject: "सामान्य पूछताछ", message: "" });
     } catch (err) {

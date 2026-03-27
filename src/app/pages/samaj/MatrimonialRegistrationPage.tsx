@@ -6,6 +6,7 @@ import {
   Eye, EyeOff, Loader2, CheckCircle2, Lock
 } from "lucide-react";
 import { samajService, MatrimonialProfile } from "../../services/samajService";
+import { telegramService } from "../../services/telegramService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
@@ -61,6 +62,13 @@ export function MatrimonialRegistrationPage() {
         uid,
         photos: ["https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=1000"], // Initial placeholder
       });
+
+      // Send Telegram Notification
+      try {
+        await telegramService.sendMatrimonialNotification(formData);
+      } catch (tgErr) {
+        console.error("Failed to send telegram notification:", tgErr);
+      }
 
       toast.success("प्रोफ़ाइल सफलतापुर्वक जोड़ी गई! सत्यापन के बाद लाइव होगी।");
       setStep(4); // Success step
