@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Heart, Briefcase, Phone, ArrowRight, Loader2, Bookmark, CheckCircle, ShieldAlert } from "lucide-react";
+import { GraduationCap, Heart, Briefcase, Phone, ArrowRight, Loader2, Bookmark, CheckCircle, ShieldAlert, ExternalLink } from "lucide-react";
+import { Link } from "react-router";
 import { samajService, SupportPost } from "../../services/samajService";
 
 export function SupportPage() {
@@ -84,13 +85,21 @@ export function SupportPage() {
                   <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-tight mb-4 group-hover:text-orange-600 transition-colors relative z-10">{post.title}</h3>
                   <p className="text-slate-600 text-sm leading-relaxed mb-8 line-clamp-3 flex-grow relative z-10">{post.description}</p>
                   
-                  <div className="pt-6 border-t border-slate-100 flex items-center justify-between relative z-10">
-                     <a href={`tel:${post.contact}`} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-orange-600 transition-colors shadow-sm">
-                        अभी आवेदन करें <ArrowRight className="size-3" />
-                     </a>
-                     <div className="flex items-center gap-2 text-slate-500">
-                        <Phone className="size-3.5" />
-                        <span className="text-xs font-semibold">{post.contact}</span>
+                  <div className="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 relative z-10">
+                     <Link 
+                       to={`/support/${post.id}`}
+                       className="flex items-center gap-2 bg-orange-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-orange-500 transition-colors shadow-sm"
+                     >
+                        पूरा विवरण देखें <ExternalLink className="size-3" />
+                     </Link>
+                     <div className="flex items-center gap-3">
+                        <a href={`tel:${post.contact}`} className="size-10 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center hover:bg-orange-50 hover:text-orange-600 transition-colors border border-slate-200">
+                           <Phone className="size-4" />
+                        </a>
+                        <div className="hidden sm:block text-right">
+                           <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">संपर्क सूत्र</p>
+                           <p className="text-xs font-bold text-slate-700">{post.contact}</p>
+                        </div>
                      </div>
                   </div>
                </div>

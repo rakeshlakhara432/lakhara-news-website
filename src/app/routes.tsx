@@ -29,6 +29,7 @@ import { NewsPage } from "./pages/samaj/NewsPage";
 import { GalleryPage } from "./pages/samaj/GalleryPage";
 import { DonatePage } from "./pages/samaj/DonatePage";
 import { SupportPage } from "./pages/samaj/SupportPage";
+import { SupportDetailPage } from "./pages/samaj/SupportDetailPage";
 import { RulesPage } from "./pages/samaj/RulesPage";
 
 export const router = createHashRouter([
@@ -46,6 +47,7 @@ export const router = createHashRouter([
       { path: "gallery", Component: GalleryPage },
       { path: "news", Component: NewsPage },
       { path: "support", Component: SupportPage },
+      { path: "support/:id", Component: SupportDetailPage },
       { path: "rules", Component: RulesPage },
       { path: "contact", Component: ContactPage },
       { path: "register", Component: RegistrationPage },
