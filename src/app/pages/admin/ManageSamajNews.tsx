@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as ImageIcon } from "lucide-react";
+import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as ImageIcon, Bot } from "lucide-react";
 import { samajService, NewsPost } from "../../services/samajService";
+import { extractKeywords } from "../../../utils/mlUtils";
 import { toast } from "sonner";
 
 export function ManageSamajNews() {
@@ -53,7 +54,20 @@ export function ManageSamajNews() {
                  <input required placeholder="Enter title..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 transition-all" value={newNews.title} onChange={e => setNewNews({...newNews, title: e.target.value})} />
               </div>
               <div className="space-y-1.5">
-                 <label className="text-xs font-bold text-slate-700">Content / Details</label>
+                 <div className="flex justify-between items-end mb-1">
+                    <label className="text-xs font-bold text-slate-700">Content / Details</label>
+                    <button type="button" onClick={() => {
+                        const tags = extractKeywords(newNews.content);
+                        if(tags.length) {
+                           setNewNews(prev => ({...prev, content: prev.content + "\n\n" + tags.join(" ")}));
+                           toast.success("AI Auto-Tags appended!");
+                        } else {
+                           toast.error("Type some content first to extract tags.");
+                        }
+                    }} className="text-[10px] bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 font-bold flex items-center gap-1 hover:bg-indigo-100 transition-colors shadow-sm">
+                       <Bot className="size-3"/> Auto-Tag (AI)
+                    </button>
+                 </div>
                  <textarea required rows={4} placeholder="Write announcement..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 resize-none transition-all" value={newNews.content} onChange={e => setNewNews({...newNews, content: e.target.value})}></textarea>
               </div>
            </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search, Loader2, CheckCircle, Trash2, User, MapPin } from "lucide-react";
 import { samajService, Member } from "../../services/samajService";
+import { smartSearch } from "../../../utils/mlUtils";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -48,11 +49,10 @@ export function ManageMembers() {
     }
   };
 
-  const filteredMembers = members.filter(
-    (m) =>
-      m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.occupation.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredMembers = smartSearch(
+    searchQuery,
+    members,
+    (m) => `${m.name} ${m.city} ${m.occupation}`
   );
 
   return (
