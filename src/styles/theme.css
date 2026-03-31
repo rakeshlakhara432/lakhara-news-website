@@ -6,23 +6,19 @@
   --background: #ffffff;
   --foreground: #1c1c1c;
   
-  /* BHAGVA (SAFFRON) THEME */
-  --primary: #FF7722; /* Deep Saffron */
+  /* BHAGVA (SAFFRON) THEME - Traditional News Style */
+  --primary: #CC3300; /* Richer traditional red/saffron */
   --primary-foreground: #ffffff;
   
-  --secondary: #FFD700; /* Gold */
-  --secondary-foreground: #1c1c1c;
+  --secondary: #2c2c2c; /* Deep Charcoal for contrast */
+  --secondary-foreground: #ffffff;
   
-  --accent: #FFF5E6; /* Light Creamy Saffron */
-  --muted: #f9f9f9;
-  --muted-foreground: #666666;
-  --border: #f0f0f0;
+  --accent: #FFF5F0; /* Almost white cream */
+  --muted: #f4f4f4;
+  --muted-foreground: #555555;
+  --border: #e0e0e0;
   --card: #ffffff;
   --card-foreground: #1c1c1c;
-  
-  /* Traditional Gradient */
-  --gradient-bhagva: linear-gradient(135deg, #FF7722 0%, #FF9933 100%);
-  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
 }
 
 @theme {
@@ -36,70 +32,72 @@
   
   --font-main: "Noto Sans Devanagari", "Outfit", "Inter", sans-serif;
   
-  --shadow-bhagva: 0 10px 30px -5px rgba(255, 119, 34, 0.2);
-  --shadow-traditional: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  /* NO SHADOWS */
+  --shadow-bhagva: none;
+  --shadow-traditional: none;
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground font-main antialiased selection:bg-primary/20 selection:text-primary;
+    transition: none !important;
   }
 }
 
-/* TRADITIONAL UTILITIES */
+/* SIMPLE UTILITIES */
 @utility traditional-header {
-  @apply text-4xl font-extrabold uppercase tracking-tight text-primary flex items-center gap-4 relative pb-4;
+  @apply text-3xl font-black uppercase tracking-tight text-primary flex items-center gap-4 relative pb-2;
 }
 
 @utility traditional-header-after {
   content: "";
-  @apply absolute bottom-0 left-0 w-24 h-1.5 bg-primary rounded-full;
+  @apply absolute bottom-0 left-0 w-16 h-1 bg-primary;
 }
 
 @utility card-traditional {
-  @apply bg-white rounded-3xl border border-border shadow-traditional hover:shadow-bhagva hover:-translate-y-1 transition-all duration-500 overflow-hidden;
+  @apply bg-white rounded-none border border-border overflow-hidden;
 }
 
 @utility bhagva-gradient {
-  @apply bg-gradient-to-br from-[#FF7722] to-[#FF9933] text-white;
+  @apply bg-primary text-white; /* Removed gradient */
 }
 
 @utility gold-border {
-  @apply border-b-4 border-secondary;
+  @apply border-b-2 border-primary;
 }
 
-/* ANIMATIONS */
+/* NO ANIMATIONS */
 @keyframes traditional-fade-up {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 1; transform: translateY(0); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes traditional-draw {
-  from { width: 0; }
+  from { width: 100%; }
   to { width: 100%; }
 }
 
 .animate-traditional {
-  animation: traditional-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: none;
 }
 
 .draw-underline::after {
-  animation: traditional-draw 1s ease-out forwards;
+  animation: none;
 }
 
-/* Decorative Mandala-like Accents */
+/* Simplified Mandala Background Removed */
 @utility mandala-bg {
-  background-image: radial-gradient(circle, var(--primary) 1px, transparent 1px);
-  background-size: 24px 24px;
-  @apply opacity-[0.03];
+  background-image: none;
+  @apply opacity-0;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   @apply bg-gray-50;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/30 rounded-full hover:bg-primary/50;
+  @apply bg-primary/20 hover:bg-primary/40;
 }
+

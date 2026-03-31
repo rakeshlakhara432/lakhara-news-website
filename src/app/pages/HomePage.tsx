@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { 
-  TrendingUp, Radio, ChevronRight, Flag, Users, Heart, 
-  Calendar, Image as ImageIcon, Phone, Info, MessageCircle, 
-  Star, Sparkles, LayoutGrid, Clock, MapPin, ArrowRight,
-  Megaphone, ShieldCheck, Bookmark, Loader2, Play, Video
+  TrendingUp, Radio, ChevronRight, Users, Heart, 
+  Calendar, Star, Clock, ArrowRight,
+  ShieldCheck, Play
 } from "lucide-react";
 import { Link } from "react-router";
 import { samajService, NewsPost, Member, SamajEvent, VideoPost } from "../services/samajService";
@@ -21,7 +20,7 @@ export function HomePage() {
     const unsub3 = samajService.subscribeToEvents(data => setEventCount(data.length));
     const unsub4 = samajService.subscribeToVideos(data => setVideos(data));
     
-    const timer = setTimeout(() => setIsLoading(false), 800);
+    const timer = setTimeout(() => setIsLoading(false), 500);
     
     return () => {
       unsub1(); unsub2(); unsub3(); unsub4();
@@ -42,11 +41,11 @@ export function HomePage() {
       } else if (url.includes("/live/")) {
         vidId = url.split("/live/")[1].split("?")[0];
       } else if (url.includes("/embed/")) {
-        return `${url}${url.includes("?") ? "&" : "?"}autoplay=1&mute=1&rel=0`;
+        return url;
       } else {
         return url;
       }
-      return `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`;
+      return `https://www.youtube.com/embed/${vidId}?rel=0&modestbranding=1&controls=1`;
     } catch (e) {
       return url;
     }
@@ -54,10 +53,10 @@ export function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-[80vh] items-center justify-center bg-white/50 backdrop-blur-3xl">
-        <div className="flex flex-col items-center gap-6 animate-pulse">
-          <Flag className="size-12 text-primary" />
-          <p className="text-[10px] font-black text-primary uppercase tracking-[0.8em] italic">लखारा समाज पोर्टल</p>
+      <div className="flex h-[80vh] items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-4">
+           <span className="text-4xl font-black text-primary tracking-tighter">LAKHARA</span>
+           <span className="text-[12px] font-black text-gray-950 uppercase tracking-widest">DIGITAL NEWS</span>
         </div>
       </div>
     );
@@ -65,9 +64,9 @@ export function HomePage() {
 
   const quickLinks = [
     { label: "पंजीकरण", slug: "register", icon: Radio, color: "bg-primary text-white" },
-    { label: "विवाह मंच", slug: "matrimonial", icon: Heart, color: "bg-red-50 text-red-600" },
-    { label: "सदस्य सूची", slug: "directory", icon: Users, color: "bg-blue-50 text-blue-600" },
-    { label: "सहायता", slug: "support", icon: Star, color: "bg-amber-50 text-amber-600" },
+    { label: "विवाह मंच", slug: "matrimonial", icon: Heart, color: "bg-gray-100 text-primary" },
+    { label: "सदस्य सूची", slug: "directory", icon: Users, color: "bg-gray-100 text-primary" },
+    { label: "सहायता", slug: "support", icon: Star, color: "bg-gray-100 text-primary" },
   ];
 
   const liveVideo = videos.find(v => v.isLive) || videos[0];
@@ -79,59 +78,55 @@ export function HomePage() {
   };
 
   return (
-    <div className="space-y-24 pb-32 animate-in fade-in duration-1000">
+    <div className="space-y-16 pb-20">
       
-      {/* 🏛️ SAMAJ INTRODUCTION HERO */}
-      <section className="relative h-[500px] md:h-[600px] md:rounded-[4rem] rounded-none overflow-hidden group shadow-bhagva border-[6px] border-white ring-1 ring-primary/5">
+      {/* 🏛️ SIMPLE HERO */}
+      <section className="relative h-[400px] md:h-[500px] bg-gray-900 overflow-hidden border-b-8 border-primary">
          <img 
-           src="https://images.unsplash.com/photo-1590133322241-8c9356ff5668?auto=format&fit=crop&q=80&w=2000" 
-           className="size-full object-cover group-hover:scale-110 transition-transform duration-[10s]" 
-           alt="Temple" 
+           src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=2000" 
+           className="size-full object-cover opacity-40" 
+           alt="News Room" 
          />
-         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent"></div>
          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 space-y-6">
-            <div className="bg-primary/20 backdrop-blur-3xl text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-white/20 mb-8">
-               ॥ संघे शक्तिः कलौ युगे ॥
+            <div className="bg-primary text-white px-6 py-2 font-black text-[12px] uppercase tracking-widest border border-white/20">
+               डिजिटल संवाद - डिजिटल समाचार
             </div>
-            <h1 className="text-4xl md:text-7xl font-black text-white italic tracking-tighter drop-shadow-2xl leading-tight">
-               स्वागत है <span className="text-primary group-hover:text-secondary transition-colors duration-1000">लखारा समाज</span> <br/> डिजिटल पोर्टल पर
+            <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none uppercase">
+               LAKHARA DIGITAL <br/> NEWS NETWORK
             </h1>
-            <p className="text-white/70 max-w-2xl text-sm md:text-lg font-bold italic drop-shadow-lg">
-               “एकता, संस्कृति और प्रगति का नया डिजिटल मंच। समाज के विकास और संगठन को डिजिटल धागे से जोड़ने का संकल्प।”
+            <p className="text-white/90 max-w-2xl text-lg md:text-xl font-bold">
+               समाज का सबसे शक्तिशाली डिजिटल समाचार मंच।
             </p>
-            <div className="flex flex-wrap justify-center gap-6 mt-12">
-               <Link to="/about" className="px-10 py-4 bg-white text-gray-950 font-black rounded-2xl hover:bg-primary hover:text-white transition-all text-xs tracking-widest uppercase shadow-2xl">हमारा इतिहास</Link>
-               <Link to="/register" className="px-10 py-4 bg-primary text-white font-black rounded-2xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl">समाज से जुड़ें</Link>
+            <div className="flex flex-wrap justify-center gap-4 mt-4">
+               <Link to="/news" className="px-10 py-4 bg-white text-gray-950 font-black text-xs tracking-widest uppercase border border-white">समाचार पढ़ें</Link>
+               <Link to="/register" className="px-10 py-4 bg-primary text-white font-black text-xs tracking-widest uppercase border border-primary">नेटवर्क से जुड़ें</Link>
             </div>
          </div>
       </section>
 
-      {/* ⚡ QUICK ACTIONS (SAMAJ FEATURES) */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* ⚡ QUICK ACTIONS */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-0">
          {quickLinks.map((link, i) => (
-           <Link key={i} to={`/${link.slug}`} className="group p-6 md:p-8 bg-white md:rounded-[3rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-2 text-center space-y-4">
-              <div className={`size-16 mx-auto ${link.color} rounded-[2rem] flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500`}>
-                 <link.icon className="size-8" />
-              </div>
-              <div>
-                 <h3 className="text-lg font-black text-gray-950 tracking-tighter uppercase italic">{link.label}</h3>
-                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">शुरू करें</p>
-              </div>
-           </Link>
+            <Link key={i} to={`/${link.slug}`} className="p-6 bg-white border border-gray-200 text-center space-y-4 hover:border-primary">
+               <div className={`size-12 md:size-16 mx-auto ${link.color} flex items-center justify-center border border-gray-100`}>
+                  <link.icon className="size-6 md:size-8" />
+               </div>
+               <h3 className="text-sm md:text-lg font-black text-gray-950 tracking-tighter uppercase">{link.label}</h3>
+            </Link>
          ))}
       </section>
 
-      {/* 📺 LIVE BROADCAST (AUTOPLAY EMBEDDED) */}
+      {/* 📺 LIVE BROADCAST */}
       {liveVideo && (
-        <section className="space-y-12">
-           <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
-               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
+        <section className="space-y-8">
+           <div className="flex items-center justify-between border-l-8 border-primary pl-6">
+               <h2 className="text-2xl md:text-3xl font-black text-gray-950 tracking-tighter uppercase">
                   लाइव <span className="text-primary">प्रसारण</span>
                </h2>
-               <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">डिजिटल स्टूडियो <Play className="size-4" /></Link>
+               <Link to="/news" className="text-[11px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2">डिजिटल स्टूडियो <Play className="size-4" /></Link>
             </div>
 
-            <div className="relative aspect-video lg:aspect-[21/9] bg-gray-950 md:rounded-[4rem] rounded-none overflow-hidden shadow-bhagva-lg border-[6px] border-white ring-1 ring-primary/5">
+            <div className="relative aspect-video lg:aspect-[21/9] bg-black border-4 border-gray-100">
                 <iframe 
                   className="size-full"
                   src={getEmbedUrl(liveVideo.videoUrl)}
@@ -142,7 +137,7 @@ export function HomePage() {
                 ></iframe>
                 
                 {liveVideo.isLive && (
-                  <div className="absolute top-6 md:p-10 left-10 flex items-center gap-3 bg-red-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic animate-pulse shadow-xl border border-white/20 pointer-events-none">
+                  <div className="absolute top-4 left-4 flex items-center gap-3 bg-red-600 text-white px-4 py-1.5 font-black text-[10px] uppercase tracking-widest">
                     <Radio className="size-4" /> LIVE NOW
                   </div>
                 )}
@@ -150,64 +145,60 @@ export function HomePage() {
         </section>
       )}
 
-      {/* 📢 LATEST UPDATES & ANNOUNCEMENTS */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-         <div className="lg:col-span-2 space-y-12">
-            <div className="flex items-center justify-between border-l-[8px] border-primary pl-8">
-               <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
+      {/* 📢 LATEST UPDATES */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+         <div className="lg:col-span-2 space-y-8">
+            <div className="flex items-center justify-between border-l-8 border-primary pl-6">
+               <h2 className="text-2xl md:text-3xl font-black text-gray-950 tracking-tighter uppercase">
                   ताज़ा <span className="text-primary">सुर्खियाँ</span>
                </h2>
-               <Link to="/news" className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2 italic">सभी देखें <ChevronRight className="size-4" /></Link>
+               <Link to="/news" className="text-[11px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-2">सभी देखें <ChevronRight className="size-4" /></Link>
             </div>
             
-            <div className="bg-white md:rounded-[4rem] rounded-none border border-gray-100 p-6 md:p-10 shadow-sm space-y-10 relative overflow-hidden group h-full">
-               <div className="absolute top-0 right-0 size-40 bg-primary/5 rounded-bl-[10rem] group-hover:bg-primary/10 transition-all"></div>
-               <div className="relative z-10 space-y-8">
-                  <div className="flex items-center gap-4 text-primary">
-                     <Clock className="size-5" />
-                     <span className="text-[10px] font-black uppercase tracking-widest italic font-bold">आज की मुख्य सूचना</span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-black text-gray-950 tracking-tighter italic leading-tight uppercase">
-                     {latestAnnouncement.title}
-                  </h3>
-                  <p className="text-gray-500 font-bold italic leading-relaxed text-sm line-clamp-3">
-                     {latestAnnouncement.content}
-                  </p>
-                  <Link to="/news" className="inline-flex items-center gap-4 bg-gray-950 text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-primary transition-all">
-                     विवरण देखें <ArrowRight className="size-4" />
-                  </Link>
+            <div className="bg-white border border-gray-200 p-8 space-y-6">
+               <div className="flex items-center gap-3 text-primary">
+                  <Clock className="size-5" />
+                  <span className="text-[11px] font-black uppercase tracking-widest">आज की मुख्य सूचना</span>
                </div>
+               <h3 className="text-xl md:text-2xl font-black text-gray-950 uppercase leading-snug">
+                  {latestAnnouncement.title}
+               </h3>
+               <p className="text-gray-600 font-bold leading-relaxed text-sm">
+                  {latestAnnouncement.content}
+               </p>
+               <Link to="/news" className="inline-flex items-center gap-4 bg-gray-950 text-white px-8 py-3 font-black text-[11px] uppercase tracking-widest border border-gray-950">
+                  विवरण देखें <ArrowRight className="size-4" />
+               </Link>
             </div>
          </div>
 
-         {/* 📊 SAMAJ STATS CARD */}
-         <div className="space-y-10">
-            <h2 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">
-               सांख्यिकी <span className="text-primary">नेटवर्क</span>
+         {/* 📊 STATS */}
+         <div className="space-y-8">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-950 tracking-tighter uppercase">
+               नेटवर्क <span className="text-primary">डाटा</span>
             </h2>
-            <div className="p-6 md:p-10 bg-gray-950 text-white md:rounded-[4rem] rounded-none shadow-bhagva-lg space-y-10 relative overflow-hidden border border-white/5 h-full flex flex-col justify-center">
-                <div className="absolute top-0 right-0 size-20 bg-primary opacity-20 blur-3xl"></div>
-                <div className="space-y-8 relative z-10">
+            <div className="p-8 bg-gray-950 text-white border-t-8 border-primary space-y-8 flex flex-col justify-center">
+                <div className="space-y-8">
                    <div className="flex items-center gap-6">
-                      <div className="size-14 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/5">
-                         <Users className="size-7" />
+                      <div className="size-12 bg-white/10 flex items-center justify-center text-primary border border-white/5">
+                         <Users className="size-6" />
                       </div>
                       <div>
-                         <p className="text-[32px] font-black italic tracking-tighter leading-tight md:leading-none">{memberCount}+</p>
-                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">कुल सदस्य</p>
+                         <p className="text-3xl font-black">{memberCount}+</p>
+                         <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-1">कुल सदस्य</p>
                       </div>
                    </div>
                    <div className="flex items-center gap-6">
-                      <div className="size-14 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/5">
-                         <Calendar className="size-7" />
+                      <div className="size-12 bg-white/10 flex items-center justify-center text-primary border border-white/5">
+                         <Calendar className="size-6" />
                       </div>
                       <div>
-                         <p className="text-[32px] font-black italic tracking-tighter leading-tight md:leading-none">{eventCount}+</p>
-                         <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mt-2">अबतक के कार्यक्रम</p>
+                         <p className="text-3xl font-black">{eventCount}+</p>
+                         <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-1">कुल कार्यक्रम</p>
                       </div>
                    </div>
-                   <div className="pt-6 border-t border-white/5">
-                      <div className="flex items-center gap-3 text-primary text-[10px] font-black uppercase tracking-widest italic">
+                   <div className="pt-6 border-t border-white/10">
+                      <div className="flex items-center gap-3 text-primary text-[11px] font-black uppercase tracking-widest">
                          <ShieldCheck className="size-4" /> 100% सत्यापित डाटा
                       </div>
                    </div>
@@ -216,18 +207,17 @@ export function HomePage() {
          </div>
       </section>
 
-      {/* 🚀 CALL TO ACTION */}
-      <section className="bg-primary md:rounded-[4rem] rounded-none p-8 md:p-24 text-center space-y-10 shadow-bhagva relative overflow-hidden group">
-         <div className="absolute top-0 left-0 size-60 bg-white/10 blur-[100px] -z-0"></div>
-         <div className="space-y-4 relative z-10">
-            <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter uppercase leading-tight md:leading-none">समाज की <span className="text-gray-950">शक्ति बनें</span></h2>
-            <p className="text-white/80 font-bold italic text-sm md:text-lg max-w-2xl mx-auto drop-shadow-md">
-               "पंजीकरण करें और समाज के हर महत्वपूर्ण निर्णय, कार्यक्रम और सूचना से सीधे जुड़ें।"
+      {/* 🚀 CTA */}
+      <section className="bg-primary p-12 text-center space-y-8 border-b-8 border-gray-950">
+         <div className="space-y-3">
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">समाज की शक्ति बनें</h2>
+            <p className="text-white/90 font-bold text-sm md:text-lg max-w-2xl mx-auto">
+               "पंजीकरण करें और समाज के हर महत्वपूर्ण निर्णय और सूचना से सीधे जुड़ें।"
             </p>
          </div>
-         <div className="flex justify-center gap-6 relative z-10">
-            <Link to="/register" className="px-16 py-6 bg-white text-primary font-black rounded-3xl text-sm uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl flex items-center gap-4">
-               अभी जुड़ें <Sparkles className="size-5" />
+         <div className="flex justify-center">
+            <Link to="/register" className="px-12 py-4 bg-white text-primary font-black text-sm uppercase tracking-widest border border-white">
+               अभी जुड़ें
             </Link>
          </div>
       </section>

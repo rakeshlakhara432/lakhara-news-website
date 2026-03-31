@@ -72,7 +72,7 @@ export function AdminLayout() {
           <div className="bg-white p-10 rounded-[2rem] border border-gray-100 shadow-bhagva text-center space-y-10">
             
             <div className="flex justify-center mb-6">
-               <div className="size-14 bg-primary text-white rounded-2xl flex items-center justify-center font-black italic shadow-lg rotate-[-12deg]">L</div>
+               <img src="/logo.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
             </div>
             
             <div className="space-y-1">
@@ -152,7 +152,7 @@ export function AdminLayout() {
       {/* ── PROFESSIONAL NAV SIDEBAR ── */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 relative z-50 shadow-sm">
         <div className="p-6 border-b border-gray-50 flex items-center gap-3">
-          <div className="size-9 bg-primary text-white rounded-lg flex items-center justify-center font-black italic shadow-md rotate-[-8deg]">L</div>
+          <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
           <div>
             <span className="font-black text-[14px] tracking-tighter block leading-none text-gray-950 uppercase italic">ADMIN HUB</span>
             <span className="text-[7px] font-black text-gray-300 uppercase tracking-widest mt-1">LAKHARA NETWORK</span>
@@ -242,7 +242,7 @@ export function AdminLayout() {
            >
               <div className="flex justify-between items-center mb-12">
                  <div className="flex items-center gap-3">
-                    <div className="size-9 bg-primary text-white rounded-lg flex items-center justify-center font-black italic shadow-lg rotate-[-8deg]">L</div>
+                    <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
                     <span className="font-black text-lg text-gray-950 tracking-tighter uppercase italic">ADMIN</span>
                  </div>
                  <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-gray-50 rounded-xl">
