@@ -13,15 +13,15 @@ export function CategoryPage() {
 
   if (!currentCategory) {
     return (
-      <div className="container mx-auto px-6 py-40 text-center space-y-12 min-h-[80vh] flex flex-col items-center justify-center animate-traditional">
-        <div className="size-32 bg-gray-100 rounded-[4rem] flex items-center justify-center text-primary/10">
+      <div className="container mx-auto px-6 py-40 text-center space-y-12 min-h-[80vh] flex flex-col items-center justify-center bg-white">
+        <div className="size-32 bg-gray-950 text-primary flex items-center justify-center border-4 border-primary">
            <Flag className="size-16" />
         </div>
         <div className="space-y-4">
-           <h1 className="text-7xl font-black text-gray-950 italic tracking-tighter uppercase leading-none mb-4">SECTOR <span className="text-primary">NULL</span></h1>
-           <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.8em]">the requested signal is unreachable.</p>
+           <h1 className="text-6xl md:text-8xl font-black text-gray-950 tracking-tighter uppercase leading-none italic border-l-8 border-primary pl-8">शून्य <span className="text-primary italic">अनुभाग</span></h1>
+           <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.8em] italic">THE REQUESTED SIGNAL IS UNREACHABLE.</p>
         </div>
-        <Link to="/" className="btn-ai-primary !bg-primary !px-16 !py-6 !text-lg !rounded-[2.5rem] shadow-bhagva">
+        <Link to="/" className="px-16 py-6 bg-primary text-white font-black text-xl uppercase tracking-[0.4em] hover:bg-gray-950 transition-colors border-none outline-none">
           मुख्य पृष्ठ पर लौटें
         </Link>
       </div>
@@ -29,90 +29,85 @@ export function CategoryPage() {
   }
 
   return (
-    <div className="bg-[#FFFDFB] min-h-screen animate-traditional relative overflow-hidden">
-      <div className="absolute inset-0 mandala-bg z-0 opacity-10"></div>
+    <div className="bg-white min-h-screen pb-32">
       
-      {/* ── TRADITIONAL CATEGORY HEADER ── */}
-      <div className="container mx-auto px-6 py-20 max-w-7xl relative z-10">
-         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-            <div className="space-y-10">
-               <Link to="/" className="group flex items-center gap-4 text-gray-500 hover:text-primary transition-all active:scale-95">
-                  <div className="size-12 bg-white border border-gray-100 rounded-[1.5rem] flex items-center justify-center group-hover:bg-primary group-hover:text-white shadow-traditional group-hover:shadow-bhagva transition-all rotate-[-12deg] group-hover:rotate-0">
-                    <ArrowLeft className="size-6" />
+      {/* ── BOLD CATEGORY HEADER ── */}
+      <div className="container mx-auto px-6 py-20 max-w-7xl pt-12">
+         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b-8 border-primary pb-20">
+            <div className="space-y-12">
+               <Link to="/" className="group flex items-center gap-6 text-gray-400 hover:text-primary transition-colors">
+                  <div className="size-16 bg-white border-4 border-gray-100 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors shadow-bhagva-flat">
+                    <ArrowLeft className="size-8" />
                   </div>
-                  <span className="text-base font-black uppercase tracking-[0.3em] italic">पीछे जाएँ</span>
+                  <span className="text-xl font-black uppercase tracking-[0.4em] italic leading-none border-b-2 border-transparent group-hover:border-primary pb-1">पीछे जाएँ</span>
                </Link>
                <div className="flex items-center gap-10">
-                  <div className="size-24 rounded-[3rem] flex items-center justify-center shadow-bhagva rotate-[-12deg] relative border-[6px] border-white group" style={{ background: `linear-gradient(135deg, ${currentCategory.color} 0%, rgba(255,255,255,0.2) 100%)` }}>
-                     <Sparkles className="size-10 text-white group-hover:scale-125 transition-transform duration-700" />
+                  <div className="size-32 bg-gray-950 text-white flex items-center justify-center border-8 border-primary shadow-2xl relative group">
+                     <Sparkles className="size-14 text-primary group-hover:scale-110 transition-transform" />
                   </div>
-                  <div className="space-y-3">
-                     <h1 className="text-5xl md:text-7xl font-black text-gray-950 italic tracking-tighter uppercase leading-none group">
-                       {currentCategory.name} <span className="text-primary underline decoration-primary/10 decoration-6 underline-offset-[-6px]">प्रवाह</span>
+                  <div className="space-y-4">
+                     <h1 className="text-5xl md:text-8xl font-black text-gray-950 italic tracking-tighter uppercase leading-none border-l-[16px] border-primary pl-8">
+                       {currentCategory.name} <span className="text-primary italic">अनुभाग</span>
                      </h1>
-                     <p className="text-[10px] font-black text-primary opacity-40 uppercase tracking-[0.8em] ml-2">सटीक समाचार अनुभाग</p>
+                     <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.8em] ml-2 italic">DIGITAL NEWS MATRIX PORTAL</p>
                   </div>
                </div>
             </div>
 
-            <div className="hidden md:flex items-center gap-12 text-gray-400 font-black text-[10px] uppercase tracking-widest bg-white p-8 rounded-[3rem] border border-gray-100 shadow-traditional h-32 transform hover:scale-105 hover:shadow-bhagva transition-all relative overflow-hidden group">
-               <div className="absolute top-0 right-0 w-2 h-full bg-primary group-hover:w-full group-hover:opacity-5 transition-all duration-[1s]"></div>
-               <div className="relative z-10">
-                  <p className="text-5xl text-gray-950 italic font-black leading-none mb-1">{categoryArticles.length}</p>
-                  <p className="tracking-[0.4em] text-[8px] opacity-50">सक्रिय खबरें</p>
+            <div className="flex items-center gap-12 text-gray-400 bg-gray-950 p-12 border-b-[12px] border-primary h-40 group">
+               <div className="space-y-1">
+                  <p className="text-6xl text-white italic font-black leading-none">{categoryArticles.length}</p>
+                  <p className="tracking-[0.4em] text-[10px] text-primary font-black uppercase italic">सक्रिय खबरें</p>
                </div>
-               <div className="size-3 bg-primary rounded-full animate-ping relative z-10"></div>
+               <div className="size-4 bg-primary animate-pulse border-2 border-white"></div>
             </div>
          </div>
 
-         {/* ── Content Matrix ── */}
-         <div className="pt-20 space-y-24 relative z-10">
+         {/* ── CONTENT FLOW ── */}
+         <div className="pt-24 space-y-32">
             {categoryArticles.length === 0 ? (
-              <div className="text-center py-40 border-4 border-dashed border-gray-100 rounded-[4rem] bg-white shadow-sm space-y-10">
-                <div className="size-32 bg-gray-50 rounded-[4rem] flex items-center justify-center shadow-xl mx-auto border border-gray-100 group-hover:rotate-12 transition-transform">
-                   <Signal className="size-16 text-gray-200" />
+              <div className="text-center py-40 bg-gray-50 border-8 border-dashed border-gray-100 space-y-12">
+                <div className="size-40 bg-white border-4 border-gray-100 flex items-center justify-center mx-auto shadow-xl">
+                   <Signal className="size-20 text-gray-200" />
                 </div>
-                <div>
-                   <h2 className="text-3xl font-black italic tracking-tighter uppercase text-gray-950 mb-3 leading-none">कोई जानकारी उपलब्ध नहीं</h2>
-                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.6em]">वर्तमान में इस क्षेत्र से कोई संकेत नहीं मिल रहा है।</p>
+                <div className="space-y-4">
+                   <h2 className="text-4xl font-black italic tracking-tighter uppercase text-gray-950 leading-none">सूचना अप्राप्त</h2>
+                   <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.6em] italic">CURRENTLY NO SIGNALS DETECTED IN THIS SECTOR.</p>
                 </div>
               </div>
             ) : (
               <>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-32">
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {categoryArticles.map((article) => (
                       <ArticleCard key={article.id} article={article} />
                     ))}
                  </div>
                  
-                 {/* Reusable Category Navigation Matrix */}
-                 <div className="pt-32 grid grid-cols-1 lg:grid-cols-2 gap-16 pb-32">
-                    <div className="bg-primary rounded-[4rem] p-12 text-white relative overflow-hidden group shadow-2xl border-[12px] border-white ring-1 ring-primary/10">
-                       <div className="absolute inset-0 mandala-bg opacity-10"></div>
-                       <div className="relative z-10 space-y-10">
-                          <div className="space-y-4">
-                             <h3 className="text-4xl font-black italic tracking-tighter uppercase leading-none">पुश <span className="text-secondary">अलर्ट</span></h3>
-                             <p className="text-primary-foreground text-lg font-bold italic opacity-80 leading-relaxed">पाएं {currentCategory.name} की ताजतरीन खबरें सीधे अपने मोबाइल पर।</p>
-                          </div>
-                          <button className="btn-ai-primary !bg-white !text-primary !rounded-[2rem] w-full py-6 text-lg group shadow-2xl transition-all">
-                             अलर्ट शुरू करें <ArrowRight className="size-6 ml-4 group-hover:translate-x-4 transition-transform" />
-                          </button>
+                 {/* 🚀 CATEGORY NAVIGATION MATRIX */}
+                 <div className="pt-32 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="bg-primary p-16 text-white border-b-[20px] border-gray-950 space-y-12 group transition-colors">
+                       <div className="space-y-6">
+                          <h3 className="text-5xl font-black italic tracking-tighter uppercase leading-none border-l-8 border-white pl-8">पुश <span className="text-gray-950 italic">सूचना</span></h3>
+                          <p className="text-white/90 text-2xl font-black italic leading-relaxed uppercase tracking-widest border-b-2 border-white/20 pb-8 mt-8">"पाएं {currentCategory.name} की ताजतरीन खबरें सीधे अपने मोबाइल पर।"</p>
                        </div>
+                       <button className="w-full py-8 bg-white text-primary font-black text-2xl uppercase tracking-[0.4em] hover:bg-gray-950 hover:text-white transition-all border-none outline-none italic flex items-center justify-center gap-6 shadow-xl">
+                          अलर्ट शुरू करें <ArrowRight className="size-8" />
+                       </button>
                     </div>
 
-                    <div className="bg-white rounded-[4rem] p-12 shadow-bhagva border border-gray-100 space-y-10 group transition-all duration-700 hover:rotate-[-2deg]">
-                       <div className="flex items-center gap-6 pb-8 border-b-2 border-gray-50">
-                          <div className="size-16 bg-primary/5 rounded-[2rem] flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                             <Globe className="size-8" />
+                    <div className="bg-white p-16 border-[12px] border-gray-100 space-y-12 group hover:border-primary transition-colors">
+                       <div className="flex items-center gap-8 pb-10 border-b-4 border-gray-50">
+                          <div className="size-20 bg-gray-950 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors border-4 border-white shadow-bhagva-flat">
+                             <Globe className="size-10" />
                           </div>
                           <div>
-                             <h3 className="text-3xl font-black italic tracking-tighter uppercase text-gray-950 leading-none">अन्य सक्रिय <span className="text-primary">धारा</span></h3>
-                             <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.4em] mt-2">विभिन्न समाचार अनुभाग</p>
+                             <h3 className="text-4xl font-black italic tracking-tighter uppercase text-gray-950 leading-none">अन्य <span className="text-primary italic">विषय</span></h3>
+                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.6em] mt-3 italic">DIVERSITY OF NEWS PORTALS</p>
                           </div>
                        </div>
-                       <div className="flex flex-wrap gap-4">
+                       <div className="flex flex-wrap gap-3">
                           {categories.filter(c => c.slug !== category).map(c => (
-                            <Link key={c.id} to={`/category/${c.slug}`} className="px-8 py-4 bg-gray-50 text-gray-600 hover:text-white hover:bg-primary rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all shadow-sm hover:shadow-bhagva border-2 border-transparent hover:border-white/10 italic">
+                            <Link key={c.id} to={`/category/${c.slug}`} className="px-10 py-5 bg-gray-50 text-gray-500 hover:text-white hover:bg-primary border-2 border-transparent font-black uppercase tracking-[0.3em] text-[10px] transition-all italic">
                                {c.name}
                             </Link>
                           ))}

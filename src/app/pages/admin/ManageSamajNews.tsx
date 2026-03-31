@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image } from "lucide-react";
+import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as ImageIcon } from "lucide-react";
 import { samajService, NewsPost } from "../../services/samajService";
 import { toast } from "sonner";
 
@@ -37,65 +37,84 @@ export function ManageSamajNews() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
-         <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Samaj <span className="text-primary italic">Media</span> Center</h1>
-         <button onClick={() => setIsAdding(!isAdding)} className="px-8 py-3 bg-gray-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
-           <Plus className="size-4" /> New Announcement
+         <h1 className="text-2xl font-bold text-slate-800 leading-none">Samaj <span className="text-orange-600">Media Center</span></h1>
+         <button onClick={() => setIsAdding(!isAdding)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-orange-600 transition-colors flex items-center gap-2">
+           <Plus className="size-4" /> {isAdding ? "Cancel" : "New Post"}
          </button>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAdd} className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-bhagva grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-top-4">
+        <form onSubmit={handleAdd} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-5 animate-in slide-in-from-top-4">
            <div className="space-y-4 col-span-full">
-              <input required placeholder="Broadcast Title..." className="w-full px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-sm italic" value={newNews.title} onChange={e => setNewNews({...newNews, title: e.target.value})} />
-              <textarea required rows={4} placeholder="Content / Details..." className="w-full px-6 py-6 bg-gray-50 rounded-[2rem] border-none outline-none font-bold text-xs italic resize-none" value={newNews.content} onChange={e => setNewNews({...newNews, content: e.target.value})}></textarea>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Broadcast Title</label>
+                 <input required placeholder="Enter title..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 transition-all" value={newNews.title} onChange={e => setNewNews({...newNews, title: e.target.value})} />
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Content / Details</label>
+                 <textarea required rows={4} placeholder="Write announcement..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 resize-none transition-all" value={newNews.content} onChange={e => setNewNews({...newNews, content: e.target.value})}></textarea>
+              </div>
            </div>
-           <div className="grid grid-cols-2 gap-6 w-full md:col-span-full">
-              <select className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-[10px] uppercase tracking-widest italic" value={newNews.category} onChange={e => setNewNews({...newNews, category: e.target.value})}>
-                 <option value="महत्वपूर्ण">महत्वपूर्ण</option>
-                 <option value="कार्यक्रम">कार्यक्रम</option>
-                 <option value="सूचना">सूचना</option>
-                 <option value="अन्य">अन्य</option>
-              </select>
-              <input placeholder="Image URL (Optional)..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newNews.imageUrl} onChange={e => setNewNews({...newNews, imageUrl: e.target.value})} />
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:col-span-full">
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Category</label>
+                 <select className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 transition-all" value={newNews.category} onChange={e => setNewNews({...newNews, category: e.target.value})}>
+                    <option value="महत्वपूर्ण">महत्वपूर्ण</option>
+                    <option value="कार्यक्रम">कार्यक्रम</option>
+                    <option value="सूचना">सूचना</option>
+                    <option value="अन्य">अन्य</option>
+                 </select>
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700">Image URL (Optional)</label>
+                 <input placeholder="https://..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none font-medium text-sm text-slate-800 transition-all" value={newNews.imageUrl} onChange={e => setNewNews({...newNews, imageUrl: e.target.value})} />
+              </div>
            </div>
-           <button type="submit" className="col-span-full py-6 bg-primary text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-4 group">
-             Broadcast Notification <Megaphone className="size-5 group-hover:-translate-y-1 transition-transform" />
-           </button>
+           <div className="col-span-full pt-2">
+              <button type="submit" className="w-full py-3.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-sm flex items-center justify-center gap-2 hover:bg-orange-500 transition-colors">
+                Broadcast Notification <Megaphone className="size-4" />
+              </button>
+           </div>
         </form>
       )}
 
-      {isLoading ? <Loader2 className="size-10 animate-spin mx-auto text-primary" /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
            {news.map(n => (
-             <div key={n.id} className="group p-8 bg-white rounded-[3.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden flex flex-col">
-                <div className="flex items-start justify-between mb-8">
+             <div key={n.id} className="group p-6 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-4">
                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-3 bg-primary/5 text-primary px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest italic border border-primary/10">
+                      <div className="flex items-center gap-1.5 bg-orange-50 text-orange-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-orange-100 w-fit">
                         <Bookmark className="size-3 fill-current" /> {n.category}
                       </div>
-                      <h3 className="text-xl font-black text-gray-950 tracking-tighter uppercase italic leading-none line-clamp-2">{n.title}</h3>
+                      <h3 className="text-lg font-bold text-slate-800 leading-tight line-clamp-2 mt-1">{n.title}</h3>
                    </div>
-                   <button onClick={() => handleDelete(n.id!)} className="size-10 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                   <button onClick={() => handleDelete(n.id!)} className="size-8 shrink-0 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors">
                       <Trash2 className="size-4" />
                    </button>
                 </div>
-                <p className="text-gray-400 font-bold italic text-xs leading-relaxed line-clamp-3 mb-8 flex-grow">{n.content}</p>
-                <div className="pt-8 border-t border-gray-50 flex items-center justify-between text-gray-300">
-                   <div className="flex items-center gap-3">
-                      <Calendar className="size-3" />
-                      <span className="text-[8px] font-black uppercase tracking-widest italic">{n.createdAt?.toDate?.().toLocaleDateString() || "Just Now"}</span>
+                <p className="text-slate-600 font-medium text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">{n.content}</p>
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-slate-500">
+                   <div className="flex items-center gap-2">
+                      <Calendar className="size-3.5" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">{n.createdAt?.toDate?.().toLocaleDateString() || "Just Now"}</span>
                    </div>
-                   <div className="flex items-center gap-4">
-                      {n.imageUrl && <Image className="size-4 text-primary" />}
-                      <span className="p-2 bg-gray-50 rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-all cursor-pointer">
+                   <div className="flex items-center gap-3">
+                      {n.imageUrl && <ImageIcon className="size-4 text-orange-600" />}
+                      <span className="p-1.5 bg-slate-50 rounded-md hover:bg-orange-50 hover:text-orange-600 transition-colors cursor-pointer text-slate-400">
                         <Eye className="size-4" />
                       </span>
                    </div>
                 </div>
              </div>
            ))}
+           {news.length === 0 && (
+             <div className="col-span-full py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300 text-center">
+               <p className="text-slate-500 font-medium text-sm">No recent announcements found.</p>
+             </div>
+           )}
         </div>
       )}
     </div>

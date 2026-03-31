@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, Image as ImageIcon, Camera, Upload, X } from "lucide-react";
+import { Search, Loader2, Plus, Trash2, Camera, Upload, X } from "lucide-react";
 import { samajService, GalleryImage } from "../../services/samajService";
 import { toast } from "sonner";
 import {
@@ -88,66 +88,66 @@ export function ManageGallery() {
   );
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-1000">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Samaj <span className="text-primary italic">Visual</span> Archive</h1>
+        <h1 className="text-2xl font-bold text-slate-800 leading-none">Samaj <span className="text-orange-600">Visual Archive</span></h1>
         <button 
-          onClick={() => setIsAdding(true)}
-          className="px-10 py-4 bg-gray-950 text-white font-black rounded-3xl hover:bg-primary transition-all text-[10px] tracking-widest uppercase shadow-2xl flex items-center justify-center gap-4 active:scale-95"
+          onClick={() => setIsAdding(!isAdding)}
+          className="px-6 py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-orange-600 transition-colors text-xs flex items-center justify-center gap-2"
         >
-          <Plus className="size-4" /> Add Memory
+          <Plus className="size-4" /> {isAdding ? "Cancel" : "Add Memory"}
         </button>
       </div>
 
-      <div className="bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4">
-        <div className="flex-grow flex items-center gap-4 px-6 py-3 bg-gray-50/50 rounded-full border border-gray-100">
-          <Search className="size-4 text-gray-400" />
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4">
+        <div className="flex-grow flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-orange-500 transition-all">
+          <Search className="size-4 text-slate-400" />
           <input
             type="text"
             placeholder="Search archive captions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none outline-none font-bold text-xs italic"
+            className="w-full bg-transparent border-none outline-none font-medium text-sm text-slate-800"
           />
         </div>
       </div>
 
       {isAdding && (
-        <div className="bg-white rounded-[4rem] border-2 border-primary/20 p-12 shadow-bhagva-lg animate-in fade-in slide-in-from-top-6 duration-700 relative overflow-hidden group">
-           <div className="absolute top-0 right-0 size-60 bg-primary/5 rounded-bl-[15rem]"></div>
-           <div className="relative z-10 space-y-12">
+        <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+           <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-black italic tracking-tighter uppercase text-gray-950">Add <span className="text-primary">Photo Asset</span></h2>
-                <button onClick={() => setIsAdding(false)} className="text-gray-400 hover:text-red-500 transition-colors uppercase font-black text-[9px] tracking-widest">Close</button>
+                <h2 className="text-xl font-bold text-slate-800">Add <span className="text-orange-600">Photo Asset</span></h2>
               </div>
               
-              <form onSubmit={handleAddSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-4">
-                   <label className="text-[9px] font-black uppercase tracking-[0.5em] text-gray-400 italic px-4">Upload Image</label>
-                   <div className="relative aspect-video rounded-[2.5rem] bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center overflow-hidden hover:border-primary transition-all">
+              <form onSubmit={handleAddSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-slate-700 ml-1">Upload Image (Max 2MB)</label>
+                   <div className="relative aspect-video rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center overflow-hidden hover:border-orange-500 transition-colors">
                       {newImage.url ? (
                         <>
                           <img src={newImage.url} className="size-full object-cover" />
-                          <button onClick={() => setNewImage({...newImage, url: ""})} className="absolute top-4 right-4 size-10 bg-red-600 text-white rounded-xl flex items-center justify-center shadow-xl"><X className="size-5"/></button>
+                          <button onClick={() => setNewImage({...newImage, url: ""})} className="absolute top-2 right-2 size-8 bg-rose-600 text-white rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-500 transition-colors"><X className="size-4"/></button>
                         </>
                       ) : (
-                        <label className="flex flex-col items-center gap-4 cursor-pointer">
-                           <div className="size-16 bg-white rounded-2xl flex items-center justify-center text-gray-300 shadow-inner">
-                              {isUploading ? <Loader2 className="size-8 animate-spin" /> : <Upload className="size-8" />}
+                        <label className="flex flex-col items-center justify-center size-full cursor-pointer group">
+                           <div className="size-12 bg-white rounded-xl border border-slate-100 flex items-center justify-center text-slate-400 shadow-sm group-hover:text-orange-600 group-hover:border-orange-200 mb-3 transition-colors">
+                              {isUploading ? <Loader2 className="size-6 animate-spin" /> : <Upload className="size-6" />}
                            </div>
-                           <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">Choose Photo (Max 2MB)</span>
+                           <span className="text-xs font-semibold text-slate-500">Click to Select</span>
                            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                         </label>
                       )}
                    </div>
                 </div>
 
-                <div className="flex flex-col justify-end space-y-3">
-                  <label className="text-[9px] font-black uppercase tracking-[0.5em] text-gray-400 italic px-4">Caption / Location / Date</label>
-                  <input required placeholder="E.g., वार्षिक मिलन 2026..." className="w-full bg-gray-50/50 border border-gray-100 rounded-3xl px-8 py-5 font-bold text-sm italic focus:border-primary transition-all outline-none" value={newImage.caption} onChange={e => setNewImage({...newImage, caption: e.target.value})} />
-                  <div className="pt-6">
-                    <button type="submit" disabled={!newImage.url || isUploading} className="w-full py-6 bg-primary text-white font-black rounded-[2rem] shadow-xl uppercase text-[10px] tracking-widest flex items-center justify-center gap-4 disabled:opacity-50 hover:bg-secondary transition-all">
-                      {isUploading ? "Uploading..." : "Save to Archive"} <Camera className="size-5" />
+                <div className="flex flex-col justify-end space-y-4">
+                  <div className="space-y-1.5">
+                     <label className="text-xs font-bold text-slate-700 ml-1">Caption / Details</label>
+                     <input required placeholder="E.g., वार्षिक मिलन 2026..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-sm text-slate-800 focus:border-orange-500 outline-none transition-all" value={newImage.caption} onChange={e => setNewImage({...newImage, caption: e.target.value})} />
+                  </div>
+                  <div className="pt-2">
+                    <button type="submit" disabled={!newImage.url || isUploading} className="w-full py-3.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-sm text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-colors">
+                      {isUploading ? "Uploading..." : "Save to Archive"} <Camera className="size-4" />
                     </button>
                   </div>
                 </div>
@@ -157,46 +157,46 @@ export function ManageGallery() {
       )}
 
       {isLoading ? (
-        <div className="flex justify-center py-24">
-          <Loader2 className="size-12 text-primary animate-spin" />
+        <div className="flex justify-center py-20">
+          <Loader2 className="size-8 text-orange-600 animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredImages.map((img) => (
-            <div key={img.id} className="group aspect-square bg-white rounded-[3.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden flex flex-col items-center justify-center cursor-pointer border-8 border-white">
-              <img src={img.url} className="absolute inset-0 size-full object-cover group-hover:scale-110 transition-transform duration-[4s]" alt={img.caption} />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent p-6 pt-16 translate-y-full group-hover:translate-y-0 transition-transform duration-700">
-                <p className="text-[10px] font-black text-white italic tracking-tighter uppercase leading-tight line-clamp-2">{img.caption}</p>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setDeleteId(img.id!); }}
-                  className="mt-4 size-10 bg-red-600/20 text-red-500 hover:bg-red-600 hover:text-white rounded-xl flex items-center justify-center transition-all active:scale-90"
-                >
-                  <Trash2 className="size-4" />
-                </button>
+            <div key={img.id} className="group aspect-square bg-slate-100 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col items-center justify-center cursor-pointer">
+              <img src={img.url} className="absolute inset-0 size-full object-cover group-hover:scale-105 transition-transform duration-500" alt={img.caption} />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-4 pt-12 opacity-0 group-hover:opacity-100 transition-opacity">
+                <p className="text-xs font-bold text-white line-clamp-2">{img.caption}</p>
+                <div className="flex justify-end mt-2">
+                   <button 
+                     onClick={(e) => { e.stopPropagation(); setDeleteId(img.id!); }}
+                     className="size-8 bg-rose-600 text-white rounded-lg flex items-center justify-center transition-colors hover:bg-rose-500"
+                   >
+                     <Trash2 className="size-4" />
+                   </button>
+                </div>
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {filteredImages.length === 0 && !isLoading && (
-        <div className="text-center py-32 bg-gray-50 rounded-[5rem] border-2 border-dashed border-gray-200">
-          <Camera className="size-12 mx-auto text-gray-200 mb-6" />
-          <p className="text-gray-400 font-black italic uppercase tracking-widest text-[9px]">The Visual Archive is currently empty</p>
+          {filteredImages.length === 0 && (
+             <div className="col-span-full py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300 text-center">
+                <p className="text-slate-500 font-medium text-sm">Visual Archive is currently empty.</p>
+             </div>
+          )}
         </div>
       )}
 
       <AlertDialog open={deleteId !== null} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent className="rounded-[3rem] border-none shadow-bhagva-lg p-12">
+        <AlertDialogContent className="rounded-3xl border-slate-200 p-6 sm:max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-black text-2xl uppercase italic tracking-tighter text-gray-950 underline decoration-primary/20">Purge Memory?</AlertDialogTitle>
-            <AlertDialogDescription className="font-bold text-gray-400 italic mt-4">
+            <AlertDialogTitle className="font-bold text-xl text-slate-800">Purge Memory?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600 text-sm mt-2">
               This image will be permanently removed from the Samaj digital archives.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="gap-6 mt-12">
-            <AlertDialogCancel className="px-10 py-5 bg-gray-50 border-none font-black text-[9px] uppercase tracking-widest rounded-2xl">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="px-10 py-5 bg-red-600 border-none font-black text-[9px] uppercase tracking-widest text-white rounded-2xl shadow-xl hover:bg-red-700 transition-all">Confirm Purge</AlertDialogAction>
+          <AlertDialogFooter className="gap-3 mt-6">
+            <AlertDialogCancel className="rounded-xl border-slate-200 bg-slate-50 text-slate-700 font-bold hover:bg-slate-100 hover:text-slate-900 m-0">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="rounded-xl border-none bg-rose-600 hover:bg-rose-700 text-white font-bold m-0 shadow-sm">Confirm Purge</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

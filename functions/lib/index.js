@@ -1,69 +1,99 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
-import axios from "axios";
-import * as nodemailer from "nodemailer";
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.telegramWebhook = exports.onUserCreate = exports.notifyNewMessage = exports.notifyNewMatrimonial = exports.onMemberChange = exports.sendLoginAlert = exports.verifyOTP = exports.sendOTP = void 0;
+const functions = __importStar(require("firebase-functions"));
+const admin = __importStar(require("firebase-admin"));
+const axios_1 = __importDefault(require("axios"));
+const nodemailer = __importStar(require("nodemailer"));
 admin.initializeApp();
-
 const GMAIL_EMAIL = "rakeshlakhara432@gmail.com";
 const GMAIL_PASS = "ntro chll ekqt rmvz";
-
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: GMAIL_EMAIL,
-    pass: GMAIL_PASS,
-  },
+    service: "gmail",
+    auth: {
+        user: GMAIL_EMAIL,
+        pass: GMAIL_PASS,
+    },
 });
-
 const getSecrets = () => {
-  return {
-    token: process.env.TELEGRAM_BOT_TOKEN || "",
-    chatId: process.env.WHITELISTED_TELEGRAM_ID || ""
-  };
+    return {
+        token: process.env.TELEGRAM_BOT_TOKEN || "",
+        chatId: process.env.WHITELISTED_TELEGRAM_ID || ""
+    };
 };
-
-const sendToTelegram = async (text: string) => {
-  const { token, chatId } = getSecrets();
-  if (!token || !chatId) {
-    console.error("TELEGRAM_BOT_TOKEN or WHITELISTED_TELEGRAM_ID not set.");
-    return;
-  }
-
-  try {
-    await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
-      chat_id: chatId,
-      text: text,
-      parse_mode: "HTML"
-    });
-  } catch (error: any) {
-    console.error("Error sending message to Telegram:", error.response?.data || error.message);
-  }
+const sendToTelegram = async (text) => {
+    const { token, chatId } = getSecrets();
+    if (!token || !chatId) {
+        console.error("TELEGRAM_BOT_TOKEN or WHITELISTED_TELEGRAM_ID not set.");
+        return;
+    }
+    try {
+        await axios_1.default.post(`https://api.telegram.org/bot${token}/sendMessage`, {
+            chat_id: chatId,
+            text: text,
+            parse_mode: "HTML"
+        });
+    }
+    catch (error) {
+        console.error("Error sending message to Telegram:", error.response?.data || error.message);
+    }
 };
-
 // ── OTP FUNCTIONS ─────────────────────────────────────────────────────────────
-
 /**
  * 1. Send OTP to User's Email
  */
-export const sendOTP = functions.https.onCall(async (data, context) => {
-  const { email } = data;
-  if (!email) throw new functions.https.HttpsError("invalid-argument", "Email is required.");
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  
-  // Store OTP in Firestore with 5-minute expiry
-  await admin.firestore().collection("otp_tokens").doc(email).set({
-    otp,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    expiresAt: Date.now() + 5 * 60 * 1000
-  });
-
-  const mailOptions = {
-    from: `"LAKHARA DIGITAL NEWS" <${GMAIL_EMAIL}>`,
-    to: email,
-    subject: "🔐 Your Verification Code - Lakhara Digital News",
-    html: `
+exports.sendOTP = functions.https.onCall(async (data, context) => {
+    const { email } = data;
+    if (!email)
+        throw new functions.https.HttpsError("invalid-argument", "Email is required.");
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Store OTP in Firestore with 5-minute expiry
+    await admin.firestore().collection("otp_tokens").doc(email).set({
+        otp,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        expiresAt: Date.now() + 5 * 60 * 1000
+    });
+    const mailOptions = {
+        from: `"LAKHARA DIGITAL NEWS" <${GMAIL_EMAIL}>`,
+        to: email,
+        subject: "🔐 Your Verification Code - Lakhara Digital News",
+        html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #CC3300; text-align: center;">LAKHARA DIGITAL NEWS</h2>
         <p style="font-size: 16px; color: #333;">नमस्ते लखारा समाज बन्धु,</p>
@@ -84,83 +114,74 @@ export const sendOTP = functions.https.onCall(async (data, context) => {
         </p>
       </div>
     `
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    return { success: true, message: "OTP Sent Successfully" };
-  } catch (error: any) {
-    console.error("Email Error:", error);
-    throw new functions.https.HttpsError("internal", "Failed to send email.");
-  }
+    };
+    try {
+        await transporter.sendMail(mailOptions);
+        return { success: true, message: "OTP Sent Successfully" };
+    }
+    catch (error) {
+        console.error("Email Error:", error);
+        throw new functions.https.HttpsError("internal", "Failed to send email.");
+    }
 });
-
 /**
  * 2. Verify OTP and Authenticate
  */
-export const verifyOTP = functions.https.onCall(async (data, context) => {
-  const { email, otp } = data;
-  if (!email || !otp) throw new functions.https.HttpsError("invalid-argument", "Email and OTP are required.");
-
-  const otpDoc = await admin.firestore().collection("otp_tokens").doc(email).get();
-  if (!otpDoc.exists) throw new functions.https.HttpsError("not-found", "Invalid or expired OTP.");
-
-  const { otp: storedOtp, expiresAt } = otpDoc.data() as any;
-
-  if (Date.now() > expiresAt) {
+exports.verifyOTP = functions.https.onCall(async (data, context) => {
+    const { email, otp } = data;
+    if (!email || !otp)
+        throw new functions.https.HttpsError("invalid-argument", "Email and OTP are required.");
+    const otpDoc = await admin.firestore().collection("otp_tokens").doc(email).get();
+    if (!otpDoc.exists)
+        throw new functions.https.HttpsError("not-found", "Invalid or expired OTP.");
+    const { otp: storedOtp, expiresAt } = otpDoc.data();
+    if (Date.now() > expiresAt) {
+        await admin.firestore().collection("otp_tokens").doc(email).delete();
+        throw new functions.https.HttpsError("deadline-exceeded", "OTP Expired.");
+    }
+    if (storedOtp !== otp) {
+        throw new functions.https.HttpsError("permission-denied", "Incorrect OTP.");
+    }
+    // OTP is correct! Delete it now
     await admin.firestore().collection("otp_tokens").doc(email).delete();
-    throw new functions.https.HttpsError("deadline-exceeded", "OTP Expired.");
-  }
-
-  if (storedOtp !== otp) {
-    throw new functions.https.HttpsError("permission-denied", "Incorrect OTP.");
-  }
-
-  // OTP is correct! Delete it now
-  await admin.firestore().collection("otp_tokens").doc(email).delete();
-
-  // Create or get user in Firebase Auth
-  let user;
-  try {
-    user = await admin.auth().getUserByEmail(email);
-  } catch {
-    user = await admin.auth().createUser({ email });
-  }
-
-  // Ensure Firestore user document exists to trigger onUserCreate
-  const userRef = admin.firestore().collection("users").doc(user.uid);
-  const userDoc = await userRef.get();
-  if (!userDoc.exists) {
-    await userRef.set({
-      uid: user.uid,
-      email: email,
-      role: "member",
-      joinedAt: new Date().toISOString(),
-      name: email.split("@")[0] // Default name from email
-    });
-  }
-
-  // Generate Custom Token for client login
-  const customToken = await admin.auth().createCustomToken(user.uid);
-
-  // Notify Admin on Telegram about new/returning user connection
-  await sendToTelegram(`🔑 <b>USER CONNECTION</b>\n\n👤 <b>Email:</b> ${email}\n📅 <b>Time:</b> ${new Date().toLocaleString()}\n\n<i>User has successfully verified their identity via Gmail OTP.</i>`);
-
-  return { success: true, token: customToken, uid: user.uid };
+    // Create or get user in Firebase Auth
+    let user;
+    try {
+        user = await admin.auth().getUserByEmail(email);
+    }
+    catch {
+        user = await admin.auth().createUser({ email });
+    }
+    // Ensure Firestore user document exists to trigger onUserCreate
+    const userRef = admin.firestore().collection("users").doc(user.uid);
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
+        await userRef.set({
+            uid: user.uid,
+            email: email,
+            role: "member",
+            joinedAt: new Date().toISOString(),
+            name: email.split("@")[0] // Default name from email
+        });
+    }
+    // Generate Custom Token for client login
+    const customToken = await admin.auth().createCustomToken(user.uid);
+    // Notify Admin on Telegram about new/returning user connection
+    await sendToTelegram(`🔑 <b>USER CONNECTION</b>\n\n👤 <b>Email:</b> ${email}\n📅 <b>Time:</b> ${new Date().toLocaleString()}\n\n<i>User has successfully verified their identity via Gmail OTP.</i>`);
+    return { success: true, token: customToken, uid: user.uid };
 });
-
 /**
  * 3. Send Login Alert Email
  */
-export const sendLoginAlert = functions.https.onCall(async (data, context) => {
-  const { email, name, method } = data;
-  if (!email) throw new functions.https.HttpsError("invalid-argument", "Email is required.");
-
-  const mailOptions = {
-    from: `"LAKHARA DIGITAL NEWS" <rakeshlakhara432@gmail.com>`,
-    to: email,
-    subject: "🚨 Security Alert: New Login to your Account",
-    html: `
+exports.sendLoginAlert = functions.https.onCall(async (data, context) => {
+    const { email, name, method } = data;
+    if (!email)
+        throw new functions.https.HttpsError("invalid-argument", "Email is required.");
+    const mailOptions = {
+        from: `"LAKHARA DIGITAL NEWS" <rakeshlakhara432@gmail.com>`,
+        to: email,
+        subject: "🚨 Security Alert: New Login to your Account",
+        html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #CC3300; text-align: center;">LAKHARA DIGITAL NEWS</h2>
         <p style="font-size: 16px; color: #333;">नमस्ते ${name || "सदस्य"},</p>
@@ -181,29 +202,26 @@ export const sendLoginAlert = functions.https.onCall(async (data, context) => {
         </p>
       </div>
     `
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    return { success: true };
-  } catch (error: any) {
-    console.error("Login Alert Email Error:", error);
-    throw new functions.https.HttpsError("internal", "Failed to send alert email.");
-  }
+    };
+    try {
+        await transporter.sendMail(mailOptions);
+        return { success: true };
+    }
+    catch (error) {
+        console.error("Login Alert Email Error:", error);
+        throw new functions.https.HttpsError("internal", "Failed to send alert email.");
+    }
 });
-
 // ── FIRESTORE TRIGGERS ────────────────────────────────────────────────────────
-
 // 1. Notify on New Member Registration AND Approval Status
-export const onMemberChange = functions.firestore
-  .document("members/{memberId}")
-  .onWrite(async (change, context) => {
+exports.onMemberChange = functions.firestore
+    .document("members/{memberId}")
+    .onWrite(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
-
     if (!change.before.exists) {
-      // NEW REGISTRATION
-      const text = `
+        // NEW REGISTRATION
+        const text = `
 🆕 <b>नया सदस्य पंजीकरण!</b>
 👤 <b>नाम:</b> ${after?.name}
 📍 <b>शहर:</b> ${after?.city}
@@ -213,21 +231,18 @@ export const onMemberChange = functions.firestore
 
 <a href="https://lakhara-news-website.web.app/admin/members">अनुमोदन (Approve) के लिए एडमिन पैनल खोलें</a>
       `;
-      return sendToTelegram(text);
+        return sendToTelegram(text);
     }
-
     if (change.after.exists && !before?.isApproved && after?.isApproved) {
-      // USER APPROVED
-       return sendToTelegram(`✅ <b>सदस्य सत्यापित:</b> ${after?.name} को लखारा समाज समुदाय के लिए सत्यापित कर दिया गया है।`);
+        // USER APPROVED
+        return sendToTelegram(`✅ <b>सदस्य सत्यापित:</b> ${after?.name} को लखारा समाज समुदाय के लिए सत्यापित कर दिया गया है।`);
     }
-    
     return null;
-  });
-
+});
 // 2. Notify on New Matrimonial Profile
-export const notifyNewMatrimonial = functions.firestore
-  .document("matrimonial/{profileId}")
-  .onCreate(async (snapshot, context) => {
+exports.notifyNewMatrimonial = functions.firestore
+    .document("matrimonial/{profileId}")
+    .onCreate(async (snapshot, context) => {
     const data = snapshot.data();
     const text = `
 ⚤ <b>Naya Matrimonial Profile!</b>
@@ -241,12 +256,11 @@ export const notifyNewMatrimonial = functions.firestore
 <a href="https://lakhara-news-website.web.app/admin/matrimonial">Verify karne ke liye Admin Panel jaye</a>
     `;
     return sendToTelegram(text);
-  });
-
+});
 // 3. Notify on New Support Message
-export const notifyNewMessage = functions.firestore
-  .document("messages/{messageId}")
-  .onCreate(async (snapshot, context) => {
+exports.notifyNewMessage = functions.firestore
+    .document("messages/{messageId}")
+    .onCreate(async (snapshot, context) => {
     const data = snapshot.data();
     const text = `
 📩 <b>Naya Support Message!</b>
@@ -256,17 +270,15 @@ export const notifyNewMessage = functions.firestore
 <i>${data.message}</i>
     `;
     return sendToTelegram(text);
-  });
-
+});
 // 3. Notify and Welcome New User on Account Creation
-export const onUserCreate = functions.firestore
-  .document("users/{userId}")
-  .onCreate(async (snapshot, context) => {
+exports.onUserCreate = functions.firestore
+    .document("users/{userId}")
+    .onCreate(async (snapshot, context) => {
     const userData = snapshot.data();
     const { email, name, photoURL, role, joinedAt } = userData;
-
-    if (!email) return null;
-
+    if (!email)
+        return null;
     // A. Send Welcome Email to User
     const welcomeMailOptions = {
         from: `"LAKHARA DIGITAL NEWS" <${GMAIL_EMAIL}>`,
@@ -313,7 +325,6 @@ export const onUserCreate = functions.firestore
           </div>
         `
     };
-
     // B. Send User Details to Telegram for Admin Review
     const telegramMessage = `
 👤 <b>NEW WEBSITE CONNECTION</b>
@@ -326,64 +337,58 @@ export const onUserCreate = functions.firestore
 --------------------------------
 🚀 <i>New user is now connected to the network!</i>
     `;
-
     try {
-      await Promise.all([
-        transporter.sendMail(welcomeMailOptions),
-        sendToTelegram(telegramMessage)
-      ]);
-      console.log(`Welcome sequence completed for: ${email}`);
-    } catch (error) {
-      console.error("Welcome Error:", error);
+        await Promise.all([
+            transporter.sendMail(welcomeMailOptions),
+            sendToTelegram(telegramMessage)
+        ]);
+        console.log(`Welcome sequence completed for: ${email}`);
     }
-
+    catch (error) {
+        console.error("Welcome Error:", error);
+    }
     return null;
-  });
-
+});
 // 4. Telegram Webhook (Handle incoming commands from Telegram)
-export const telegramWebhook = functions.https.onRequest(async (req, res) => {
-  const { token, chatId } = getSecrets();
-  
-  if (req.query.token !== token) {
-     res.status(401).send("Unauthorized");
-     return;
-  }
-
-  const message = req.body.message;
-  if (!message || String(message.chat.id) !== chatId) {
-     res.status(200).send("OK");
-     return;
-  }
-
-  const text = message.text || "";
-  
-  if (text.startsWith("/post ")) {
-    const newsContent = text.replace("/post ", "").trim();
-    if (newsContent) {
-      await admin.firestore().collection("samaj_news").add({
-        title: "Telegram Update",
-        content: newsContent,
-        category: "Breaking",
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
-      });
-      await sendToTelegram("✅ News published to website successfully!");
+exports.telegramWebhook = functions.https.onRequest(async (req, res) => {
+    const { token, chatId } = getSecrets();
+    if (req.query.token !== token) {
+        res.status(401).send("Unauthorized");
+        return;
     }
-  } else if (text === "/stats") {
-    const members = await admin.firestore().collection("members").count().get();
-    const matrimonial = await admin.firestore().collection("matrimonial").count().get();
-    const messages = await admin.firestore().collection("messages").count().get();
-    
-    const statsText = `
+    const message = req.body.message;
+    if (!message || String(message.chat.id) !== chatId) {
+        res.status(200).send("OK");
+        return;
+    }
+    const text = message.text || "";
+    if (text.startsWith("/post ")) {
+        const newsContent = text.replace("/post ", "").trim();
+        if (newsContent) {
+            await admin.firestore().collection("samaj_news").add({
+                title: "Telegram Update",
+                content: newsContent,
+                category: "Breaking",
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            await sendToTelegram("✅ News published to website successfully!");
+        }
+    }
+    else if (text === "/stats") {
+        const members = await admin.firestore().collection("members").count().get();
+        const matrimonial = await admin.firestore().collection("matrimonial").count().get();
+        const messages = await admin.firestore().collection("messages").count().get();
+        const statsText = `
 📊 <b>Website Stats:</b>
 👥 Members: ${members.data().count}
 💍 Matrimonial: ${matrimonial.data().count}
 📩 Messages: ${messages.data().count}
     `;
-    await sendToTelegram(statsText);
-  } else if (text === "/start") {
-    await sendToTelegram("Namaste Admin! My features:\n/post [news] - News upload karein\n/stats - Website report dekhein");
-  }
-
-  res.status(200).send("OK");
+        await sendToTelegram(statsText);
+    }
+    else if (text === "/start") {
+        await sendToTelegram("Namaste Admin! My features:\n/post [news] - News upload karein\n/stats - Website report dekhein");
+    }
+    res.status(200).send("OK");
 });
-
+//# sourceMappingURL=index.js.map

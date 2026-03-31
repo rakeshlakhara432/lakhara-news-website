@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, User, ShieldCheck, MapPin, Phone } from "lucide-react";
+import { Search, Loader2, Plus, Trash2, ShieldCheck, MapPin, Phone } from "lucide-react";
 import { samajService, CommitteeMember } from "../../services/samajService";
 import { toast } from "sonner";
 
@@ -37,54 +37,75 @@ export function ManageCommittee() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
-         <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">The <span className="text-primary italic">Executive</span> Council</h1>
-         <button onClick={() => setIsAdding(!isAdding)} className="px-8 py-3 bg-gray-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
-           <Plus className="size-4" /> Add Executive
+         <h1 className="text-2xl font-bold text-slate-800 leading-none">The <span className="text-orange-600">Executive</span> Council</h1>
+         <button onClick={() => setIsAdding(!isAdding)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-orange-600 transition-colors flex items-center gap-2">
+           <Plus className="size-4" /> {isAdding ? "Cancel" : "Add Executive"}
          </button>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAdd} className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-bhagva grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-top-4">
-           <input required placeholder="Name..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} />
-           <input required placeholder="Designation..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newMember.designation} onChange={e => setNewMember({...newMember, designation: e.target.value})} />
-           <input required placeholder="City..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newMember.city} onChange={e => setNewMember({...newMember, city: e.target.value})} />
-           <input required placeholder="Phone..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newMember.phone} onChange={e => setNewMember({...newMember, phone: e.target.value})} />
-           <input required type="number" placeholder="Order..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newMember.order} onChange={e => setNewMember({...newMember, order: parseInt(e.target.value)})} />
-           <button type="submit" className="bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl">Confirm Member</button>
+        <form onSubmit={handleAdd} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 animate-in slide-in-from-top-4">
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">Name</label>
+             <input required placeholder="Enter name..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} />
+           </div>
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">Designation</label>
+             <input required placeholder="e.g. President" className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.designation} onChange={e => setNewMember({...newMember, designation: e.target.value})} />
+           </div>
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">City</label>
+             <input required placeholder="City..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.city} onChange={e => setNewMember({...newMember, city: e.target.value})} />
+           </div>
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">Phone</label>
+             <input required placeholder="Phone..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.phone} onChange={e => setNewMember({...newMember, phone: e.target.value})} />
+           </div>
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">Display Order</label>
+             <input required type="number" placeholder="Order..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.order} onChange={e => setNewMember({...newMember, order: parseInt(e.target.value)})} />
+           </div>
+           <div className="flex items-end">
+             <button type="submit" className="w-full py-3.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold text-sm shadow-sm transition-colors">Confirm Member</button>
+           </div>
         </form>
       )}
 
-      {isLoading ? <Loader2 className="size-10 animate-spin mx-auto text-primary" /> : (
+      {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
            {members.map(m => (
-             <div key={m.id} className="p-6 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all group overflow-hidden relative">
-                <div className="absolute top-0 right-0 size-20 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
-                <div className="size-16 bg-primary/5 text-primary rounded-[1.5rem] flex items-center justify-center mb-6 border border-primary/10">
-                   <ShieldCheck className="size-8" />
+             <div key={m.id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                <div className="size-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-4 border border-orange-100">
+                   <ShieldCheck className="size-6" />
                 </div>
-                <div className="space-y-1">
-                   <h3 className="text-lg font-black text-gray-950 tracking-tighter uppercase italic leading-none">{m.name}</h3>
-                   <p className="text-[10px] font-black text-primary uppercase tracking-widest italic">{m.designation}</p>
+                <div className="space-y-1 mb-4 flex-grow">
+                   <h3 className="text-lg font-bold text-slate-800 leading-tight">{m.name}</h3>
+                   <p className="text-xs font-bold text-orange-600 uppercase tracking-widest">{m.designation}</p>
                 </div>
-                <div className="mt-6 pt-6 border-t border-gray-50 flex items-center justify-between">
-                   <div className="flex flex-col gap-1 text-gray-400">
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                   <div className="flex flex-col gap-1.5 text-slate-500">
                       <div className="flex items-center gap-2">
-                        <MapPin className="size-3" />
-                        <span className="text-[8px] font-black uppercase tracking-widest">{m.city}</span>
+                        <MapPin className="size-3.5 shrink-0" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider truncate">{m.city}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Phone className="size-3" />
-                        <span className="text-[8px] font-black uppercase tracking-widest">{m.phone}</span>
+                        <Phone className="size-3.5 shrink-0" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">{m.phone}</span>
                       </div>
                    </div>
-                   <button onClick={() => handleDelete(m.id!)} className="size-10 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                   <button onClick={() => handleDelete(m.id!)} className="size-8 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0">
                       <Trash2 className="size-4" />
                    </button>
                 </div>
              </div>
            ))}
+           {members.length === 0 && (
+             <div className="col-span-full py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300 text-center">
+               <p className="text-slate-500 font-medium text-sm">No committee members found.</p>
+             </div>
+           )}
         </div>
       )}
     </div>

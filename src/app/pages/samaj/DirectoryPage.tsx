@@ -1,11 +1,10 @@
-import { Search, Filter, User, MapPin, Phone, Mail, ChevronRight, Users, ShieldCheck } from "lucide-react";
+import { Search, User, MapPin, Phone, Users, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { samajService, Member } from "../../services/samajService";
 
 export function DirectoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
-
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,95 +23,97 @@ export function DirectoryPage() {
   );
 
   return (
-    <div className="space-y-16 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+    <div className="space-y-12 pb-24">
       
       {/* 🧑🤝🧑 HEADER */}
       <section className="text-center space-y-6 pt-12">
-         <div className="size-16 mx-auto bg-primary/10 text-primary rounded-2xl flex items-center justify-center shadow-md">
+         <div className="size-16 mx-auto bg-orange-600 text-white flex items-center justify-center rounded-2xl shadow-sm">
             <Users className="size-8" />
          </div>
          <div className="space-y-1">
-            <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">सदस्य <span className="text-primary underline decoration-primary/20">निर्देशिका</span></h1>
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic opacity-60">SAMAJ MEMBER DIRECTORY</p>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 leading-tight">सदस्य <span className="text-orange-600">निर्देशिका</span></h1>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Samaj Member Directory</p>
          </div>
       </section>
 
-      {/* 🔍 SEARCH & FILTER BAR */}
-      <section className="max-w-4xl mx-auto">
-         <div className="bg-white p-3 rounded-[2.5rem] border border-gray-100 shadow-bhagva flex flex-col md:flex-row gap-3">
-            <div className="flex-grow flex items-center gap-4 px-6 py-3 bg-gray-50/50 rounded-full border border-gray-100">
-               <Search className="size-4 text-gray-400" />
+      {/* 🔍 SEARCH & FILTER */}
+      <section className="max-w-3xl mx-auto px-6">
+         <div className="bg-white p-2 border border-slate-200 rounded-xl flex flex-col md:flex-row gap-2 shadow-sm">
+            <div className="flex-grow flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-lg">
+               <Search className="size-5 text-slate-400" />
                <input 
                  type="text" 
                  placeholder="नाम या शहर से खोजें..." 
-                 className="bg-transparent border-none outline-none w-full font-bold text-xs italic"
+                 className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-700"
                  value={searchTerm}
                  onChange={(e) => setSearchTerm(e.target.value)}
                />
             </div>
-            <button className="px-8 py-3 bg-primary text-white font-black rounded-full text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 transition-all">
-               <Filter className="size-4" /> फ़िल्टर करें
+            <button className="px-6 py-2 bg-orange-600 text-white font-semibold text-sm rounded-lg hover:bg-orange-500 transition-colors">
+               फ़िल्टर
             </button>
          </div>
       </section>
 
       {/* 📋 MEMBERS GRID */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-         {filteredMembers.length > 0 ? (
-           filteredMembers.map((m, i) => (
-             <div key={i} className="group p-6 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-1">
-                <div className="flex items-center gap-5">
-                   <div className="size-16 bg-gray-50 rounded-[1.5rem] flex items-center justify-center text-gray-300 group-hover:bg-primary/5 group-hover:text-primary transition-all relative overflow-hidden">
-                      <User className="size-8" />
-                      <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                         <ShieldCheck className="size-4" />
-                      </div>
-                   </div>
-                   <div className="flex-grow min-w-0">
-                      <h3 className="text-lg font-black text-gray-950 tracking-tighter uppercase italic leading-none mb-1.5 truncate">{m.name}</h3>
-                      <div className="flex items-center gap-2 text-gray-400">
-                         <MapPin className="size-3" />
-                         <span className="text-[9px] font-black uppercase tracking-widest italic">{m.city}</span>
-                      </div>
-                   </div>
-                </div>
-                
-                <div className="mt-8 pt-6 border-t border-gray-50 grid grid-cols-2 gap-4">
-                   <div className="space-y-1">
-                      <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest">व्यवसाय</p>
-                      <p className="text-[10px] font-black text-gray-600 italic uppercase">{m.occupation}</p>
-                   </div>
-                   <div className="space-y-1 text-right">
-                      <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest">संपर्क</p>
-                      <p className="text-[10px] font-black text-primary italic">{m.phone}</p>
-                   </div>
-                </div>
-                
-                <button className="w-full mt-6 py-3 bg-gray-50 text-gray-400 group-hover:bg-primary group-hover:text-white rounded-xl font-black text-[9px] uppercase tracking-widest transition-all">
-                   प्रोफ़ाइल देखें
-                </button>
+      {isLoading ? (
+        <div className="flex justify-center py-20">
+          <Loader2 className="size-10 text-orange-600 animate-spin" />
+        </div>
+      ) : (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 lg:px-0 container mx-auto">
+           {filteredMembers.length > 0 ? (
+             filteredMembers.map((m, i) => (
+               <div key={i} className="group p-6 bg-white border border-slate-200 rounded-xl hover:shadow-md transition-shadow hover:border-orange-200 flex flex-col">
+                  <div className="flex items-center gap-4">
+                     <div className="size-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center shrink-0">
+                        <User className="size-6" />
+                     </div>
+                     <div className="flex-grow min-w-0">
+                        <h3 className="text-base font-bold text-slate-800 truncate mb-1">{m.name}</h3>
+                        <div className="flex items-center gap-1.5 text-slate-500">
+                           <MapPin className="size-3.5 text-orange-600" />
+                           <span className="text-xs font-medium">{m.city}</span>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                     <div className="space-y-0.5">
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">व्यवसाय</p>
+                        <p className="text-sm font-medium text-slate-700">{m.occupation || '-'}</p>
+                     </div>
+                     <div className="space-y-0.5 text-right">
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">संपर्क</p>
+                        <p className="text-sm font-semibold text-orange-600">{m.phone}</p>
+                     </div>
+                  </div>
+                  
+                  <button className="w-full mt-5 py-2.5 bg-slate-50 text-slate-600 rounded-lg group-hover:bg-orange-50 group-hover:text-orange-700 font-semibold text-xs transition-colors border border-slate-100">
+                     प्रोफ़ाइल देखें
+                  </button>
+               </div>
+             ))
+           ) : (
+             <div className="col-span-full py-20 text-center space-y-4">
+                <Search className="size-12 text-slate-300 mx-auto" />
+                <p className="text-slate-500 font-medium text-sm">कोई सदस्य नहीं मिला।</p>
              </div>
-           ))
-         ) : (
-           <div className="col-span-full py-20 text-center space-y-4">
-              <div className="size-20 mx-auto bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
-                 <Search className="size-10" />
-              </div>
-              <p className="text-gray-400 font-black italic text-sm">कोई सदस्य नहीं मिला। कृपया पुनः प्रयास करें।</p>
-           </div>
-         )}
-      </section>
+           )}
+        </section>
+      )}
 
       {/* 📢 JOIN SAMAJ BANNER */}
-      <section className="bg-gray-950 text-white rounded-[4rem] p-12 relative overflow-hidden border-[6px] border-white shadow-2xl">
-         <div className="absolute inset-x-0 -bottom-1/2 h-full bg-primary/10 blur-[10rem]"></div>
-         <div className="absolute inset-0 mandala-bg opacity-5"></div>
-         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-            <div className="space-y-4 text-center md:text-left">
-               <h2 className="text-3xl font-black italic tracking-tighter uppercase">क्या आप समाज के <span className="text-primary">पंजीकृत</span> सदस्य हैं?</h2>
-               <p className="text-gray-400 font-bold italic text-sm">अभी अपनी सदस्यता सुनिश्चित करें और समाज के डिजिटल नेटवर्क का हिस्सा बनें।</p>
+      <section className="container mx-auto px-6 lg:px-0">
+         <div className="bg-slate-900 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-lg border border-slate-800">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-600/10 to-transparent"></div>
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+               <div className="space-y-4 text-center md:text-left">
+                  <h2 className="text-2xl md:text-3xl font-bold leading-tight">क्या आप समाज के <br /> <span className="text-orange-500">पंजीकृत</span> सदस्य हैं?</h2>
+                  <p className="text-slate-300 font-medium text-sm md:text-base max-w-lg">अभी अपनी सदस्यता सुनिश्चित करें और समाज के डिजिटल नेटवर्क का हिस्सा बनें।</p>
+               </div>
+               <Link to="/register" className="shrink-0 px-8 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-500 transition-colors shadow">अभी पंजीकरण करें</Link>
             </div>
-            <Link to="/register" className="px-12 py-5 bg-primary text-white font-black rounded-3xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-bhagva">अभी पंजीकरण करें</Link>
          </div>
       </section>
 

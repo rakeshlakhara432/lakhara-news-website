@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Globe, Flag, Heart, MessageCircle, Send, ArrowRight, Loader2 } from "lucide-react";
+import { Phone, Mail, MapPin, Globe, Flag, Heart, MessageCircle, Send, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { samajService } from "../../services/samajService";
 import { telegramService } from "../../services/telegramService";
@@ -18,7 +18,6 @@ export function ContactPage() {
     try {
       await samajService.addMessage(formData);
       
-      // Send Telegram Notification
       try {
         await telegramService.sendContactNotification(formData);
       } catch (tgErr) {
@@ -34,108 +33,107 @@ export function ContactPage() {
     }
   };
   return (
-    <div className="space-y-24 pb-32 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+    <div className="space-y-16 pb-24 animate-in fade-in slide-in-from-bottom-5 duration-700">
       
       {/* 📞 HEADER */}
-      <section className="text-center space-y-10 pt-12">
-         <div className="size-20 mx-auto bg-primary/10 text-primary md:rounded-[2rem] rounded-none flex items-center justify-center shadow-lg animate-pulse border border-primary/10">
-            <Phone className="size-10" />
+      <section className="text-center space-y-6 pt-12">
+         <div className="size-16 mx-auto bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center shadow-sm">
+            <Phone className="size-8" />
          </div>
-         <div className="space-y-4 px-6">
-            <h1 className="text-4xl md:text-5xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">हमसे <span className="text-primary underline decoration-primary/10 underline-offset-8">संपर्क</span> सूत्र</h1>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em] italic">GET IN TOUCH • WE ARE HERE</p>
+         <div className="space-y-2 px-6">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 leading-tight">हमसे <span className="text-orange-600">संपर्क</span> करें</h1>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Get in touch • We are here</p>
          </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-         {/* 📝 CONTACT FORM */}
-         <section className="bg-white p-8 md:p-20 md:rounded-[4rem] rounded-none border border-gray-100 shadow-bhagva space-y-12 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 size-40 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
-            
-            <div className="space-y-4">
-               <h2 className="text-2xl font-black italic tracking-tighter uppercase text-gray-950">संदेश <span className="text-primary opacity-50">भेजें</span></h2>
-               <p className="text-gray-400 font-bold italic text-[10px] uppercase tracking-widest">हम आपके सुझावों का स्वागत करते हैं</p>
-            </div>
+      <div className="container mx-auto px-6 lg:px-0">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* 📝 CONTACT FORM */}
+            <section className="bg-white p-8 md:p-12 rounded-3xl border border-slate-200 shadow-sm space-y-8 relative overflow-hidden">
+               <div className="absolute top-0 right-0 size-40 bg-gradient-to-br from-orange-600/5 to-transparent rounded-bl-full"></div>
+               
+               <div className="space-y-2">
+                  <h2 className="text-2xl font-bold text-slate-800">संदेश <span className="text-orange-600">भेजें</span></h2>
+                  <p className="text-slate-500 font-medium text-sm">हम आपके सुझावों का स्वागत करते हैं</p>
+               </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-               <div className="space-y-3">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">पूरा नाम</label>
-                  <div className="flex items-center gap-4 px-8 py-5 bg-gray-50/50 rounded-2xl border border-gray-100 focus-within:border-primary transition-all">
-                     <Mail className="size-5 text-gray-300" />
-                     <input required type="text" placeholder="नाम..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+               <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+                  <div className="space-y-2">
+                     <label className="text-xs font-bold text-slate-700">पूरा नाम</label>
+                     <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+                        <Mail className="size-5 text-slate-400" />
+                        <input required type="text" placeholder="नाम..." className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-800" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                     </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                     <label className="text-xs font-bold text-slate-700">आपका विषय</label>
+                     <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+                        <Heart className="size-5 text-slate-400" />
+                        <select required className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-700" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})}>
+                           <option>सामान्य पूछताछ</option>
+                           <option>पंजीकरण सहायता</option>
+                           <option>सुझाव</option>
+                           <option>शिकायत</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                     <label className="text-xs font-bold text-slate-700">विस्तृत संदेश</label>
+                     <div className="flex items-start gap-3 px-4 py-4 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+                        <MessageCircle className="size-5 text-slate-400 mt-0.5" />
+                        <textarea required rows={4} placeholder="अपना संदेश यहाँ लिखें..." className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-800 resize-none" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+                     </div>
+                  </div>
+
+                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-500 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50">
+                     {isSubmitting ? <Loader2 className="size-5 animate-spin" /> : <>संदेश भेजें <Send className="size-4" /></>}
+                  </button>
+               </form>
+            </section>
+
+            {/* 🗺️ ADDRESS & MAP */}
+            <section className="space-y-8">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                   { label: "ईमेल", val: "rakeshlakhara432@gmail.com", icon: Mail, color: "bg-blue-50 text-blue-600 border-blue-100" },
+                   { label: "फोन", val: "+91-9636691724", icon: Phone, color: "bg-emerald-50 text-emerald-600 border-emerald-100" },
+                   { label: "स्थान", val: "पली, राजस्थान", icon: MapPin, color: "bg-rose-50 text-rose-600 border-rose-100" },
+                   { label: "वेबसाइट", val: "lakhara-news-website.web.app", icon: Globe, color: "bg-amber-50 text-amber-600 border-amber-100" }
+                  ].map((item, i) => (
+                    <div key={i} className={`p-6 bg-white rounded-2xl border ${item.color.split(' ')[2]} shadow-sm hover:shadow-md transition-shadow text-center space-y-3`}>
+                       <div className={`size-12 mx-auto ${item.color.split(' ').slice(0,2).join(' ')} rounded-full flex items-center justify-center`}>
+                          <item.icon className="size-5" />
+                       </div>
+                       <div>
+                          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">{item.label}</h3>
+                          <p className="text-xs font-bold text-slate-800 truncate" title={item.val}>{item.val}</p>
+                       </div>
+                    </div>
+                  ))}
+               </div>
+               
+               {/* 📍 MAP PLACEHOLDER */}
+               <div className="bg-slate-100 h-[250px] md:h-[300px] rounded-3xl overflow-hidden relative shadow-sm border border-slate-200">
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000" className="size-full object-cover" alt="Map" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 bg-white/90 backdrop-blur px-6 py-2 rounded-full font-bold text-[10px] uppercase tracking-wider text-orange-600 shadow border border-orange-100">
+                     <MapPin className="size-4 animate-bounce" /> मुख्य कार्यालय
                   </div>
                </div>
                
-               <div className="space-y-3">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">आपका विषय</label>
-                  <div className="flex items-center gap-4 px-8 py-5 bg-gray-50/50 rounded-2xl border border-gray-100 focus-within:border-primary transition-all">
-                     <Heart className="size-5 text-gray-300" />
-                     <select required className="bg-transparent border-none outline-none w-full font-bold text-xs italic text-gray-500" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})}>
-                        <option>सामान्य पूछताछ</option>
-                        <option>पंजीकरण सहायता</option>
-                        <option>सुझाव</option>
-                        <option>शिकायत</option>
-                     </select>
+               <div className="bg-slate-900 text-white rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-lg border border-slate-800">
+                  <div className="size-16 bg-orange-600/20 text-orange-500 rounded-2xl flex items-center justify-center shrink-0 border border-orange-600/30">
+                     <Flag className="size-8" />
+                  </div>
+                  <div className="text-center md:text-left">
+                     <h4 className="text-xl font-bold leading-none mb-2">लखारा समाज पोर्टल</h4>
+                     <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">एकता • संस्कृति • विकास</p>
                   </div>
                </div>
-
-               <div className="space-y-3">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">विस्तृत संदेश</label>
-                  <div className="flex items-start gap-4 px-8 py-6 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 focus-within:border-primary transition-all">
-                     <MessageCircle className="size-6 text-gray-300 mt-1" />
-                     <textarea required rows={4} placeholder="अपना संदेश यहाँ लिखें..." className="bg-transparent border-none outline-none w-full font-bold text-xs italic resize-none" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
-                  </div>
-               </div>
-
-               <button type="submit" disabled={isSubmitting} className="w-full py-6 bg-primary text-white font-black rounded-3xl hover:bg-secondary transition-all text-xs tracking-widest uppercase shadow-2xl flex items-center justify-center gap-6 group disabled:opacity-50">
-                  {isSubmitting ? <Loader2 className="size-5 animate-spin" /> : <>संदेश भेजें <Send className="size-5 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform" /></>}
-               </button>
-            </form>
-         </section>
-
-         {/* 🗺️ ADDRESS & MAP */}
-         <section className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               {[
-                { label: "ईमेल", val: "rakeshlakhara432@gmail.com", icon: Mail, color: "bg-blue-50 text-blue-600" },
-                { label: "फोन", val: "+91-9636691724", icon: Phone, color: "bg-green-50 text-green-600" },
-                { label: "स्थान", val: "पली, राजस्थान", icon: MapPin, color: "bg-red-50 text-red-600" },
-                { label: "वेबसाइट", val: "lakhara-news-website.web.app", icon: Globe, color: "bg-amber-50 text-amber-600" }
-               ].map((item, i) => (
-                 <div key={i} className="group p-8 bg-white md:rounded-[3rem] rounded-none border border-gray-100 shadow-sm hover:shadow-bhagva transition-all hover:-translate-y-1 text-center space-y-4">
-                    <div className={`size-14 mx-auto ${item.color} rounded-2xl flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform`}>
-                       <item.icon className="size-6" />
-                    </div>
-                    <div>
-                       <h3 className="text-[10px] font-black text-gray-400 uppercase underline decoration-primary/10 tracking-widest leading-none mb-1.5">{item.label}</h3>
-                       <p className="text-sm font-black text-gray-950 italic tracking-tighter truncate">{item.val}</p>
-                    </div>
-                 </div>
-               ))}
-            </div>
-            
-            {/* 📍 MAP PLACEHOLDER */}
-            <div className="bg-gray-100 h-[300px] md:h-[400px] md:rounded-[5rem] rounded-none overflow-hidden relative group border-[10px] border-white shadow-2xl transition-all">
-               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000" className="size-full object-cover group-hover:scale-110 transition-transform duration-[10s]" alt="Map" />
-               <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 bg-white/95 backdrop-blur-3xl px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-[0.3em] text-primary shadow-2xl italic border border-primary/20">
-                  <MapPin className="size-6 animate-bounce" /> मुख्य कार्यालय
-               </div>
-            </div>
-            
-            <div className="bg-gray-950 text-white md:rounded-[4rem] rounded-none p-10 flex flex-col md:flex-row items-center gap-10 shadow-2xl relative overflow-hidden group">
-               <div className="absolute inset-0 mandala-bg opacity-5 group-hover:scale-125 transition-transform duration-[10s]"></div>
-               <div className="size-20 bg-primary/20 text-primary rounded-3xl flex items-center justify-center shrink-0 border border-primary/20 group-hover:scale-110 transition-transform">
-                  <Flag className="size-10 fill-current" />
-               </div>
-               <div className="text-center md:text-left">
-                  <h4 className="text-2xl font-black italic tracking-tighter uppercase leading-none mb-2">लखारा समाज पोर्टल</h4>
-                  <p className="text-[10px] font-black text-gray-400 italic uppercase tracking-[0.4em]">एकता &bull; संस्कृति &bull; विकास</p>
-               </div>
-            </div>
-         </section>
+            </section>
+         </div>
       </div>
-
     </div>
   );
 }

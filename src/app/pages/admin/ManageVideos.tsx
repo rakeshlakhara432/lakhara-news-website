@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, Video, Play, Radio, ArrowRight, Eye, Smartphone, Monitor } from "lucide-react";
+import { Loader2, Plus, Trash2, Video, Play, Radio, Monitor, Smartphone } from "lucide-react";
 import { samajService, VideoPost } from "../../services/samajService";
 import { toast } from "sonner";
 
@@ -43,85 +43,96 @@ export function ManageVideos() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
-         <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Samaj <span className="text-primary italic">Live</span> & Broadcast</h1>
-         <button onClick={() => setIsAdding(!isAdding)} className="px-8 py-3 bg-gray-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
-           <Plus className="size-4" /> Schedule Broadcast
+         <h1 className="text-2xl font-bold text-slate-800 leading-none">Samaj <span className="text-orange-600">Video Center</span></h1>
+         <button onClick={() => setIsAdding(!isAdding)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-orange-600 transition-colors flex items-center gap-2">
+           <Plus className="size-4" /> {isAdding ? "Cancel" : "Add Video"}
          </button>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAdd} className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-bhagva grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-top-4">
+        <form onSubmit={handleAdd} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-5 animate-in slide-in-from-top-4">
            <div className="space-y-4 col-span-full">
-              <input required placeholder="Broadcast Title..." className="w-full px-6 py-4 bg-gray-50 rounded-2xl border-none font-bold text-sm italic" value={newVideo.title} onChange={e => setNewVideo({...newVideo, title: e.target.value})} />
-              <textarea required rows={3} placeholder="Broadcast Description..." className="w-full px-6 py-6 bg-gray-50 rounded-[2rem] border-none font-bold text-xs italic resize-none" value={newVideo.description} onChange={e => setNewVideo({...newVideo, description: e.target.value})}></textarea>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Video Title</label>
+                 <input required placeholder="Enter title..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newVideo.title} onChange={e => setNewVideo({...newVideo, title: e.target.value})} />
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Description</label>
+                 <textarea required rows={3} placeholder="Enter details..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 resize-none transition-all focus:border-orange-500" value={newVideo.description} onChange={e => setNewVideo({...newVideo, description: e.target.value})}></textarea>
+              </div>
            </div>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full md:col-span-full">
-              <input required placeholder="Video URL (YouTube/Live Stream)..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none font-bold text-xs italic shadow-inner" value={newVideo.videoUrl} onChange={e => setNewVideo({...newVideo, videoUrl: e.target.value})} />
-              <input placeholder="Thumbnail Image URL (Optional)..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none font-bold text-xs italic shadow-inner" value={newVideo.thumbnailUrl} onChange={e => setNewVideo({...newVideo, thumbnailUrl: e.target.value})} />
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:col-span-full">
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Video Source URL (YouTube)</label>
+                 <input required placeholder="https://..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newVideo.videoUrl} onChange={e => setNewVideo({...newVideo, videoUrl: e.target.value})} />
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Thumbnail Image URL (Optional)</label>
+                 <input placeholder="Image URL..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newVideo.thumbnailUrl} onChange={e => setNewVideo({...newVideo, thumbnailUrl: e.target.value})} />
+              </div>
            </div>
-           <div className="flex items-center gap-6 col-span-full">
+           
+           <div className="flex flex-col sm:flex-row items-center gap-4 col-span-full pt-2">
               <button 
                 type="button" 
                 onClick={() => setNewVideo({...newVideo, isLive: !newVideo.isLive})}
-                className={`flex-grow py-4 rounded-xl font-black text-[9px] uppercase tracking-widest border-2 transition-all flex items-center justify-center gap-3 ${newVideo.isLive ? 'bg-red-50 text-red-600 border-red-500 shadow-xl shadow-red-500/20 animate-pulse' : 'bg-gray-50 text-gray-400 border-gray-100'}`}
+                className={`w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider border transition-colors flex items-center justify-center gap-2 ${newVideo.isLive ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-slate-50 text-slate-500 border-slate-200'}`}
               >
-                 <Radio className="size-4" /> {newVideo.isLive ? "Currently Live" : "Set as Live Video"}
+                 <Radio className={`size-4 ${newVideo.isLive ? 'animate-pulse' : ''}`} /> {newVideo.isLive ? "Currently Live" : "Set as Live Video"}
               </button>
-              <button type="submit" className="flex-grow py-5 bg-primary text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-4 group">
-                Seize Broadcast <Video className="size-5 group-hover:-translate-y-1 transition-transform" />
+              <button type="submit" className="w-full sm:flex-grow py-3.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-sm hover:bg-orange-500 transition-colors flex items-center justify-center gap-2">
+                Publish Video <Video className="size-4" />
               </button>
            </div>
         </form>
       )}
 
-      {isLoading ? <Loader2 className="size-10 animate-spin mx-auto text-primary" /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
            {videos.map(v => (
-             <div key={v.id} className="group p-4 bg-white rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden flex flex-col">
-                <div className="relative aspect-video rounded-[2rem] bg-gray-900 border-4 border-white shadow-xl overflow-hidden mb-6 group-hover:scale-105 transition-transform">
+             <div key={v.id} className="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full overflow-hidden">
+                <div className="relative aspect-video bg-slate-900 overflow-hidden flex-shrink-0">
                    {v.thumbnailUrl ? (
-                     <img src={v.thumbnailUrl} className="size-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" alt={v.title} />
+                     <img src={v.thumbnailUrl} className="size-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-75" alt={v.title} />
                    ) : (
-                     <div className="size-full flex items-center justify-center text-gray-700 bg-gray-800"><Video className="size-10" /></div>
+                     <div className="size-full flex items-center justify-center text-slate-600"><Video className="size-8" /></div>
                    )}
                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="size-14 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-125 transition-transform border-4 border-white/20">
-                         <Play className="size-6 fill-current" />
+                      <div className="size-12 bg-orange-600 text-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                         <Play className="size-5 fill-current ml-1" />
                       </div>
                    </div>
                    {v.isLive && (
-                     <div className="absolute top-4 left-4 bg-red-600 text-white px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest italic animate-pulse shadow-lg flex items-center gap-2 border border-white/20">
-                        <Radio className="size-3" /> Live Now
+                     <div className="absolute top-3 left-3 bg-rose-600 text-white px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+                        <Radio className="size-3 animate-pulse" /> Live Now
                      </div>
                    )}
                 </div>
                 
-                <div className="px-4 pb-4 space-y-3 flex-grow">
-                   <h3 className="text-md font-black text-gray-950 tracking-tighter uppercase italic leading-tight line-clamp-1">{v.title}</h3>
-                   <p className="text-[9px] font-bold text-gray-400 italic line-clamp-2 leading-relaxed">{v.description}</p>
-                </div>
-
-                <div className="pt-6 px-4 border-t border-gray-50 flex items-center justify-between">
-                   <div className="flex items-center gap-3">
-                      <button onClick={() => handleDelete(v.id!)} className="size-10 bg-gray-50 text-gray-300 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                <div className="p-4 flex flex-col flex-grow">
+                   <h3 className="text-base font-bold text-slate-800 leading-tight line-clamp-2 mb-2">{v.title}</h3>
+                   <p className="text-sm font-medium text-slate-500 line-clamp-2 mb-4">{v.description}</p>
+                   
+                   <div className="pt-4 mt-auto border-t border-slate-100 flex items-center justify-between">
+                      <button onClick={() => handleDelete(v.id!)} className="size-8 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors">
                         <Trash2 className="size-4" />
                       </button>
-                   </div>
-                   <div className="flex items-center gap-3 text-gray-300">
-                      <Monitor className="size-4" />
-                      <Smartphone className="size-4" />
+                      <div className="flex items-center gap-2 text-slate-400">
+                         <Monitor className="size-4" />
+                         <Smartphone className="size-4" />
+                      </div>
                    </div>
                 </div>
              </div>
            ))}
-        </div>
-      )}
-
-      {videos.length === 0 && !isLoading && (
-        <div className="text-center py-40 bg-gray-50 rounded-[4rem] border-4 border-dashed border-gray-100 italic">
-          <p className="text-gray-400 font-black uppercase tracking-widest text-xs opacity-40">No digital broadcasts detected in the Samaj streams</p>
+           {videos.length === 0 && (
+             <div className="col-span-full py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300 text-center">
+               <p className="text-slate-500 font-medium text-sm">No videos found in the database.</p>
+             </div>
+           )}
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   TrendingUp, Search, Filter, Play, Eye, Heart, Clock,
-  Hash, Flame, Sparkles, Loader2, ChevronRight, Film, Zap, FileText, ArrowRight
+  Hash, Flame, Sparkles, Loader2, ChevronRight, Film, Zap, FileText, ArrowRight, X
 } from "lucide-react";
 import { videoService, VideoPost } from "../services/videoService";
 import { newsService, Article } from "../services/newsService";
@@ -9,12 +9,12 @@ import { useNavigate, useSearchParams } from "react-router";
 import { ArticleCard } from "../components/ArticleCard";
 
 const CATEGORIES = [
-  { label: "All Network", value: "all", emoji: "🌐" },
-  { label: "Politics", value: "politics", emoji: "🏛️" },
-  { label: "Sports", value: "sports", emoji: "⚽" },
-  { label: "Entertainment", value: "entertainment", emoji: "🎭" },
-  { label: "Tech", value: "tech", emoji: "💻" },
-  { label: "Business", value: "business", emoji: "💼" },
+  { label: "ऑल नेटवर्क", value: "all", emoji: "🌐" },
+  { label: "राजनीति", value: "politics", emoji: "🏛️" },
+  { label: "खेल", value: "sports", emoji: "⚽" },
+  { label: "मनोरंजन", value: "entertainment", emoji: "🎭" },
+  { label: "तकनीक", value: "tech", emoji: "💻" },
+  { label: "व्यापार", value: "business", emoji: "💼" },
 ];
 
 export function ExplorePage() {
@@ -81,84 +81,90 @@ export function ExplorePage() {
   };
 
   return (
-    <div className="bg-[#fcfcfc] dark:bg-gray-950 min-h-screen pb-32">
-      <div className="container mx-auto px-6 py-10 max-w-6xl space-y-16">
+    <div className="bg-white min-h-screen pb-40">
+      <div className="container mx-auto px-6 py-12 max-w-7xl space-y-24">
         
-        {/* ── Mission Search Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-           <div className="space-y-4">
-              <div className="size-16 bg-lakhara rounded-[1.5rem] flex items-center justify-center shadow-lakhara rotate-[-10deg]">
-                 <Search className="size-8 text-white" />
+        {/* ── BOLD EXPLORE HEADER ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b-8 border-primary pb-20">
+           <div className="space-y-8">
+              <div className="size-20 bg-gray-950 text-primary flex items-center justify-center border-4 border-primary shadow-bhagva-flat">
+                 <Search className="size-10" />
               </div>
-              <h1 className="text-6xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase leading-none">
-                 LAKHARA <span className="text-gradient">EXPLORE</span>
-              </h1>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.8em]">Network Intelligence Discovery</p>
+              <div className="space-y-4">
+                 <h1 className="text-6xl md:text-8xl font-black text-gray-950 italic tracking-tighter uppercase leading-none border-l-[16px] border-primary pl-8">विषय <span className="text-primary italic">खोजें</span></h1>
+                 <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.8em] ml-2 italic">LAKHARA DIGITAL INTELLIGENCE MATRIX</p>
+              </div>
            </div>
 
-           <div className="flex bg-gray-100 dark:bg-white/5 p-1.5 rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-sm self-start">
+           <div className="flex bg-gray-950 p-2 border-b-8 border-primary group">
              {(["all", "articles", "videos"] as const).map(t => (
                <button 
                  key={t}
                  onClick={() => setContentType(t)}
-                 className={`px-8 py-3 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all ${contentType === t ? 'bg-white dark:bg-lakhara text-primary dark:text-white shadow-sm' : 'text-gray-400 hover:text-gray-900 group'}`}
+                 className={`px-12 py-5 text-[11px] font-black uppercase tracking-[0.3em] transition-all italic ${contentType === t ? 'bg-primary text-white' : 'text-gray-500 hover:text-white'}`}
                >
-                 {t}
+                 {t === "all" ? "सबकुछ" : t === "articles" ? "खबरें" : "वीडियो"}
                </button>
              ))}
            </div>
         </div>
 
-        {/* ── Search Command Bar ── */}
+        {/* ── COMMAND SEARCH BAR ── */}
         <div className="relative group">
-           <div className="absolute inset-x-0 bottom-0 h-1 bg-primary/20 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-700 origin-left"></div>
-           <Search className="absolute left-8 top-1/2 -translate-y-1/2 size-8 text-gray-300 group-focus-within:text-primary transition-colors" />
+           <Search className="absolute left-10 top-1/2 -translate-y-1/2 size-10 text-gray-200 group-focus-within:text-primary transition-colors" />
            <input 
              type="text" 
              value={searchQuery}
              onChange={e => handleSearchChange(e.target.value)}
-             className="w-full bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-[3rem] pl-20 pr-10 py-10 text-3xl font-black text-gray-950 dark:text-white placeholder:text-gray-200 dark:placeholder:text-gray-800 outline-none focus:shadow-3xl transition-all italic tracking-tighter"
-             placeholder="Search the network pulse..."
+             className="w-full bg-gray-50 border-8 border-gray-100 pl-24 pr-12 py-12 text-4xl md:text-6xl font-black text-gray-950 placeholder:text-gray-100 outline-none focus:border-primary transition-all italic tracking-tighter uppercase"
+             placeholder="नेटवर्क पर खोजें..."
            />
+           {searchQuery && (
+             <button onClick={() => handleSearchChange("")} className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary">
+                <X className="size-10" />
+             </button>
+           )}
         </div>
 
-        {/* ── Channel Selector ── */}
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6 -mx-6 px-6">
+        {/* ── CHANNEL SELECTOR GRID ── */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
            {CATEGORIES.map(cat => (
              <button 
                key={cat.value} 
                onClick={() => setSelectedCategory(cat.value)}
-               className={`flex-shrink-0 flex items-center gap-4 px-10 py-5 rounded-[2rem] border-2 transition-all active:scale-95 ${selectedCategory === cat.value ? 'bg-gray-950 border-gray-950 text-white shadow-2xl' : 'bg-white dark:bg-white/5 border-gray-100 dark:border-white/5 text-gray-400 hover:border-primary/20'}`}
+               className={`flex items-center gap-6 p-8 border-4 transition-all italic ${selectedCategory === cat.value ? 'bg-gray-950 border-primary text-white shadow-bhagva-flat' : 'bg-white border-gray-100 text-gray-400 hover:border-primary/30'}`}
              >
-                <span className="text-2xl">{cat.emoji}</span>
-                <span className="text-[11px] font-black uppercase tracking-widest">{cat.label}</span>
+                <span className="text-3xl">{cat.emoji}</span>
+                <span className="text-[12px] font-black uppercase tracking-widest leading-none">{cat.label}</span>
              </button>
            ))}
         </div>
 
         {loading ? (
-           <div className="flex flex-col items-center justify-center py-40 gap-10">
-              <div className="size-24 bg-gray-50 dark:bg-white/5 rounded-[3rem] flex items-center justify-center animate-pulse">
-                 <Loader2 className="size-12 text-primary animate-spin" />
+           <div className="flex flex-col items-center justify-center py-40 gap-12 bg-gray-50 border-8 border-dashed border-gray-100">
+              <div className="size-32 bg-white border-4 border-gray-200 flex items-center justify-center relative">
+                 <Loader2 className="size-16 text-primary animate-spin" />
+                 <div className="absolute inset-0 border-4 border-primary/10 animate-ping"></div>
               </div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[1em] ml-[1em]">Establishing Connection</p>
+              <div className="space-y-4 text-center">
+                 <p className="text-2xl font-black text-gray-950 uppercase italic tracking-widest">सिस्टम सिंक जारी है</p>
+                 <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.6em] italic">ESTABLISHING CONNECTION PROTOCOL</p>
+              </div>
            </div>
         ) : (
            <div className="space-y-40">
               
-              {/* ── Articles Feed ── */}
+              {/* ── INTELLIGENCE BRIEFINGS (Articles) ── */}
               {(contentType === "all" || contentType === "articles") && filteredArticles.length > 0 && (
                 <div className="space-y-16">
-                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-10">
-                      <div className="flex items-center gap-6">
-                         <div className="size-12 bg-lakhara/10 text-primary rounded-xl flex items-center justify-center">
-                            <FileText className="size-6" />
-                         </div>
-                         <h2 className="text-4xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase">Intelligence Briefings</h2>
+                   <div className="flex items-center justify-between border-l-[16px] border-primary pl-8">
+                      <div className="space-y-1">
+                         <h2 className="text-4xl md:text-6xl font-black text-gray-950 italic tracking-tighter uppercase leading-none">खबर <span className="text-primary italic">डिटेल</span></h2>
+                         <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.5em] italic">LATEST FIELD REPORTS</p>
                       </div>
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">{filteredArticles.length} Results</span>
+                      <span className="bg-gray-950 text-white px-8 py-4 font-black text-[12px] uppercase tracking-[0.4em] italic">{filteredArticles.length} परिणाम</span>
                    </div>
-                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {filteredArticles.map(article => (
                         <ArticleCard key={article.id} article={article} />
                       ))}
@@ -166,30 +172,31 @@ export function ExplorePage() {
                 </div>
               )}
 
-              {/* ── Reels Feed ── */}
+              {/* ── VISUAL OPERATIONS (Videos) ── */}
               {(contentType === "all" || contentType === "videos") && filteredVideos.length > 0 && (
                 <div className="space-y-16">
-                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-10">
-                      <div className="flex items-center gap-6">
-                         <div className="size-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <Film className="size-6" />
-                         </div>
-                         <h2 className="text-4xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase">Visual Operations</h2>
+                   <div className="flex items-center justify-between border-l-[16px] border-gray-950 pl-8">
+                      <div className="space-y-1">
+                         <h2 className="text-4xl md:text-6xl font-black text-gray-950 italic tracking-tighter uppercase leading-none">वीडियो <span className="text-primary italic">प्रसार</span></h2>
+                         <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.5em] italic">REAL-TIME VISUAL DATA</p>
                       </div>
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">{filteredVideos.length} Results</span>
+                      <span className="bg-primary text-white px-8 py-4 font-black text-[12px] uppercase tracking-[0.4em] italic">{filteredVideos.length} परिणाम</span>
                    </div>
-                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                       {filteredVideos.map(video => (
-                        <div key={video.id} onClick={() => navigate("/reels")} className="group relative aspect-[9/16] rounded-[2.5rem] overflow-hidden bg-black cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500">
-                           <img src={video.thumbnailUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale-[0.3] group-hover:grayscale-0" />
-                           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all">
-                              <div className="size-16 bg-primary rounded-full flex items-center justify-center text-white shadow-lakhara">
-                                 <Play className="size-8 fill-current translate-x-1" />
+                        <div key={video.id} onClick={() => navigate("/reels")} className="group relative aspect-[9/16] overflow-hidden bg-black cursor-pointer group border-4 border-gray-100 hover:border-primary transition-all shadow-xl">
+                           <img src={video.thumbnailUrl} className="size-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0" />
+                           <div className="absolute inset-0 bg-black/40 opacity-60 group-hover:opacity-0 transition-opacity"></div>
+                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="size-20 bg-primary flex items-center justify-center text-white shadow-bhagva-flat border-4 border-white">
+                                 <Play className="size-10 fill-current translate-x-1" />
                               </div>
                            </div>
+                           <div className="absolute top-4 right-4 bg-gray-950 text-white px-3 py-1 font-black text-[10px] uppercase italic border border-white/20">
+                              REEL
+                           </div>
                            <div className="absolute bottom-6 left-6 right-6">
-                              <p className="text-white font-black text-xs italic tracking-tighter line-clamp-2 leading-tight group-hover:text-primary transition-colors">{video.title}</p>
+                              <p className="text-white font-black text-[12px] italic tracking-tighter line-clamp-2 leading-tight uppercase bg-gray-950/80 p-3 border-l-4 border-primary">{video.title}</p>
                            </div>
                         </div>
                       ))}
@@ -197,17 +204,17 @@ export function ExplorePage() {
                 </div>
               )}
 
-              {/* ── Empty State ── */}
+              {/* ── EMPTY STATE MATRIX ── */}
               {filteredArticles.length === 0 && filteredVideos.length === 0 && (
-                 <div className="py-40 flex flex-col items-center justify-center text-center gap-10">
-                    <div className="size-32 bg-gray-50 dark:bg-white/5 rounded-[4rem] flex items-center justify-center text-gray-200">
-                       <Zap className="size-16" />
+                 <div className="py-40 flex flex-col items-center justify-center text-center gap-12 bg-gray-50 border-8 border-dashed border-gray-100">
+                    <div className="size-40 bg-white border-8 border-gray-100 flex items-center justify-center text-gray-200 shadow-2xl">
+                       <Zap className="size-20" />
                     </div>
-                    <div>
-                       <h2 className="text-4xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase mb-4 leading-none">Intelligence Nullified</h2>
-                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em]">No network activity matches your scan</p>
+                    <div className="space-y-6">
+                       <h2 className="text-5xl md:text-7xl font-black text-gray-950 italic tracking-tighter uppercase mb-4 leading-none border-b-8 border-primary inline-block pb-4">निरंक <span className="text-primary italic">डाटा</span></h2>
+                       <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.8em] italic">NO NETWORK ACTIVITY MATCHES YOUR SCAN PROTOCOL</p>
                     </div>
-                    <button onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }} className="btn-lakhara !rounded-[2rem] !px-12 !py-6">RESET ALL SCANS</button>
+                    <button onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }} className="px-20 py-8 bg-primary text-white font-black text-xl uppercase tracking-[0.5em] hover:bg-gray-950 transition-colors border-none outline-none italic shadow-bhagva-flat">RESET ALL SCANS</button>
                  </div>
               )}
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { 
-  Users, Heart, Calendar, MessageCircle, Activity, Shield, 
+  Users, Heart, Calendar, MessageCircle, Activity, 
   ShieldCheck, Megaphone, GraduationCap, Image as ImageIcon,
   TrendingUp, Zap, Star
 } from "lucide-react";
@@ -36,7 +36,7 @@ export function AdminDashboard() {
   }, []);
 
   const distributionData = [
-    { name: "Members", value: stats.members, color: "#f97316" },
+    { name: "Members", value: stats.members, color: "#ea580c" },
     { name: "Matrimonial", value: stats.matrimonial, color: "#ec4899" },
     { name: "Events", value: stats.events, color: "#eab308" },
     { name: "News", value: stats.news, color: "#0ea5e9" }
@@ -51,101 +51,95 @@ export function AdminDashboard() {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-1000">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       
       {/* 🚀 HEADER & STATUS */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-         <div className="flex items-center gap-6 border-l-[10px] border-primary pl-10 py-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+         <div className="flex items-center gap-4 border-l-4 border-orange-600 pl-4 py-1">
             <div>
-               <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-tight md:leading-none">Samaj <span className="text-primary italic">Control</span> Hub</h1>
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2 italic shadow-inner">Real-time Community Intelligence v4.0</p>
+               <h1 className="text-2xl font-bold text-slate-800 leading-tight">Samaj <span className="text-orange-600">Control Hub</span></h1>
+               <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-1">Real-time Community Intelligence</p>
             </div>
          </div>
-         <div className="flex items-center gap-4 px-8 py-3 bg-gray-950 text-white md:rounded-[2rem] rounded-none shadow-2xl border border-white/5">
-            <Activity className="size-4 text-primary animate-pulse" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] italic">System Active &bull; Verified</span>
+         <div className="flex items-center gap-2.5 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100">
+            <Activity className="size-4 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">System Active</span>
          </div>
       </div>
 
       {/* 📊 CORE STATS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Community Members", val: stats.members, icon: Users, color: "bg-orange-50 text-orange-600" },
-          { label: "Matrimonial Matches", val: stats.matrimonial, icon: Heart, color: "bg-pink-50 text-pink-600" },
-          { label: "Live Events", val: stats.events, icon: Calendar, color: "bg-amber-50 text-amber-600" },
-          { label: "Executive Council", val: stats.committee, icon: ShieldCheck, color: "bg-gray-100 text-gray-950" }
+          { label: "Community Members", val: stats.members, icon: Users, color: "bg-orange-50 text-orange-600 border-orange-100" },
+          { label: "Matrimonial Matches", val: stats.matrimonial, icon: Heart, color: "bg-rose-50 text-rose-600 border-rose-100" },
+          { label: "Live Events", val: stats.events, icon: Calendar, color: "bg-amber-50 text-amber-600 border-amber-100" },
+          { label: "Executive Council", val: stats.committee, icon: ShieldCheck, color: "bg-emerald-50 text-emerald-600 border-emerald-100" }
         ].map((stat, i) => (
-          <div key={i} className="group bg-white md:rounded-[2.5rem] rounded-none border border-gray-100 p-8 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
-            <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg] scale-150 group-hover:scale-175 transition-transform duration-700"></div>
-            <div className={`size-14 ${stat.color} rounded-[1.5rem] flex items-center justify-center mb-6 shadow-md shadow-black/5`}>
-              <stat.icon className="size-7" />
+          <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div className={`size-12 ${stat.color} border rounded-xl flex items-center justify-center mb-4`}>
+              <stat.icon className="size-6" />
             </div>
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">{stat.label}</p>
-            <p className="text-4xl font-black text-gray-950 tracking-tighter leading-tight md:leading-none italic">{stat.val}</p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{stat.label}</p>
+            <p className="text-3xl font-extrabold text-slate-800 leading-none">{stat.val}</p>
           </div>
         ))}
       </div>
 
       {/* 📈 CHARTS SECTION */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
          
          {/* GROWTH TREND */}
-         <div className="xl:col-span-2 bg-white md:rounded-[3.5rem] rounded-none border border-gray-100 p-6 md:p-10 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between mb-12">
-               <h2 className="text-sm font-black text-gray-950 uppercase tracking-widest flex items-center gap-4 italic">
-                  <TrendingUp className="size-5 text-primary" /> Community Growth Analytics
+         <div className="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between mb-8">
+               <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <TrendingUp className="size-4 text-orange-600" /> Community Growth
                </h2>
-               <div className="flex gap-2">
-                  <div className="h-2 w-8 bg-primary rounded-full"></div>
-                  <div className="h-2 w-2 bg-gray-100 rounded-full"></div>
+               <div className="flex gap-1.5">
+                  <div className="h-1.5 w-6 bg-orange-600 rounded-full"></div>
+                  <div className="h-1.5 w-1.5 bg-slate-200 rounded-full"></div>
                </div>
             </div>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={280}>
                <BarChart data={activityData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 'bold', fill: '#94a3b8'}} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 500, fill: '#64748b'}} />
                   <YAxis hide />
                   <Tooltip 
                      cursor={{fill: '#f8fafc'}}
-                     contentStyle={{borderRadius: '1rem', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', padding: '1rem'}}
+                     contentStyle={{borderRadius: '0.75rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '0.75rem', fontSize: '12px'}}
                   />
-                  <Bar dataKey="activity" fill="url(#bhagvaGradient)" radius={[10, 10, 10, 10]} barSize={40} />
-                  <defs>
-                     <linearGradient id="bhagvaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f97316" stopOpacity={1}/>
-                        <stop offset="100%" stopColor="#ea580c" stopOpacity={0.8}/>
-                     </linearGradient>
-                  </defs>
+                  <Bar dataKey="activity" fill="#ea580c" radius={[6, 6, 6, 6]} barSize={32} />
                </BarChart>
             </ResponsiveContainer>
          </div>
 
          {/* 🎯 DISTRIBUTION PIE */}
-         <div className="bg-white md:rounded-[3.5rem] rounded-none border border-gray-100 p-6 md:p-10 shadow-sm flex flex-col items-center">
-            <h2 className="text-sm font-black text-gray-950 uppercase tracking-widest mb-10 italic text-center">Entity Distribution</h2>
-            <div className="flex-grow w-full h-[240px]">
+         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col items-center">
+            <h2 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2"><Star className="size-4 text-orange-600"/> Entity Distribution</h2>
+            <div className="flex-grow w-full h-[200px]">
                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                      <Pie
                         data={distributionData}
-                        innerRadius={60}
-                        outerRadius={80}
+                        innerRadius={50}
+                        outerRadius={70}
                         paddingAngle={5}
                         dataKey="value"
+                        stroke="none"
                      >
                         {distributionData.map((entry, index) => (
                            <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                      </Pie>
-                     <Tooltip />
+                     <Tooltip contentStyle={{borderRadius: '0.5rem', border: '1px solid #e2e8f0', fontSize: '12px'}} />
                   </PieChart>
                </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-2 gap-4 w-full mt-8">
+            <div className="grid grid-cols-2 gap-3 w-full mt-6">
                {distributionData.map((d, i) => (
-                  <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-2xl p-3 border border-gray-100">
-                     <div className="size-2 rounded-full" style={{backgroundColor: d.color}}></div>
-                     <span className="text-[9px] font-black uppercase text-gray-500 italic">{d.name}</span>
+                  <div key={i} className="flex items-center gap-2 bg-slate-50 rounded-lg p-2 border border-slate-100">
+                     <div className="size-2.5 rounded-full shrink-0" style={{backgroundColor: d.color}}></div>
+                     <span className="text-[10px] font-bold text-slate-600 truncate">{d.name}</span>
                   </div>
                ))}
             </div>
@@ -156,18 +150,18 @@ export function AdminDashboard() {
       {/* 🔔 SECONDARY STATS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Announcements", val: stats.news, icon: Megaphone, color: "text-blue-500 bg-blue-50" },
-          { label: "Aid Ops", val: stats.support, icon: GraduationCap, color: "text-purple-500 bg-purple-50" },
-          { label: "Archived Media", val: stats.gallery, icon: ImageIcon, color: "text-indigo-500 bg-indigo-50" },
-          { label: "Total Queries", val: stats.messages, icon: MessageCircle, color: "text-emerald-500 bg-emerald-50" }
+          { label: "Announcements", val: stats.news, icon: Megaphone, color: "text-blue-600 bg-blue-50 border-blue-100" },
+          { label: "Aid Ops", val: stats.support, icon: GraduationCap, color: "text-purple-600 bg-purple-50 border-purple-100" },
+          { label: "Archived Media", val: stats.gallery, icon: ImageIcon, color: "text-indigo-600 bg-indigo-50 border-indigo-100" },
+          { label: "Total Queries", val: stats.messages, icon: MessageCircle, color: "text-emerald-600 bg-emerald-50 border-emerald-100" }
         ].map((stat, i) => (
-          <div key={i} className="flex items-center gap-6 p-6 bg-white md:rounded-[2rem] rounded-none border border-gray-100 hover:border-primary/20 transition-all cursor-default">
-             <div className={`size-12 ${stat.color} rounded-2xl flex items-center justify-center shadow-inner`}>
-                <stat.icon className="size-6" />
+          <div key={i} className="flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+             <div className={`size-12 ${stat.color} border rounded-xl flex items-center justify-center shrink-0`}>
+                <stat.icon className="size-5" />
              </div>
              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-tight md:leading-none mb-1.5">{stat.label}</p>
-                <p className="text-xl font-black text-gray-950 italic">{stat.val}</p>
+                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">{stat.label}</p>
+                <p className="text-lg font-bold text-slate-800 leading-none">{stat.val}</p>
              </div>
           </div>
         ))}

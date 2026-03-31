@@ -31,9 +31,9 @@ export function NotificationsPage() {
     setMarkingAll(true);
     try {
       await videoService.markAllNotificationsRead(user.uid);
-      toast.success("All protocols updated.");
+      toast.success("सभी सूचनाएं अपडेट की गईं।");
     } catch {
-      toast.error("Protocol update failed.");
+      toast.error("अपडेट विफल।");
     } finally {
       setMarkingAll(false);
     }
@@ -46,53 +46,53 @@ export function NotificationsPage() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case "like": return <Heart className="size-6 text-primary fill-primary" />;
-      case "comment": return <MessageCircle className="size-6 text-blue-500" />;
-      case "follow": return <UserPlus className="size-6 text-green-500" />;
-      default: return <Bell className="size-6 text-orange-500" />;
+      case "like": return <Heart className="size-8 text-primary" />;
+      case "comment": return <MessageCircle className="size-8 text-gray-950" />;
+      case "follow": return <UserPlus className="size-8 text-primary" />;
+      default: return <Bell className="size-8 text-gray-950" />;
     }
   };
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] gap-12 px-6">
-        <div className="relative">
-           <div className="absolute inset-0 bg-primary/20 blur-3xl animate-pulse"></div>
-           <div className="size-32 bg-gray-950 rounded-[3rem] flex items-center justify-center border border-white/10 relative z-10">
-              <ZapOff className="size-16 text-primary" />
-           </div>
+      <div className="flex flex-col items-center justify-center min-h-[80vh] gap-12 px-6 bg-white">
+        <div className="size-40 bg-gray-950 text-primary flex items-center justify-center border-8 border-primary shadow-bhagva-flat relative">
+           <ZapOff className="size-20" />
         </div>
-        <div className="text-center space-y-4">
-           <h2 className="text-5xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase leading-none">SIGNALS <span className="text-gradient">BLOCKED</span></h2>
-           <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.6em]">Secure login required to access intercept log.</p>
+        <div className="text-center space-y-6">
+           <h2 className="text-5xl md:text-7xl font-black text-gray-950 italic tracking-tighter uppercase leading-none border-l-[16px] border-primary pl-8">सिग्नल <span className="text-primary italic">ब्लॉक</span></h2>
+           <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.6em] italic">SECURE LOGIN REQUIRED TO ACCESS INTERCEPT LOG.</p>
         </div>
         <button
           onClick={() => navigate("/profile")}
-          className="btn-lakhara !rounded-[2rem] px-16 py-6 !text-lg"
+          className="px-20 py-8 bg-primary text-white font-black text-xl uppercase tracking-[0.5em] hover:bg-gray-950 transition-colors border-none outline-none italic shadow-bhagva-flat"
         >
-          INITIALIZE LOGIN
+          प्रवेश द्वार खोलें
         </button>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#fcfcfc] dark:bg-gray-950 min-h-screen pb-40">
-      <div className="container mx-auto px-6 py-12 max-w-2xl space-y-16">
+    <div className="bg-white min-h-screen pb-40">
+      <div className="container mx-auto px-6 py-12 max-w-4xl space-y-24">
         
-        {/* ── Intelligence Header ── */}
-        <div className="flex items-center justify-between gap-10">
-           <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                 <div className="size-12 bg-lakhara rounded-2xl flex items-center justify-center shadow-lakhara">
-                    <Bell className="size-6 text-white" />
+        {/* ── INTELLIGENCE HEADER ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b-8 border-primary pb-20">
+           <div className="space-y-8">
+              <div className="flex items-center gap-6">
+                 <div className="size-20 bg-gray-950 text-primary flex items-center justify-center border-4 border-primary shadow-bhagva-flat">
+                    <Bell className="size-10" />
                  </div>
-                 <h1 className="text-5xl font-black text-gray-950 dark:text-white italic tracking-tighter uppercase leading-none">INTERCEPTS</h1>
+                 <div className="space-y-2">
+                    <h1 className="text-5xl md:text-7xl font-black text-gray-950 italic tracking-tighter uppercase leading-none">सूचना <span className="text-primary italic">केंद्र</span></h1>
+                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.6em] italic">NETWORK NOTIFICATION INTERCEPTS</p>
+                 </div>
               </div>
               <div className="flex items-center gap-4">
-                 <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full border border-primary/20">
-                    <Activity className="size-3" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em]">{unreadCount} Critical Signals</span>
+                 <div className="flex items-center gap-4 bg-primary text-white px-8 py-3 italic font-black uppercase tracking-[0.3em] text-[12px] border-2 border-primary">
+                    <Activity className="size-4" />
+                    <span>{unreadCount} सक्रिय सिग्नल</span>
                  </div>
               </div>
            </div>
@@ -101,73 +101,74 @@ export function NotificationsPage() {
               <button
                 onClick={markAllRead}
                 disabled={markingAll}
-                className="size-16 bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-[1.8rem] flex items-center justify-center text-gray-400 hover:text-primary transition-all shadow-sm active:scale-90"
+                className="px-10 py-6 bg-gray-950 text-white border-b-8 border-primary flex items-center justify-center gap-6 hover:bg-primary transition-all group border-none outline-none"
               >
-                {markingAll ? <Loader2 className="size-8 animate-spin" /> : <CheckCheck className="size-8" />}
+                <span className="font-black text-[12px] uppercase tracking-[0.3em] italic">{markingAll ? "अपडेट..." : "सब पढ़ें"}</span>
+                {markingAll ? <Loader2 className="size-6 animate-spin" /> : <CheckCheck className="size-8" />}
               </button>
            )}
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-32 gap-8">
-             <div className="size-20 bg-gray-50 dark:bg-white/5 rounded-[2.5rem] flex items-center justify-center animate-pulse">
-                <Loader2 className="size-10 animate-spin text-primary" />
+          <div className="flex flex-col items-center justify-center py-32 gap-12 bg-gray-50 border-8 border-dashed border-gray-100">
+             <div className="size-24 bg-white border-4 border-primary flex items-center justify-center">
+                <Loader2 className="size-12 animate-spin text-primary" />
              </div>
-             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.5em]">Decoding Stream</p>
+             <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.6em] italic">DECODING STREAM PROTOCOL</p>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-40 gap-10 text-center bg-white dark:bg-white/5 rounded-[4rem] border border-dashed border-gray-100 dark:border-white/5">
-            <div className="size-24 bg-gray-50 dark:bg-gray-950 rounded-[3rem] flex items-center justify-center text-gray-200">
-              <BellOff className="size-12" />
+          <div className="flex flex-col items-center justify-center py-40 gap-12 text-center bg-gray-50 border-8 border-dashed border-gray-100 italic">
+            <div className="size-32 bg-white border-4 border-gray-100 flex items-center justify-center text-gray-200 shadow-2xl">
+              <BellOff className="size-16" />
             </div>
-            <div>
-               <h3 className="text-3xl font-black italic tracking-tighter uppercase text-gray-950 dark:text-white mb-4">No Signals Detected</h3>
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">The network environment is currently silent.</p>
+            <div className="space-y-4">
+               <h3 className="text-4xl font-black italic tracking-tighter uppercase text-gray-950 leading-none">कोई सिग्नल नहीं</h3>
+               <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.6em] italic underline underline-offset-8 decoration-primary/20">The network environment is currently silent.</p>
             </div>
-            <button onClick={() => navigate("/reels")} className="btn-lakhara !rounded-[1.5rem] !px-10 !py-4 font-black">ENGAGE NETWORK</button>
+            <button onClick={() => navigate("/reels")} className="px-16 py-6 bg-primary text-white font-black text-lg uppercase tracking-[0.4em] hover:bg-gray-950 shadow-bhagva-flat italic border-none outline-none">नेटवर्क से जुड़ें</button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-4">
             {notifications.map((notif) => (
               <button
                 key={notif.id}
                 onClick={() => handleNotifClick(notif)}
-                className={`group relative w-full flex items-start gap-8 p-10 rounded-[3.5rem] border transition-all duration-500 overflow-hidden text-left ${notif.read ? "bg-white dark:bg-white/2 border-gray-50 dark:border-white/5" : "bg-white dark:bg-white/5 border-primary/20 shadow-2xl shadow-primary/5"}`}
+                className={`relative w-full flex items-start gap-10 p-10 border-4 transition-all italic hover:border-primary group ${notif.read ? "bg-white border-gray-100" : "bg-gray-50 border-gray-100 shadow-bhagva-flat"}`}
               >
                 {!notif.read && (
-                  <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+                  <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
                 )}
                 
-                {/* Visual Marker */}
-                <div className={`size-16 rounded-[1.8rem] flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 duration-500 ${notif.read ? 'bg-gray-50 dark:bg-white/5 text-gray-400' : 'bg-primary/10 text-primary shadow-lakhara shadow-primary/10'}`}>
+                {/* ICON MARKER */}
+                <div className={`size-20 flex items-center justify-center flex-shrink-0 border-4 ${notif.read ? 'bg-gray-100 border-white text-gray-300' : 'bg-white border-primary text-primary shadow-xl'}`}>
                   {getIcon(notif.type)}
                 </div>
 
-                {/* Intel Body */}
-                <div className="flex-1 min-w-0 space-y-4">
-                  <div className="flex justify-between items-start gap-4">
-                     <p className={`text-xl leading-tight italic tracking-tighter ${notif.read ? "text-gray-500 font-medium" : "text-gray-950 dark:text-white font-black uppercase"}`}>
+                {/* CONTENT BODY */}
+                <div className="flex-1 min-w-0 space-y-6">
+                  <div className="flex justify-between items-start gap-6 pt-2">
+                     <p className={`text-2xl leading-[1.1] italic tracking-tighter uppercase ${notif.read ? "text-gray-400 font-bold" : "text-gray-950 font-black"}`}>
                        {notif.message}
                      </p>
-                     <ChevronRight className="size-5 text-gray-300 flex-shrink-0 group-hover:translate-x-2 transition-transform" />
+                     <ChevronRight className="size-8 text-gray-100 group-hover:text-primary transition-all group-hover:translate-x-3" />
                   </div>
                   
                   {notif.videoTitle && (
-                    <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/5 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                      <Film className="size-4 text-primary" />
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest truncate italic">{notif.videoTitle}</p>
+                    <div className="flex items-center gap-4 bg-gray-950 p-5 text-white border-l-8 border-primary">
+                      <Film className="size-5 text-primary" />
+                      <p className="text-[11px] font-black uppercase tracking-[0.2em] truncate italic">{notif.videoTitle}</p>
                     </div>
                   )}
                   
-                  <div className="flex items-center justify-between pt-2">
-                     <div className="flex items-center gap-2">
-                        <span className="size-1.5 bg-gray-200 rounded-full"></span>
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                     <div className="flex items-center gap-4">
+                        <Zap className={`size-4 ${notif.read ? 'text-gray-200' : 'text-primary'}`} />
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
                           {formatTime(notif.createdAt?.toDate ? notif.createdAt.toDate() : new Date(notif.createdAt))}
                         </p>
                      </div>
                      {!notif.read && (
-                        <span className="text-[8px] font-black text-primary uppercase tracking-[0.3em] bg-primary/10 px-3 py-1 rounded-full">Priority Signal</span>
+                        <span className="text-[9px] font-black text-white bg-primary px-4 py-1.5 uppercase tracking-[0.3em] italic border border-white">PRIORITY SIGNAL</span>
                      )}
                   </div>
                 </div>
@@ -183,8 +184,8 @@ export function NotificationsPage() {
 function formatTime(date: Date): string {
   const now = new Date();
   const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
-  if (diff < 60) return "Just Now";
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 84600) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 84600)}d ago`;
+  if (diff < 60) return "अभी";
+  if (diff < 3600) return `${Math.floor(diff / 60)} मि पहले`;
+  if (diff < 84600) return `${Math.floor(diff / 3600)} घं पहले`;
+  return `${Math.floor(diff / 84600)} दिन पहले`;
 }

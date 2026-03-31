@@ -31,18 +31,18 @@ export function ReelsPage() {
 
   const scrollTo = (idx: number) => {
     const el = containerRef.current?.children[idx] as HTMLElement;
-    el?.scrollIntoView({ behavior: "smooth" });
+    el?.scrollIntoView({ behavior: "auto" });
     setActiveIndex(idx);
   };
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
+      <div className="flex h-screen items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-8">
-           <div className="size-20 bg-lakhara rounded-[2rem] flex items-center justify-center shadow-lakhara rotate-[-12deg] animate-pulse">
-              <Activity className="size-10 text-white" />
+           <div className="size-24 bg-primary text-white flex items-center justify-center border-4 border-gray-950">
+              <Zap className="size-12" />
            </div>
-           <Loader2 className="size-8 animate-spin text-primary" />
+           <Loader2 className="size-10 animate-spin text-primary" />
         </div>
       </div>
     );
@@ -50,28 +50,27 @@ export function ReelsPage() {
 
   return (
     <div className="relative bg-black h-screen overflow-hidden">
-      {/* ── Premium Top Overlay ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex flex-col gap-6 p-8 bg-gradient-to-b from-black/90 via-black/40 to-transparent">
+      
+      {/* ── TOP OVERLAY ── */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex flex-col gap-6 p-8 bg-black/80 border-b-4 border-primary">
         <div className="flex items-center justify-between">
-           <Link to="/" className="flex items-center gap-3">
-              <div className="size-10 bg-lakhara rounded-xl flex items-center justify-center shadow-lakhara rotate-[-5deg]">
-                <span className="text-white font-black italic">L</span>
-              </div>
-              <h1 className="text-white font-black text-2xl italic tracking-tighter">REELS <span className="text-primary italic">HQ</span></h1>
+           <Link to="/" className="flex flex-col">
+              <h1 className="text-white font-black text-3xl tracking-tighter uppercase italic leading-none">LAKHARA <span className="text-primary italic">REELS</span></h1>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-1 italic">Short Digital Intelligence</p>
            </Link>
-           <div className="flex items-center gap-3 bg-white/10 backdrop-blur-2xl px-6 py-2.5 rounded-full border border-white/10">
-              <div className="size-2 bg-red-600 rounded-full animate-ping"></div>
-              <span className="text-white text-[9px] font-black uppercase tracking-[0.3em]">Operational Live Feed</span>
+           <div className="flex items-center gap-3 bg-gray-900 px-6 py-3 border-2 border-white/10">
+              <Signal className="size-4 text-primary" />
+              <span className="text-white text-[10px] font-black uppercase tracking-widest">RAW LIVE FEED</span>
            </div>
         </div>
 
         {/* Categories */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar">
            {VIDEO_CATEGORIES.map(cat => (
              <button 
                key={cat}
                onClick={() => setActiveCategory(cat)}
-               className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === cat ? 'bg-primary text-white shadow-lakhara' : 'bg-white/10 text-gray-400 hover:text-white'}`}
+               className={`px-8 py-3 font-black uppercase tracking-widest text-[10px] border-2 transition-colors ${activeCategory === cat ? 'bg-primary border-primary text-white' : 'bg-gray-900 border-white/5 text-gray-500 hover:text-white'}`}
              >
                {cat}
              </button>
@@ -101,22 +100,22 @@ export function ReelsPage() {
         ))}
         
         {videos.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center gap-6 p-12 text-center">
-             <div className="size-32 bg-white/5 rounded-[3rem] flex items-center justify-center border border-white/10 opacity-20">
-                <Signal className="size-16 text-white" />
+          <div className="h-full flex flex-col items-center justify-center gap-8 p-12 text-center bg-gray-950">
+             <div className="size-32 bg-gray-900 flex items-center justify-center border-4 border-dashed border-white/10">
+                <Signal className="size-16 text-white opacity-20" />
              </div>
-             <p className="text-white font-black text-2xl italic uppercase tracking-widest opacity-30">No Intelligence Discovered</p>
+             <p className="text-white font-black text-2xl uppercase tracking-widest opacity-30 italic">No Content Available</p>
           </div>
         )}
       </div>
 
       {/* Navigation Layer */}
-      <div className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-4">
-         <button onClick={() => scrollTo(activeIndex - 1)} className="size-12 bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-primary transition-all active:scale-90">
-            <ChevronUp className="size-6" />
+      <div className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-2">
+         <button onClick={() => scrollTo(activeIndex - 1)} className="size-14 bg-gray-900 border-2 border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-colors">
+            <ChevronUp className="size-8" />
          </button>
-         <button onClick={() => scrollTo(activeIndex + 1)} className="size-12 bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-primary transition-all active:scale-90">
-            <ChevronDown className="size-6" />
+         <button onClick={() => scrollTo(activeIndex + 1)} className="size-14 bg-gray-900 border-2 border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-colors">
+            <ChevronDown className="size-8" />
          </button>
       </div>
     </div>
@@ -149,8 +148,8 @@ function VideoCard({ video, isActive, user, userData }: {
   }, [isActive]);
 
   const handleLike = async () => {
-    if (!user) { toast.error("ACCESS DENIED: Please Log In"); return; }
-    const res = await videoService.toggleLike(video.id!, user.uid, video.authorId, userData?.name || "Agent", video.title);
+    if (!user) { toast.error("LOGIN REQUIRED"); return; }
+    const res = await videoService.toggleLike(video.id!, user.uid, video.authorId, userData?.name || "Member", video.title);
     setLiked(res);
     setLikesCount(prev => res ? prev + 1 : prev - 1);
   };
@@ -167,69 +166,72 @@ function VideoCard({ video, isActive, user, userData }: {
         onClick={() => setIsPlaying(!isPlaying)}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none" />
 
-      {/* ── Social Action Bar ── */}
-      <div className="absolute right-6 bottom-32 flex flex-col items-center gap-10 z-30">
-        <button onClick={() => setIsMuted(!isMuted)} className="size-14 bg-white/10 backdrop-blur-3xl rounded-[1.5rem] flex items-center justify-center text-white border border-white/20 active:scale-90 transition-all">
-           {isMuted ? <VolumeX className="size-6" /> : <Volume2 className="size-6" />}
+      {/* ── ACTION BAR ── */}
+      <div className="absolute right-6 bottom-32 flex flex-col items-center gap-8 z-30">
+        <button onClick={() => setIsMuted(!isMuted)} className="size-16 bg-gray-950 font-black border-2 border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-colors">
+           {isMuted ? <VolumeX className="size-8" /> : <Volume2 className="size-8" />}
         </button>
 
         <div className="flex flex-col items-center gap-3">
-           <button onClick={handleLike} className={`size-16 rounded-[1.8rem] flex items-center justify-center transition-all active:scale-90 border-2 ${liked ? 'bg-primary border-primary shadow-lakhara' : 'bg-white/10 border-white/20 text-white'}`}>
-              <Heart className={`size-8 ${liked ? 'fill-current' : ''}`} />
+           <button onClick={handleLike} className={`size-20 border-4 flex items-center justify-center transition-colors ${liked ? 'bg-primary border-primary text-white shadow-bhagva-flat' : 'bg-gray-950 border-white/20 text-white'}`}>
+              <Heart className={`size-10 ${liked ? 'fill-current text-white' : 'text-primary'}`} />
            </button>
-           <span className="text-white font-black text-[10px] uppercase tracking-widest">{likesCount}</span>
+           <span className="text-white font-black text-[12px] uppercase tracking-widest">{likesCount}</span>
         </div>
 
         <div className="flex flex-col items-center gap-3">
-           <button className="size-16 bg-white/10 backdrop-blur-3xl rounded-[1.8rem] flex items-center justify-center text-white border-2 border-white/20 active:scale-90 transition-all">
+           <button className="size-16 bg-gray-950 border-2 border-white/20 flex items-center justify-center text-white hover:bg-primary transition-colors">
               <MessageCircle className="size-8" />
            </button>
-           <span className="text-white font-black text-[10px] uppercase tracking-widest">{video.commentsCount || 0}</span>
+           <span className="text-white font-black text-[12px] uppercase tracking-widest">{video.commentsCount || 0}</span>
         </div>
 
         <div className="flex flex-col items-center gap-3">
-           <button className="size-16 bg-white/10 backdrop-blur-3xl rounded-[1.8rem] flex items-center justify-center text-white border-2 border-white/20 active:scale-90 transition-all">
+           <button className="size-16 bg-gray-950 border-2 border-white/20 flex items-center justify-center text-white hover:bg-primary transition-colors">
               <Share2 className="size-8" />
            </button>
-           <span className="text-white font-black text-[10px] uppercase tracking-widest">{video.shares || 0}</span>
+           <span className="text-white font-black text-[12px] uppercase tracking-widest">{video.shares || 0}</span>
         </div>
       </div>
 
-      {/* ── Metadata Intelligence ── */}
-      <div className="absolute bottom-12 left-8 right-24 z-30 space-y-6">
-         <div className="flex items-center gap-5">
-            <div className="size-14 rounded-2xl p-0.5 bg-lakhara shadow-lakhara rotate-[-10deg]">
+      {/* ── METADATA ── */}
+      <div className="absolute bottom-12 left-10 right-24 z-30 space-y-8">
+         <div className="flex items-center gap-6">
+            <div className="size-16 border-4 border-primary bg-gray-950 p-1">
                {video.authorPhotoURL ? (
-                 <img src={video.authorPhotoURL} alt="" className="size-full rounded-[0.9rem] object-cover" />
+                 <img src={video.authorPhotoURL} alt="" className="size-full object-cover" />
                ) : (
-                 <div className="size-full bg-black rounded-[0.9rem] flex items-center justify-center text-white font-black">{video.authorName?.[0]}</div>
+                 <div className="size-full flex items-center justify-center text-white font-black text-2xl">{video.authorName?.[0]}</div>
                )}
             </div>
             <div>
-               <h4 className="text-white font-black text-lg italic tracking-tighter leading-none">{video.authorName}</h4>
-               <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-1">Verification Verified</p>
+               <h4 className="text-white font-black text-xl italic tracking-tighter leading-none flex items-center gap-3">
+                  {video.authorName}
+                  <Zap className="size-4 text-primary fill-current" />
+               </h4>
+               <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-2 italic">VERIFIED MEMBER</p>
             </div>
-            <button className="bg-white text-black px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">Follow</button>
+            <button className="ml-4 bg-primary text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-primary transition-colors border-none outline-none">SUBSCRIBE</button>
          </div>
 
-         <div className="space-y-3">
-            <h3 className="text-2xl font-black text-white italic tracking-tighter leading-tight line-clamp-2">{video.title}</h3>
-            <p className="text-gray-400 text-sm font-medium line-clamp-2 italic">{video.caption}</p>
+         <div className="space-y-4">
+            <h3 className="text-3xl font-black text-white italic tracking-tighter leading-tight uppercase border-l-8 border-primary pl-6">{video.title}</h3>
+            <p className="text-gray-400 text-lg uppercase font-black tracking-widest italic line-clamp-3 leading-relaxed">{video.caption}</p>
          </div>
 
-         <div className="flex gap-4 overflow-x-auto no-scrollbar">
+         <div className="flex gap-3 overflow-x-auto no-scrollbar">
             {video.hashtags?.map(tag => (
-              <span key={tag} className="text-primary font-black text-[10px] uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full">#{tag}</span>
+              <span key={tag} className="text-white font-black text-[10px] uppercase tracking-widest bg-primary px-6 py-2">#{tag}</span>
             ))}
          </div>
       </div>
 
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-           <div className="size-32 bg-white/20 backdrop-blur-3xl rounded-full flex items-center justify-center opacity-60">
-              <Play className="size-16 text-white fill-current" />
+           <div className="size-32 bg-primary/20 flex items-center justify-center border-4 border-primary">
+              <Play className="size-20 text-white fill-current" />
            </div>
         </div>
       )}

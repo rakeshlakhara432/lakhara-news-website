@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, GraduationCap, Briefcase, Heart, Phone, MapPin } from "lucide-react";
+import { Loader2, Plus, Trash2, GraduationCap, Briefcase, Heart, Phone, Calendar } from "lucide-react";
 import { samajService, SupportPost } from "../../services/samajService";
 import { toast } from "sonner";
 
@@ -19,7 +19,7 @@ export function ManageSupport() {
     e.preventDefault();
     try {
       await samajService.addSupport(newPost);
-      toast.success("Support/Aid opportunity published");
+      toast.success("Support opportunity published");
       setIsAdding(false);
       setNewPost({ title: "", description: "", type: "शिक्षा", contact: "" });
     } catch (err) {
@@ -37,63 +37,87 @@ export function ManageSupport() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
-         <h1 className="text-3xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">Samaj <span className="text-primary italic">Scholarship</span> & Aid</h1>
-         <button onClick={() => setIsAdding(!isAdding)} className="px-8 py-3 bg-gray-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
-           <Plus className="size-4" /> Add Opportunity
+         <h1 className="text-2xl font-bold text-slate-800 leading-none">Samaj <span className="text-orange-600">Scholarship & Aid</span></h1>
+         <button onClick={() => setIsAdding(!isAdding)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-orange-600 transition-colors flex items-center gap-2">
+           <Plus className="size-4" /> {isAdding ? "Cancel" : "Add Opportunity"}
          </button>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAdd} className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-bhagva grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-top-4">
+        <form onSubmit={handleAdd} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-5 animate-in slide-in-from-top-4">
            <div className="space-y-4 col-span-full">
-              <input required placeholder="Opportunity Title..." className="w-full px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-sm italic" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} />
-              <textarea required rows={4} placeholder="Full Description / Eligibility..." className="w-full px-6 py-6 bg-gray-50 rounded-[2rem] border-none outline-none font-bold text-xs italic resize-none" value={newPost.description} onChange={e => setNewPost({...newPost, description: e.target.value})}></textarea>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Opportunity Title</label>
+                 <input required placeholder="Enter title..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} />
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Full Description / Eligibility</label>
+                 <textarea required rows={4} placeholder="Enter details..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 resize-none transition-all focus:border-orange-500" value={newPost.description} onChange={e => setNewPost({...newPost, description: e.target.value})}></textarea>
+              </div>
            </div>
-           <div className="grid grid-cols-2 gap-6 w-full md:col-span-full">
-              <select className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-[10px] uppercase tracking-widest italic" value={newPost.type} onChange={e => setNewPost({...newPost, type: e.target.value as any})}>
-                 <option value="शिक्षा">शिक्षा (Scholarship)</option>
-                 <option value="सहायता">सहायता (Aid/Help)</option>
-                 <option value="अन्य">अन्य (Other)</option>
-              </select>
-              <input required placeholder="Contact Number/Email..." className="px-6 py-4 bg-gray-50 rounded-2xl border-none outline-none font-bold text-xs italic" value={newPost.contact} onChange={e => setNewPost({...newPost, contact: e.target.value})} />
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:col-span-full">
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Type</label>
+                 <select className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newPost.type} onChange={e => setNewPost({...newPost, type: e.target.value as any})}>
+                    <option value="शिक्षा">शिक्षा (Scholarship)</option>
+                    <option value="सहायता">सहायता (Aid/Help)</option>
+                    <option value="अन्य">अन्य (Other)</option>
+                 </select>
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-xs font-bold text-slate-700 ml-1">Contact Details</label>
+                 <input required placeholder="Number or Email..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 transition-all focus:border-orange-500" value={newPost.contact} onChange={e => setNewPost({...newPost, contact: e.target.value})} />
+              </div>
            </div>
-           <button type="submit" className="col-span-full py-6 bg-primary text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-4 group">
-             Publish Aid Opportunity <GraduationCap className="size-5 group-hover:rotate-12 transition-transform" />
-           </button>
+           
+           <div className="col-span-full pt-2">
+              <button type="submit" className="w-full py-3.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-sm flex items-center justify-center gap-2 hover:bg-orange-500 transition-colors">
+                Publish Opportunity <GraduationCap className="size-4" />
+              </button>
+           </div>
         </form>
       )}
 
-      {isLoading ? <Loader2 className="size-10 animate-spin mx-auto text-primary" /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
            {posts.map(post => (
-             <div key={post.id} className="p-8 bg-white rounded-[3.5rem] border border-gray-100 shadow-sm hover:shadow-bhagva transition-all relative overflow-hidden">
-                <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/5 to-transparent rotate-[-45deg]"></div>
-                <div className="flex items-center justify-between mb-8">
-                   <div className="size-16 bg-gray-50 rounded-[2rem] flex items-center justify-center text-primary border border-primary/5">
-                      {post.type === "शिक्षा" ? <GraduationCap className="size-8" /> : post.type === "सहायता" ? <Heart className="size-8" /> : <Briefcase className="size-8" />}
+             <div key={post.id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start relative overflow-hidden group">
+                
+                <div className="flex items-start justify-between w-full mb-4">
+                   <div className="size-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 border border-orange-100">
+                      {post.type === "शिक्षा" ? <GraduationCap className="size-6" /> : post.type === "सहायता" ? <Heart className="size-6" /> : <Briefcase className="size-6" />}
                    </div>
-                   <button onClick={() => handleDelete(post.id!)} className="size-10 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                   <button onClick={() => handleDelete(post.id!)} className="size-8 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors">
                       <Trash2 className="size-4" />
                    </button>
                 </div>
-                <div className="space-y-2 mb-6">
-                   <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] italic">{post.type} Opportunity</span>
-                   <h3 className="text-xl font-black text-gray-950 tracking-tighter uppercase italic leading-none">{post.title}</h3>
+                
+                <div className="space-y-1.5 mb-3">
+                   <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">{post.type} Opportunity</span>
+                   <h3 className="text-lg font-bold text-slate-800 leading-tight">{post.title}</h3>
                 </div>
-                <p className="text-gray-400 font-bold italic text-xs leading-relaxed mb-8 line-clamp-3">{post.description}</p>
-                <div className="pt-8 border-t border-gray-50 flex items-center justify-between">
-                   <div className="flex items-center gap-3 text-primary">
-                      <Phone className="size-4" />
-                      <span className="text-[10px] font-black italic tracking-widest uppercase">{post.contact}</span>
+                
+                <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6 line-clamp-3">{post.description}</p>
+                
+                <div className="pt-4 mt-auto border-t border-slate-100 flex items-center w-full justify-between">
+                   <div className="flex items-center gap-2 text-slate-700">
+                      <Phone className="size-3.5" />
+                      <span className="text-xs font-bold">{post.contact}</span>
                    </div>
-                   <div className="text-[9px] font-black text-gray-300 uppercase italic tracking-widest tracking-widest flex items-center gap-2">
+                   <div className="text-[10px] font-semibold text-slate-400 uppercase flex items-center gap-1.5">
                       <Calendar className="size-3" /> {post.createdAt?.toDate?.().toLocaleDateString() || "Active"}
                    </div>
                 </div>
              </div>
            ))}
+           {posts.length === 0 && (
+             <div className="col-span-full py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300 text-center">
+               <p className="text-slate-500 font-medium text-sm">No support opportunities active right now.</p>
+             </div>
+           )}
         </div>
       )}
     </div>
