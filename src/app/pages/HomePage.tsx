@@ -80,19 +80,25 @@ export function HomePage() {
            alt="News Room" 
          />
          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
-         <div className="relative container mx-auto px-6 py-24 md:py-32 flex flex-col items-start gap-6">
-            <span className="inline-flex items-center gap-2 rounded-full bg-orange-600/10 px-4 py-1.5 text-sm font-semibold text-orange-400 border border-orange-600/20">
-               <span className="relative flex size-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex size-2 rounded-full bg-orange-500"></span>
+         <div className="relative container mx-auto px-6 py-24 md:py-32 flex flex-col items-start gap-8">
+            <div className="flex items-center gap-4">
+               <div className="size-16 rounded-2xl bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-600/20 border-2 border-orange-400/30">
+                  <span className="text-3xl font-bold text-white">ॐ</span>
+               </div>
+               <span className="inline-flex items-center gap-2 rounded-full bg-orange-600/10 px-4 py-1.5 text-sm font-semibold text-orange-400 border border-orange-600/20">
+                  <span className="relative flex size-2">
+                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
+                     <span className="relative inline-flex size-2 rounded-full bg-orange-500"></span>
+                  </span>
+                  डिजिटल संवाद • राष्ट्रभक्ति ही सर्वोपरि
                </span>
-               डिजिटल संवाद • राष्ट्रभक्ति ही सर्वोपरि
-            </span>
+            </div>
+            
             <div className="max-w-3xl space-y-4">
-               <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-                  Lakhara Digital <br /> <span className="text-orange-500">News Network</span>
+               <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight uppercase">
+                  Lakhara Digital <br /> <span className="text-orange-500 tracking-tighter">News Network</span>
                </h1>
-               <p className="text-lg md:text-xl text-slate-300 font-medium">
+               <p className="text-lg md:text-xl text-slate-300 font-bold border-l-4 border-orange-600 pl-6">
                   "राष्ट्र का स्वाभिमान, समाज की गौरवशाली परम्परा।" <br/>
                   एक मंच जहां समाज की हर आवाज़ को मिलता है डिजिटल विस्तार।
                </p>
@@ -121,6 +127,72 @@ export function HomePage() {
                   </div>
                </Link>
             ))}
+         </section>
+      </div>
+
+      {/* SERVICES GRID (From Lakhara) */}
+      <div className="container mx-auto px-6">
+         <section className="space-y-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+               <div className="space-y-2">
+                  <h2 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter uppercase">हमारी सेवाएँ</h2>
+                  <p className="text-slate-500 font-bold text-sm border-l-4 border-orange-600 pl-4">लखारा समाज के उत्थान के लिए समर्पित डिजिटल पहल</p>
+               </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+               {/* Marriage Portal */}
+               <div className="bg-white p-8 border-2 border-slate-100 hover:border-orange-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 size-24 bg-rose-50 rounded-bl-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500 opacity-50"></div>
+                  <Heart className="size-10 text-rose-600 mb-6 relative z-10" />
+                  <h3 className="text-xl font-black text-slate-800 mb-3 relative z-10">विवाह मंच</h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mb-6 relative z-10">
+                     हमारे समुदाय में उपयुक्त जीवनसाथी खोजें। सुरक्षित, सम्मानजनक और परिवार-उन्मुख वैवाहिक सेवाएं।
+                  </p>
+                  <Link to="/matrimonial" className="inline-flex items-center gap-2 text-sm font-bold text-rose-600 hover:gap-3 transition-all relative z-10">
+                     प्रोफाइल देखें <ArrowRight className="size-4" />
+                  </Link>
+               </div>
+
+               {/* Directory */}
+               <div className="bg-white p-8 border-2 border-slate-100 hover:border-orange-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 size-24 bg-blue-50 rounded-bl-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500 opacity-50"></div>
+                  <Users className="size-10 text-blue-600 mb-6 relative z-10" />
+                  <h3 className="text-xl font-black text-slate-800 mb-3 relative z-10">सदस्य सूची</h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mb-6 relative z-10">
+                     समाज के सभी सदस्यों की विवरणी और व्यावसायिक निर्देशिका। अपनों से जुड़ें और संपर्क बढ़ाएं।
+                  </p>
+                  <Link to="/directory" className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:gap-3 transition-all relative z-10">
+                     सूची खोजें <ArrowRight className="size-4" />
+                  </Link>
+               </div>
+
+               {/* Events */}
+               <div className="bg-white p-8 border-2 border-slate-100 hover:border-orange-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 size-24 bg-orange-50 rounded-bl-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500 opacity-50"></div>
+                  <Calendar className="size-10 text-orange-600 mb-6 relative z-10" />
+                  <h3 className="text-xl font-black text-slate-800 mb-3 relative z-10">कार्यक्रम</h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mb-6 relative z-10">
+                     आगामी सांस्कृतिक आयोजनों, महासभाओं और सामाजिक उत्सवों की जानकारी और पंजीकरण।
+                  </p>
+                  <Link to="/events" className="inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:gap-3 transition-all relative z-10">
+                     आयोजन देखें <ArrowRight className="size-4" />
+                  </Link>
+               </div>
+
+               {/* Resources */}
+               <div className="bg-white p-8 border-2 border-slate-100 hover:border-orange-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 size-24 bg-emerald-50 rounded-bl-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500 opacity-50"></div>
+                  <Newspaper className="size-10 text-emerald-600 mb-6 relative z-10" />
+                  <h3 className="text-xl font-black text-slate-800 mb-3 relative z-10">सूचना एवं शिक्षा</h3>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mb-6 relative z-10">
+                     शैक्षिक संसाधन, छात्रवृत्ति जानकारी और समाज के महत्वपूर्ण नोटिस एवं नियम।
+                  </p>
+                  <Link to="/support" className="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:gap-3 transition-all relative z-10">
+                     जानकारी लें <ArrowRight className="size-4" />
+                  </Link>
+               </div>
+            </div>
          </section>
       </div>
 

@@ -3,8 +3,17 @@ import { router } from "./routes";
 import { Toaster } from "./components/ui/sonner";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "next-themes";
+import { useEffect } from "react";
+import { db } from "./data/database";
 
 export default function App() {
+  useEffect(() => {
+    const settings = db.getTable('settings');
+    if (settings?.primaryColor) {
+      document.documentElement.style.setProperty('--primary', settings.primaryColor);
+    }
+  }, []);
+
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <AuthProvider>

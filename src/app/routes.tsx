@@ -31,6 +31,13 @@ import { DonatePage } from "./pages/samaj/DonatePage";
 import { SupportPage } from "./pages/samaj/SupportPage";
 import { SupportDetailPage } from "./pages/samaj/SupportDetailPage";
 import { RulesPage } from "./pages/samaj/RulesPage";
+import { StorePage } from "./pages/samaj/StorePage";
+import { SitemapPage } from "./pages/samaj/SitemapPage";
+import { EBooksPage } from "./pages/samaj/EBooksPage";
+
+// Admin Management
+import { ManageStore } from "./pages/admin/ManageStore";
+import { ManageEBooks } from "./pages/admin/ManageEBooks";
 
 export const router = createHashRouter([
   {
@@ -53,6 +60,9 @@ export const router = createHashRouter([
       { path: "register", Component: RegistrationPage },
       { path: "donate", Component: DonatePage },
       { path: "profile", Component: ProfilePage },
+      { path: "store", Component: StorePage },
+      { path: "sitemap", Component: SitemapPage },
+      { path: "ebooks", Component: EBooksPage },
     ],
   },
   {
@@ -69,7 +79,8 @@ export const router = createHashRouter([
       { path: "videos", Component: ManageVideos },
       { path: "support", Component: ManageSupport },
       { path: "messages", Component: ManageMessages },
-      { path: "settings", Component: AdminSettings },
+      { path: "store", Component: ManageStore },
+      { path: "ebooks", Component: ManageEBooks },
       { path: "settings", Component: AdminSettings },
     ],
   },

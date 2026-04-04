@@ -32,7 +32,9 @@ import {
   GraduationCap,
   Megaphone,
   Briefcase,
-  Play
+  Play,
+  ShoppingBag,
+  Book,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -131,6 +133,8 @@ export function AdminLayout() {
     { path: "/admin/committee", label: "Executive", icon: ShieldCheck },
     { path: "/admin/members", label: "Members", icon: Users },
     { path: "/admin/matrimonial", label: "Matrimonial", icon: Heart },
+    { path: "/admin/store", label: "Samaj Store", icon: ShoppingBag },
+    { path: "/admin/ebooks", label: "E-Library", icon: Book },
     { path: "/admin/events", label: "Events", icon: Calendar },
     { path: "/admin/gallery", label: "Archive", icon: Image },
     { path: "/admin/news", label: "Samaj News", icon: Megaphone },

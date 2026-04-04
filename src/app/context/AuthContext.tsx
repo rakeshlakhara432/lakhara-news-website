@@ -8,6 +8,8 @@ interface AuthContextType {
   userData: any | null;
   loading: boolean;
   isAdmin: boolean;
+  isStaff: boolean;
+  isSuperAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +17,8 @@ const AuthContext = createContext<AuthContextType>({
   userData: null,
   loading: true,
   isAdmin: false,
+  isStaff: false,
+  isSuperAdmin: false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -43,7 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     userData,
     loading,
-    isAdmin: userData?.role === "admin",
+    isAdmin: userData?.role === "admin" || userData?.role === "superadmin",
+    isStaff: userData?.role === "staff" || userData?.role === "admin" || userData?.role === "superadmin",
+    isSuperAdmin: userData?.role === "superadmin",
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

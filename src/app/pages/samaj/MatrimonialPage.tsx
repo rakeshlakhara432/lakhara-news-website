@@ -41,28 +41,66 @@ export function MatrimonialPage() {
       </section>
 
       {/* 🔍 SEARCH & FILTER */}
-      <section className="max-w-4xl mx-auto px-6 lg:px-0">
-         <div className="bg-white p-2 border border-slate-200 rounded-xl flex flex-col md:flex-row gap-2 shadow-sm">
-            <div className="flex-grow flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-lg">
-               <Search className="size-5 text-slate-400" />
-               <input 
-                 type="text" 
-                 placeholder="खोजें (उम्र, शहर, शिक्षा)..." 
-                 className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-700" 
-                 value={searchTerm} 
-                 onChange={e => setSearchTerm(e.target.value)} 
-               />
-            </div>
-            <div className="flex gap-2">
-               <button className="px-6 py-2 bg-rose-600 text-white font-semibold text-sm rounded-lg hover:bg-rose-500 transition-colors shrink-0">
-                  खोजें
-               </button>
-               <div className="hidden md:flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg shrink-0">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">पंजीकृत</span>
-                  <span className="text-sm font-bold flex items-center gap-1"><Users className="size-4 text-rose-400" /> 500+</span>
+      <section className="max-w-6xl mx-auto px-6">
+         <form 
+           onSubmit={(e) => {
+             e.preventDefault();
+             // Filtering is already handled by the state changes
+           }}
+           className="bg-white p-6 border border-slate-200 rounded-2xl shadow-sm grid grid-cols-1 md:grid-cols-4 gap-6"
+         >
+            <div className="space-y-2">
+               <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">नाम या पद</label>
+               <div className="flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 focus-within:border-rose-300 focus-within:bg-white transition-all">
+                  <Search className="size-4 text-slate-400" />
+                  <input 
+                    type="text" 
+                    placeholder="खोजें..." 
+                    className="bg-transparent border-none outline-none w-full text-sm font-bold text-slate-700 placeholder:font-medium" 
+                    value={searchTerm} 
+                    onChange={e => setSearchTerm(e.target.value)} 
+                  />
                </div>
             </div>
-         </div>
+
+            <div className="space-y-2">
+               <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">आयु सीमा</label>
+               <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    placeholder="से" 
+                    className="w-full px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 focus:border-rose-300 focus:bg-white outline-none text-sm font-bold"
+                    onChange={(e) => {
+                      // Custom logic for age filtering if needed
+                    }}
+                  />
+                  <span className="text-slate-300 font-bold">-</span>
+                  <input 
+                    type="number" 
+                    placeholder="तक" 
+                    className="w-full px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 focus:border-rose-300 focus:bg-white outline-none text-sm font-bold"
+                  />
+               </div>
+            </div>
+
+            <div className="space-y-2">
+               <label className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">शहर / स्थान</label>
+               <div className="flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 focus-within:border-rose-300 focus-within:bg-white transition-all">
+                  <MapPin className="size-4 text-slate-400" />
+                  <input 
+                    type="text" 
+                    placeholder="स्थान चुनें..." 
+                    className="bg-transparent border-none outline-none w-full text-sm font-bold text-slate-700 placeholder:font-medium" 
+                  />
+               </div>
+            </div>
+
+            <div className="flex items-end">
+               <button className="w-full py-3 bg-rose-600 text-white font-bold text-sm rounded-xl hover:bg-rose-500 transition-colors shadow-lg shadow-rose-600/20 active:scale-95">
+                  फिल्टर लागू करें
+               </button>
+            </div>
+         </form>
       </section>
 
       {/* 📋 PROFILES GRID */}

@@ -66,7 +66,51 @@ export interface DB_Settings {
   };
   contactEmail: string;
   theme: 'dark' | 'light' | 'auto';
+  primaryColor: string; // Feature: Premium Theme Customization
   autoUpdateDB: boolean; // Feature: AI Automation Toggle
+}
+
+export interface DB_Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  salePrice?: number;
+  imageUrl: string;
+  category: string;
+  stock: number;
+  isFeatured: boolean;
+}
+
+export interface DB_Order {
+  id: string;
+  userId: string;
+  items: {
+    productId: string;
+    quantity: number;
+    price: number;
+  }[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod: 'cod' | 'prepaid';
+  createdAt: string;
+  customerDetails: {
+    name: string;
+    phone: string;
+    address: string;
+  };
+}
+
+export interface DB_EBook {
+  id: string;
+  title: string;
+  description: string;
+  author: string;
+  pdfUrl: string;
+  thumbnail?: string;
+  category: string;
+  downloads: number;
+  createdAt: string;
 }
 
 export interface DatabaseSchema {
@@ -75,6 +119,9 @@ export interface DatabaseSchema {
   articles: DB_Article[];
   categories: DB_Category[];
   shorts: DB_Short[];
+  products: DB_Product[];
+  orders: DB_Order[];
+  ebooks: DB_EBook[];
   users: DB_User[];
   settings: DB_Settings;
   analytics: {
@@ -85,7 +132,7 @@ export interface DatabaseSchema {
 
 // Initial Data for the first-time setup
 const initialDatabase: DatabaseSchema = {
-  version: 1.2,
+  version: 1.4,
   lastUpdated: Date.now(),
   articles: [],
   categories: [
@@ -99,6 +146,9 @@ const initialDatabase: DatabaseSchema = {
     { id: '8', name: 'दुनिया', slug: 'world', color: '#14b8a6' },
   ],
   shorts: [],
+  products: [],
+  orders: [],
+  ebooks: [],
   users: [
     { id: 'admin-1', name: 'Admin User', email: 'admin@lakhara.com', role: 'admin', joinedAt: new Date().toISOString() }
   ],
@@ -112,6 +162,7 @@ const initialDatabase: DatabaseSchema = {
     socialLinks: {},
     contactEmail: 'contact@lakhara.com',
     theme: 'light',
+    primaryColor: '#CC3300',
     autoUpdateDB: true,
   },
   analytics: {

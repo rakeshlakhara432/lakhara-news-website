@@ -251,6 +251,43 @@ export interface YouTubeSettings {
   favoriteVideos: YouTubeVideo[];
 }
 
+export interface DB_Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  salePrice?: number;
+  imageUrl: string;
+  category: string;
+  stock: number;
+  isFeatured: boolean;
+}
+
+export const mockProducts: DB_Product[] = [
+  {
+    id: 'p1',
+    name: 'समाज डायरी 2026',
+    description: 'प्रत्येक घर के लिए उपयोगी वार्षिक डायरी जिसमें समाज की महत्वपूर्ण तिथियां और जानकारी है।',
+    price: 250,
+    salePrice: 199,
+    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=400&fit=crop',
+    category: 'Merchandise',
+    stock: 100,
+    isFeatured: true
+  },
+  {
+    id: 'p2',
+    name: 'लखारा समाज टी-शर्ट',
+    description: 'प्रीमियम कॉटन टी-शर्ट (सभी साइज़ उपलब्ध)। समाज के लोगो के साथ।',
+    price: 499,
+    salePrice: 399,
+    imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
+    category: 'Apparel',
+    stock: 50,
+    isFeatured: true
+  }
+];
+
 import { db } from './database';
 
 export const getArticles = (): Article[] => {
@@ -295,3 +332,40 @@ export const saveYouTubeSettings = (settings: YouTubeSettings) => {
 };
 
 // Initialize DB is handled inside Database class
+
+export interface DB_EBook {
+  id: string;
+  title: string;
+  description: string;
+  author: string;
+  pdfUrl: string;
+  thumbnail?: string;
+  category: string;
+  downloads: number;
+  createdAt: string;
+}
+
+export const mockEBooks: DB_EBook[] = [
+  {
+    id: 'eb1',
+    title: 'लखारा समाज इतिहास',
+    description: 'समाज की उत्पत्ति और गौरवशाली इतिहास का विस्तृत विवरण।',
+    author: 'समाज समिति',
+    pdfUrl: '#',
+    thumbnail: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=200&h=300&fit=crop',
+    category: 'History',
+    downloads: 125,
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'eb2',
+    title: 'आदर्श आचार सहिंता',
+    description: 'समाज के नियम और मार्गदर्शन पुस्तिका।',
+    author: 'केंद्रीय कार्यकारिणी',
+    pdfUrl: '#',
+    thumbnail: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop',
+    category: 'Rules',
+    downloads: 89,
+    createdAt: new Date().toISOString()
+  }
+];
