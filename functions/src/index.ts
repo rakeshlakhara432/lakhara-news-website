@@ -387,3 +387,69 @@ export const telegramWebhook = functions.https.onRequest(async (req, res) => {
   res.status(200).send("OK");
 });
 
+// ── SARVAM AI INTEGRATION ──────────────────────────────────────────────────
+const SARVAM_API_KEY = process.env.SARVAM_API_KEY || "YOUR_SARVAM_API_KEY_HERE";
+
+/**
+ * 1. Sarvam Text-to-Speech (Voice News Reading / Announcements)
+ */
+export const sarvamTTS = functions.https.onCall(async (data, context) => {
+  const { text, speaker = "meera", language = "hi-IN" } = data;
+  if (!text) throw new functions.https.HttpsError("invalid-argument", "Text is required");
+
+  try {
+    const response = await axios.post("https://api.sarvam.ai/text-to-speech", {
+      inputs: [text],
+      target_language_code: language,
+      speaker: speaker,
+      pitch: 0,
+      pace: 1.0,
+      loudness: 1.5,
+      speech_sample_rate: 8000,
+      enable_preprocessing: true,
+      model: "bulbul:v1"
+    }, {
+      headers: {
+        "api-subscription-key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+      }
+    });
+
+    return { success: true, audioBase64: response.data?.audios?.[0] };
+  } catch (error: any) {
+    console.error("Sarvam TTS Error:", error.response?.data || error.message);
+    throw new functions.https.HttpsError("internal", "Text-to-Speech translation failed.");
+  }
+});
+
+/**
+ * 2. General AI Generation (Chatbot & Auto News Writer using Translation/Generation)
+ * Note: Assuming usage of Sarvam translation / Gemini combo or indicative endpoint
+ */
+export const sarvamTranslate = functions.https.onCall(async (data, context) => {
+  const { text, source = "en-IN", target = "hi-IN" } = data;
+  if (!text) throw new functions.https.HttpsError("invalid-argument", "Text is required");
+
+  try {
+    const response = await axios.post("https://api.sarvam.ai/translate", {
+      input: text,
+      source_language_code: source,
+      target_language_code: target,
+      speaker_gender: "Male",
+      mode: "formal",
+      model: "mayura:v1",
+      enable_preprocessing: true
+    }, {
+      headers: {
+        "api-subscription-key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+      }
+    });
+
+    return { success: true, translatedText: response.data?.translated_text };
+  } catch (error: any) {
+    console.error("Sarvam Translate Error:", error.response?.data || error.message);
+    throw new functions.https.HttpsError("internal", "Translation failed.");
+  }
+});
+

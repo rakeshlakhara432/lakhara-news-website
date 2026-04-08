@@ -74,7 +74,7 @@ export function AdminLayout() {
           <div className="bg-white p-10 rounded-[2rem] border border-gray-100 shadow-bhagva text-center space-y-10">
             
             <div className="flex justify-center mb-6">
-               <img src="/logo.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
+               <img src="/favicon.png" alt="Lakhara Logo" className="h-16 w-auto object-contain drop-shadow-md" />
             </div>
             
             <div className="space-y-1">
@@ -156,7 +156,7 @@ export function AdminLayout() {
       {/* ── PROFESSIONAL NAV SIDEBAR ── */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 relative z-50 shadow-sm">
         <div className="p-6 border-b border-gray-50 flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
+          <img src="/favicon.png" alt="Lakhara Logo" className="h-10 w-auto object-contain" />
           <div>
             <span className="font-black text-[14px] tracking-tighter block leading-none text-gray-950 uppercase italic">ADMIN HUB</span>
             <span className="text-[7px] font-black text-gray-300 uppercase tracking-widest mt-1">LAKHARA NETWORK</span>
@@ -245,10 +245,12 @@ export function AdminLayout() {
              onClick={(e) => e.stopPropagation()}
            >
               <div className="flex justify-between items-center mb-12">
-                 <div className="flex items-center gap-3">
-                    <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
-                    <span className="font-black text-lg text-gray-950 tracking-tighter uppercase italic">ADMIN</span>
-                 </div>
+                 <Link to="/admin" className="flex items-center gap-3 w-full p-2 group">
+                    <div className="size-10 rounded-lg bg-white border border-primary/20 flex items-center justify-center shadow-sm group-hover:rotate-12 transition-transform p-1">
+                       <img src="/favicon.png" alt="Logo" className="size-full object-contain" />
+                    </div>
+                    <span className="font-black text-lg text-slate-800 tracking-tighter uppercase italic">ADMIN</span>
+                 </Link>
                  <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-gray-50 rounded-xl">
                     <X className="size-6 text-gray-400" />
                  </button>

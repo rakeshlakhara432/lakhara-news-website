@@ -46,8 +46,8 @@ export function PublicLayout() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-between gap-6">
             <Link to="/" className="flex items-center gap-4 group">
-               <div className="size-10 md:size-12 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 border border-primary/30 shrink-0 group-hover:rotate-12 transition-transform">
-                  <span className="text-xl md:text-2xl font-bold text-white">ॐ</span>
+               <div className="size-10 md:size-12 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-primary/20 border border-primary/30 shrink-0 group-hover:rotate-12 transition-transform p-1">
+                  <img src="/favicon.png" alt="Lakhara Samaj Logo" className="size-full object-contain" />
                </div>
                <div className="flex flex-col items-start shrink-0">
                   <span className="text-xl md:text-2xl font-black text-primary leading-none tracking-tighter uppercase">LAKHARA</span>

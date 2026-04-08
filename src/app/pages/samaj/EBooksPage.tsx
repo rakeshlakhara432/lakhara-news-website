@@ -4,11 +4,15 @@ import { mockEBooks } from '../../data/mockData';
 import { Book, Download, Search, Filter, BookOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { PdfViewerModal } from '../../components/ui/PdfViewerModal';
+
 
 export function EBooksPage() {
   const [ebooks, setEbooks] = useState<DB_EBook[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activePdf, setActivePdf] = useState<DB_EBook | null>(null);
+
 
   useEffect(() => {
     const dbEbooks = db.getTable('ebooks');
@@ -115,17 +119,26 @@ export function EBooksPage() {
                <p className="text-[10px] font-medium text-gray-500 line-clamp-2 leading-relaxed">{ebook.description}</p>
             </div>
 
-            <div className="pt-6 mt-auto border-t border-gray-50 flex items-center justify-between">
+            <div className="pt-6 mt-auto border-t border-gray-50 flex items-center justify-between gap-2">
                <div className="flex flex-col">
                   <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Downloads</span>
                   <span className="text-sm font-black text-gray-900">{ebook.downloads}</span>
                </div>
-               <button 
-                 onClick={() => handleDownload(ebook)}
-                 className="bg-gray-950 text-white px-4 py-2 font-black text-[9px] uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-all shadow-lg shadow-black/5"
-               >
-                 Download PDF <Download className="size-3" />
-               </button>
+               <div className="flex gap-2">
+                 <button 
+                   onClick={() => setActivePdf(ebook)}
+                   className="bg-primary text-white p-2 font-black text-[9px] uppercase tracking-widest flex items-center justify-center hover:bg-orange-600 transition-all shadow-lg"
+                   title="Read Book"
+                 >
+                   <BookOpen className="size-4" />
+                 </button>
+                 <button 
+                   onClick={() => handleDownload(ebook)}
+                   className="bg-gray-950 text-white px-3 py-2 font-black text-[9px] uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-all shadow-lg"
+                 >
+                   <Download className="size-3" />
+                 </button>
+               </div>
             </div>
           </motion.div>
         ))}
@@ -137,6 +150,12 @@ export function EBooksPage() {
            <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">कोई पुस्तक नहीं मिली।</p>
         </div>
       )}
+
+      <PdfViewerModal 
+        isOpen={!!activePdf} 
+        onClose={() => setActivePdf(null)} 
+        ebook={activePdf} 
+      />
     </div>
   );
 }

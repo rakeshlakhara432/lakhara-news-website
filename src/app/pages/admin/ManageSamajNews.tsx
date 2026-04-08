@@ -3,6 +3,7 @@ import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as Ima
 import { samajService, NewsPost } from "../../services/samajService";
 import { extractKeywords } from "../../../utils/mlUtils";
 import { toast } from "sonner";
+import { AutoNewsWriter } from "../../components/ai/AutoNewsWriter";
 
 export function ManageSamajNews() {
   const [news, setNews] = useState<NewsPost[]>([]);
@@ -37,6 +38,12 @@ export function ManageSamajNews() {
     }
   };
 
+  const handleAIAutoNews = (title: string, content: string) => {
+    setNewNews({ title, content, category: "महत्वपूर्ण", imageUrl: "" });
+    setIsAdding(true);
+    toast.success("AI Translated News Ready!");
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       <div className="flex items-center justify-between">
@@ -45,6 +52,8 @@ export function ManageSamajNews() {
            <Plus className="size-4" /> {isAdding ? "Cancel" : "New Post"}
          </button>
       </div>
+
+      <AutoNewsWriter onNewsGenerated={handleAIAutoNews} />
 
       {isAdding && (
         <form onSubmit={handleAdd} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-5 animate-in slide-in-from-top-4">

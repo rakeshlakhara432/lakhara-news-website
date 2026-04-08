@@ -82,8 +82,8 @@ export function HomePage() {
          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
          <div className="relative container mx-auto px-6 py-24 md:py-32 flex flex-col items-start gap-8">
             <div className="flex items-center gap-4">
-               <div className="size-16 rounded-2xl bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-600/20 border-2 border-orange-400/30">
-                  <span className="text-3xl font-bold text-white">ॐ</span>
+               <div className="size-16 md:size-24 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center mb-10 shadow-2xl skew-y-12 shadow-primary/40 group-hover:skew-y-0 group-hover:rotate-12 transition-all duration-700 p-2 overflow-hidden">
+                  <img src="/favicon.png" alt="Lakhara Logo" className="size-full object-contain drop-shadow-lg" />
                </div>
                <span className="inline-flex items-center gap-2 rounded-full bg-orange-600/10 px-4 py-1.5 text-sm font-semibold text-orange-400 border border-orange-600/20">
                   <span className="relative flex size-2">

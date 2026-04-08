@@ -76,9 +76,9 @@ export function AdminDashboard() {
       {/* 🚀 TRADITIONAL HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border-b-4 border-primary shadow-lg">
          <div className="flex items-center gap-5">
-            <div className="size-16 rounded-xl bg-primary flex items-center justify-center shadow-lg shrink-0">
-               <span className="text-3xl font-bold text-white">ॐ</span>
-            </div>
+               <div className="size-16 md:size-20 rounded-2xl bg-white text-white flex items-center justify-center border border-white/30 shadow-2xl drop-shadow-xl group-hover:rotate-12 transition-transform duration-500 p-2">
+                  <img src="/favicon.png" alt="Lakhara Logo" className="size-full object-contain drop-shadow-sm" />
+               </div>
             <div>
                <h1 className="text-3xl font-black text-slate-800 leading-none tracking-tighter uppercase">प्रशासन पैनल</h1>
                <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mt-1">हिंदू लखारा समाज • डिजिटल प्रबंधन</p>
@@ -207,7 +207,9 @@ export function AdminDashboard() {
          <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="space-y-4">
                <div className="flex items-center gap-3">
-                  <div className="size-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold">ॐ</div>
+                  <div className="size-10 bg-white rounded-xl flex items-center justify-center border border-primary/20 p-1">
+                     <img src="/favicon.png" alt="Logo" className="size-full object-contain" />
+                  </div>
                   <h3 className="text-lg font-bold leading-none tracking-tighter">प्रणाली जानकारी<br/><span className="text-[10px] font-black text-primary uppercase tracking-widest">System Architecture</span></h3>
                </div>
                <p className="text-slate-400 text-xs font-medium leading-relaxed italic">
