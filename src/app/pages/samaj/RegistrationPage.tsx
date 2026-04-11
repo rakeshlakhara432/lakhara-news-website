@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { 
   User, Mail, Phone, MapPin, PlusCircle, CheckCircle, 
-  Users, Briefcase, ShieldAlert, CheckCircle2,
+  Users, Briefcase, ShieldAlert, CheckCircle2, Download,
 } from "lucide-react";
 import { samajService } from "../../services/samajService";
 import { telegramService } from "../../services/telegramService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { generateMembershipPDF } from "../../utils/generateMembershipPDF";
 
 export function RegistrationPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [memberCertData, setMemberCertData] = useState<{
+    memberId: string;
+    memberNumber: string;
+  } | null>(null);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -83,7 +89,7 @@ export function RegistrationPage() {
 
     setIsSubmitting(true);
     try {
-      await samajService.addMember({
+      const docRef = await samajService.addMember({
         name: formData.name,
         fatherName: formData.fatherName,
         city: formData.city,
@@ -103,12 +109,60 @@ export function RegistrationPage() {
         console.error("Failed to send telegram notification:", tgErr);
       }
 
+      // Generate member ID and number using Firestore doc ID
+      const year = new Date().getFullYear();
+      const shortId = docRef.id.slice(-4).toUpperCase();
+      const memberId = `ARHLM_ID_${year}_${shortId}`;
+      const memberNumber = shortId;
+
+      setMemberCertData({ memberId, memberNumber });
       setStep(4);
       toast.success("पंजीकरण सफल!");
+
+      // Auto-download the certificate PDF
+      try {
+        setIsGeneratingPDF(true);
+        await generateMembershipPDF({
+          memberId,
+          memberNumber,
+          name: formData.name,
+          fatherName: formData.fatherName,
+          address: formData.city,
+          city: formData.city,
+          dateOfIssue: new Date().toLocaleDateString("hi-IN", { day: "2-digit", month: "long", year: "numeric" }),
+        });
+        toast.success("बधाई पत्र (PDF) डाउनलोड हो गया!");
+      } catch (pdfErr) {
+        console.error("PDF generation failed:", pdfErr);
+        toast.error("PDF तैयार नहीं हो सका। नीचे बटन से पुनः प्रयास करें।");
+      } finally {
+        setIsGeneratingPDF(false);
+      }
     } catch (err) {
       toast.error("पंजीकरण विफल रहा।");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDownloadCertificate = async () => {
+    if (!memberCertData) return;
+    setIsGeneratingPDF(true);
+    try {
+      await generateMembershipPDF({
+        memberId: memberCertData.memberId,
+        memberNumber: memberCertData.memberNumber,
+        name: formData.name,
+        fatherName: formData.fatherName,
+        address: formData.city,
+        city: formData.city,
+        dateOfIssue: new Date().toLocaleDateString("hi-IN", { day: "2-digit", month: "long", year: "numeric" }),
+      });
+      toast.success("PDF डाउनलोड हो गया!");
+    } catch (err) {
+      toast.error("PDF तैयार नहीं हो सका।");
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -307,7 +361,32 @@ export function RegistrationPage() {
                      धन्यवाद! आपकी समाज सदस्यता का आवेदन प्राप्त हो गया है। सत्यापन के बाद आप समाज के डिजिटल पोर्टल का पूर्ण उपयोग कर पाएंगे।
                   </p>
                </div>
-               <div className="pt-6 flex flex-col md:flex-row justify-center gap-4">
+
+               {/* Member ID Badge */}
+               {memberCertData && (
+                  <div className="bg-orange-50 border border-orange-200 rounded-2xl px-8 py-5 inline-block space-y-1">
+                     <p className="text-xs font-bold uppercase tracking-widest text-orange-500">आपका सदस्यता विवरण</p>
+                     <p className="text-lg font-extrabold text-slate-800">{memberCertData.memberId}</p>
+                     <p className="text-sm text-slate-500 font-medium">सदस्यता संख्या: <strong className="text-slate-700">{memberCertData.memberNumber}</strong></p>
+                  </div>
+               )}
+
+               {/* Certificate Download */}
+               {memberCertData && (
+                  <div className="space-y-3">
+                     <p className="text-xs text-slate-400 font-medium uppercase tracking-widest">बधाई पत्र (Certificate)</p>
+                     <button
+                        onClick={handleDownloadCertificate}
+                        disabled={isGeneratingPDF}
+                        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-2xl hover:opacity-90 transition-all text-sm shadow-lg disabled:opacity-50"
+                     >
+                        <Download className="size-5" />
+                        {isGeneratingPDF ? "PDF तैयार हो रही है..." : "बधाई पत्र डाउनलोड करें (PDF)"}
+                     </button>
+                  </div>
+               )}
+
+               <div className="pt-2 flex flex-col md:flex-row justify-center gap-4">
                   <button onClick={() => navigate("/")} className="px-8 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors text-sm">होम पेज पर जाएं</button>
                   <button onClick={() => navigate("/news")} className="px-8 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-500 transition-colors text-sm shadow">समाज समाचार</button>
                </div>

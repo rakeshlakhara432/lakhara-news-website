@@ -8,7 +8,7 @@ Write-Host "📦 Staging changes..." -ForegroundColor Yellow
 git add .
 
 # 2. Commit changes
-$commitMessage = "Added Google Auth, Gmail OTP Login, Welcome Email System, and Telegram Data Sync"
+$commitMessage = "feat: ARHLM Membership Congratulations PDF certificate auto-generated on registration"
 Write-Host "💾 Committing changes: $commitMessage" -ForegroundColor Yellow
 git commit -m $commitMessage
 
