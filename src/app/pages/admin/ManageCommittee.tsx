@@ -145,33 +145,33 @@ export function ManageCommittee() {
       )}
 
       {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
            {members.map(m => (
-              <div key={m.id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full items-center text-center">
-                 <div className="size-20 rounded-full overflow-hidden border-4 border-orange-50 shadow-sm mb-4 flex-shrink-0 bg-orange-50 flex items-center justify-center">
+              <div key={m.id} className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full items-center text-center">
+                 <div className="size-14 rounded-full overflow-hidden border-2 border-orange-50 shadow-sm mb-3 flex-shrink-0 bg-orange-50 flex items-center justify-center">
                     {m.photoUrl ? (
                       <img src={m.photoUrl} alt={m.name} className="size-full object-cover" />
                     ) : (
-                      <ShieldCheck className="size-8 text-orange-600" />
+                      <ShieldCheck className="size-6 text-orange-600" />
                     )}
                  </div>
-                 <div className="space-y-1.5 mb-5 flex-grow">
-                    <h3 className="text-lg font-black text-slate-800 leading-tight">{m.name}</h3>
-                    <p className="text-[11px] font-black text-orange-600 uppercase tracking-widest">{m.designation}</p>
+                 <div className="space-y-1 mb-3 flex-grow">
+                    <h3 className="text-sm font-black text-slate-800 leading-tight">{m.name}</h3>
+                    <p className="text-[9px] font-black text-orange-600 uppercase tracking-widest">{m.designation}</p>
                  </div>
-                 <div className="pt-4 border-t border-slate-100 flex flex-col w-full gap-3 mt-auto">
-                    <div className="flex flex-col gap-2 text-slate-500 mx-auto">
+                 <div className="pt-3 border-t border-slate-100 flex flex-col w-full gap-2 mt-auto">
+                    <div className="flex flex-col gap-1.5 text-slate-500 mx-auto w-full px-2">
                       <div className="flex items-center gap-2">
-                        <MapPin className="size-3.5 shrink-0" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider truncate">{m.city}</span>
+                        <MapPin className="size-3 shrink-0" />
+                        <span className="text-[9px] font-bold uppercase tracking-wider truncate">{m.city}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Phone className="size-3.5 shrink-0" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">{m.phone}</span>
+                        <Phone className="size-3 shrink-0" />
+                        <span className="text-[9px] font-bold uppercase tracking-wider">{m.phone}</span>
                       </div>
                     </div>
-                    <button onClick={() => handleDelete(m.id!)} className="w-full py-2 bg-slate-50 text-slate-400 font-bold text-xs uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0 gap-2 mt-2">
-                       <Trash2 className="size-3.5" /> Remove
+                    <button onClick={() => handleDelete(m.id!)} className="w-full py-1.5 bg-slate-50 text-slate-400 font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0 gap-1.5 mt-1">
+                       <Trash2 className="size-3" /> Remove
                     </button>
                  </div>
              </div>

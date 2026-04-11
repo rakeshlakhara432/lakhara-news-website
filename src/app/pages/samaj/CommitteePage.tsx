@@ -109,12 +109,12 @@ export function CommitteePage() {
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {others.map((m, i) => (
                 <div key={i} className="group p-6 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-center space-y-4 hover:border-orange-200">
-                  <div className="size-14 mx-auto bg-slate-50 text-slate-400 rounded-full flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors">
-                      <User className="size-6" />
+                  <div className="size-16 mx-auto bg-slate-50 text-slate-400 rounded-full flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors border-2 border-slate-100 overflow-hidden shadow-sm">
+                      {m.photoUrl ? <img src={m.photoUrl} className="size-full object-cover" alt={m.name} /> : <User className="size-6" />}
                   </div>
                   <div>
                       <h3 className="text-sm font-bold text-slate-800 line-clamp-1">{m.name}</h3>
-                      <p className="text-xs text-orange-600 font-medium mt-1">{m.designation}</p>
+                      <p className="text-[10px] text-orange-600 font-bold uppercase tracking-wider mt-1">{m.designation}</p>
                   </div>
                   <div className="flex justify-center pt-2 border-t border-slate-50">
                       <a href={`tel:${m.phone}`} className="flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-orange-600 transition-colors">
