@@ -38,6 +38,7 @@ import { EBooksPage } from "./pages/samaj/EBooksPage";
 // Admin Management
 import { ManageStore } from "./pages/admin/ManageStore";
 import { ManageEBooks } from "./pages/admin/ManageEBooks";
+import { CertificateSettings } from "./pages/admin/CertificateSettings";
 
 export const router = createHashRouter([
   {
@@ -82,6 +83,7 @@ export const router = createHashRouter([
       { path: "store", Component: ManageStore },
       { path: "ebooks", Component: ManageEBooks },
       { path: "settings", Component: AdminSettings },
+      { path: "certificate-settings", Component: CertificateSettings },
     ],
   },
   {

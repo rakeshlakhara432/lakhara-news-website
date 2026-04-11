@@ -35,6 +35,7 @@ import {
   Play,
   ShoppingBag,
   Book,
+  Award,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -158,6 +159,7 @@ export function AdminLayout() {
     { path: "/admin/support", label: "Education", icon: GraduationCap },
     { path: "/admin/messages", label: "Messages", icon: MessageCircle },
     { path: "/admin/settings", label: "About Settings", icon: Settings },
+    { path: "/admin/certificate-settings", label: "Certificate Sign", icon: Award },
   ];
 
   const isActive = (path: string) => {
