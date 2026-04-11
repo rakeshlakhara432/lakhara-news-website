@@ -38,34 +38,58 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
+import { auth } from "../data/firebase";
+import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 
 export function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem("isAdminLoggedIn") === "true";
-  });
-  const [loginPassword, setLoginPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [loginError, setLoginError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    const storedPassword = localStorage.getItem("adminPassword") || "admin123";
-    if (loginPassword === storedPassword) {
-      localStorage.setItem("isAdminLoggedIn", "true");
-      setIsAuthenticated(true);
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user && user.email === "rakeshlakhara432@gmail.com") {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+      setIsCheckingAuth(false);
+    });
+    return () => unsub();
+  }, []);
+
+  const handleLogin = async () => {
+    try {
       setLoginError("");
-    } else {
-      setLoginError("Incorrect Password");
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await signInWithPopup(auth, provider);
+      
+      if (result.user.email !== "rakeshlakhara432@gmail.com") {
+        await signOut(auth);
+        setLoginError("ACCESS DENIED: You are not the owner of this website.");
+      }
+    } catch (err: any) {
+      setLoginError(err.message || "Authentication Failed.");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAdminLoggedIn");
+  const handleLogout = async () => {
+    await signOut(auth);
     setIsAuthenticated(false);
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-[#FFFDFB] flex items-center justify-center">
+        <div className="animate-spin text-primary size-10 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -84,43 +108,35 @@ export function AdminLayout() {
               <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.4em] leading-none opacity-60">AUTHORIZED ENTRY ONLY</p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div className="relative group">
-                <input
-                  type="password"
-                  placeholder="Enter Passcode..."
-                  value={loginPassword}
-                  onChange={(e) => {
-                     setLoginPassword(e.target.value);
-                     setLoginError("");
-                  }}
-                  className="w-full bg-gray-50/50 border border-gray-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 rounded-xl px-6 py-3.5 font-bold text-gray-900 outline-none transition-all text-center tracking-[0.2em] text-[13px]"
-                  autoFocus
-                  required
-                />
-              </div>
+            <div>
+              <button
+                onClick={handleLogin}
+                className="w-full bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-800 focus:ring-4 focus:ring-gray-100 rounded-xl px-6 py-3.5 font-bold transition-all shadow-sm flex items-center justify-center gap-3"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 48 48">
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                  <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                  <path fill="none" d="M0 0h48v48H0z"/>
+                </svg>
+                Sign in as Owner
+              </button>
               
               {loginError && (
-                <div className="text-red-600 text-[8px] font-black uppercase tracking-widest bg-red-50 py-2.5 rounded-lg border border-red-100">
+                <div className="mt-4 text-red-600 text-[10px] uppercase font-black tracking-widest bg-red-50 p-3 border border-red-100 rounded-lg text-center leading-relaxed">
                   {loginError}
                 </div>
               )}
 
               <button
-                type="submit"
-                className="w-full py-3.5 bg-primary text-white font-black rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95 uppercase text-[10px] tracking-widest"
-              >
-                UNSEAL ACCESS
-              </button>
-
-              <button
                 type="button"
                 onClick={() => navigate("/")}
-                className="w-full py-2 text-gray-400 font-black uppercase tracking-widest text-[7px] hover:text-primary transition-colors flex items-center justify-center gap-2"
+                className="w-full mt-6 py-2 text-gray-400 font-black uppercase tracking-widest text-[8px] hover:text-primary transition-colors flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="size-3" /> RETURN TO PORTAL
               </button>
-            </form>
+            </div>
           </div>
           <p className="text-center text-[7px] font-black text-gray-300 mt-10 uppercase tracking-[0.5em] opacity-50">Secure Core System &bull; Active Shield v4.0</p>
         </div>
