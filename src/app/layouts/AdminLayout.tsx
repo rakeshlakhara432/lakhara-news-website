@@ -259,37 +259,63 @@ export function AdminLayout() {
       {isSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-[100] bg-gray-950/20 backdrop-blur-md" onClick={() => setIsSidebarOpen(false)}>
            <aside 
-             className="absolute inset-y-0 left-0 w-72 bg-white p-8 flex flex-col border-r border-gray-100 shadow-2xl"
+             className="absolute inset-y-0 left-0 w-72 bg-white flex flex-col border-r border-gray-100 shadow-2xl overflow-hidden"
              onClick={(e) => e.stopPropagation()}
            >
-              <div className="flex justify-between items-center mb-12">
-                 <Link to="/admin" className="flex items-center gap-3 w-full p-2 group">
+              {/* ── Header ── */}
+              <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-gray-100 shrink-0">
+                 <Link to="/admin" className="flex items-center gap-3 group" onClick={() => setIsSidebarOpen(false)}>
                     <div className="size-10 rounded-full bg-white border border-primary/30 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform p-0.5 overflow-hidden">
                        <img src="/brand-logo.png" alt="Logo" className="size-full object-contain rounded-full" />
                     </div>
-                    <span className="font-black text-lg text-slate-800 tracking-tighter uppercase italic">ADMIN</span>
+                    <div>
+                      <span className="font-black text-base text-slate-800 tracking-tighter uppercase italic block leading-none">ADMIN HUB</span>
+                      <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">LAKHARA NETWORK</span>
+                    </div>
                  </Link>
-                 <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-gray-50 rounded-xl">
-                    <X className="size-6 text-gray-400" />
+                 <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-gray-50 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors shrink-0">
+                    <X className="size-5 text-gray-400" />
                  </button>
               </div>
 
-              <nav className="flex-grow space-y-1">
+              {/* ── Scrollable Nav ── */}
+              <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+                 <p className="text-[7px] font-black text-gray-400 tracking-[0.4em] px-3 mb-3 uppercase opacity-50">STATION CONTROL</p>
                  {menuItems.map(item => {
                    const Icon = item.icon;
                    const active = isActive(item.path);
                    return (
-                     <Link key={item.path} to={item.path} onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-4 p-4 rounded-xl transition-all border ${active ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20 italic' : 'text-gray-400 border-transparent hover:text-primary italic'}`}>
-                        <Icon className="size-5" />
-                        <span className="font-black uppercase tracking-widest text-[10px]">{item.label}</span>
+                     <Link
+                       key={item.path}
+                       to={item.path}
+                       onClick={() => setIsSidebarOpen(false)}
+                       className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all border ${
+                         active
+                           ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                           : 'text-gray-500 border-transparent hover:text-primary hover:bg-primary/5'
+                       }`}
+                     >
+                        <Icon className="size-5 shrink-0" />
+                        <span className="font-black uppercase tracking-wider text-[11px]">{item.label}</span>
+                        {active && <div className="ml-auto size-1.5 bg-white/60 rounded-full animate-pulse" />}
                      </Link>
                    );
                  })}
               </nav>
               
-              <button onClick={handleLogout} className="mt-auto flex items-center gap-4 p-4 text-gray-400 font-black uppercase tracking-widest text-[9px] hover:text-red-600 transition-colors">
-                 <LogOut className="size-5" /> TERMINATE SESSION
-              </button>
+              {/* ── Logout Footer ── */}
+              <div className="px-4 pb-6 pt-3 border-t border-gray-100 shrink-0">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all font-black uppercase tracking-widest text-[9px]"
+                >
+                   <LogOut className="size-5" /> TERMINATE SESSION
+                </button>
+                <div className="mt-2 flex items-center gap-2 px-3">
+                  <div className="size-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-[7px] font-black text-gray-400 uppercase tracking-widest">Network Online</span>
+                </div>
+              </div>
            </aside>
         </div>
       )}
