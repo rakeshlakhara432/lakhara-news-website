@@ -58,8 +58,8 @@ export function HomePage() {
   const quickLinks = [
     { label: "पंजीकरण", slug: "register", icon: Radio, bg: "bg-orange-50", text: "text-orange-600" },
     { label: "विवाह मंच", slug: "matrimonial", icon: Heart, bg: "bg-rose-50", text: "text-rose-600" },
-    { label: "सदस्य सूची", slug: "directory", icon: Users, bg: "bg-blue-50", text: "text-blue-600" },
-    { label: "समाचार", slug: "news", icon: Newspaper, bg: "bg-emerald-50", text: "text-emerald-600" },
+    { label: "सूचना पट्ट", slug: "notices", icon: Activity, bg: "bg-emerald-50", text: "text-emerald-600" },
+    { label: "जन्मदिन", slug: "birthday-wishes", icon: Users, bg: "bg-blue-50", text: "text-blue-600" },
   ];
 
   const liveVideo = videos.find(v => v.isLive) || videos[0];
@@ -256,6 +256,31 @@ export function HomePage() {
                      </Link>
                   </div>
                </div>
+            </div>
+
+            {/* BIRTHDAY WISHES QUICK VIEW */}
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-800">जन्मदिन बधाई</h2>
+                <Link to="/birthday-wishes" className="text-xs font-bold text-pink-600 hover:underline px-2 py-1 bg-pink-50 rounded">सभी देखें</Link>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex-1 relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 p-4 opacity-5 text-pink-500 group-hover:scale-110 transition-transform">
+                    <Users className="size-16" />
+                 </div>
+                 <div className="space-y-4 relative z-10">
+                    <div className="flex items-center gap-3">
+                       <div className="size-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center">
+                          <Activity className="size-5" />
+                       </div>
+                       <p className="text-sm font-bold text-slate-700 italic">"अपनों को विश करें"</p>
+                    </div>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">समाज के उन सदस्यों को बधाई दें जिनका आज जन्मदिन है। एकता और प्रेम को बढ़ावा दें।</p>
+                    <Link to="/birthday-wishes" className="w-full mt-4 flex items-center justify-center py-2.5 bg-pink-600 text-white font-bold text-xs rounded-xl hover:bg-pink-700 transition-colors shadow-sm">
+                       बधाई भेजें
+                    </Link>
+                 </div>
+              </div>
             </div>
 
             {/* NETWORK INTEL */}

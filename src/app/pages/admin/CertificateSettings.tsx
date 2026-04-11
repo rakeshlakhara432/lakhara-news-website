@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Upload, Save, Pen, User, Award, CheckCircle,
-  RefreshCw, AlertCircle, Trash2, Edit3, Image, X
+  RefreshCw, AlertCircle, Trash2, Edit3, Image, X, CreditCard, ShieldCheck
 } from "lucide-react";
 import { certSettingsService, CertAdminSettings } from "../../services/certSettingsService";
 import { toast } from "sonner";
@@ -66,18 +66,23 @@ function SignatureCanvas({ onSave, onClose }: { onSave: (b64: string) => void; o
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg space-y-5 p-7">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg space-y-5 p-7 border border-indigo-100">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-black text-slate-900">Signature Draw करें</h2>
-            <p className="text-xs text-slate-400 font-medium mt-0.5">नीचे box में माउस / उंगली से हस्ताक्षर करें</p>
+             <div className="flex items-center gap-2">
+                <div className="size-6 bg-indigo-600 rounded-lg flex items-center justify-center">
+                   <Edit3 className="size-3.5 text-white" />
+                </div>
+                <h2 className="text-lg font-black text-slate-900">🖊️ Signature Draw करें</h2>
+             </div>
+            <p className="text-xs text-slate-400 font-medium mt-1">माउस या उंगली से हस्ताक्षर करें</p>
           </div>
-          <button onClick={onClose} className="size-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
-            <X className="size-5 text-slate-600" />
+          <button onClick={onClose} className="size-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+            <X className="size-6 text-slate-500" />
           </button>
         </div>
 
-        <div className="border-2 border-dashed border-slate-300 rounded-2xl overflow-hidden bg-slate-50 cursor-crosshair">
+        <div className="border-2 border-dashed border-slate-300 rounded-2xl overflow-hidden bg-slate-50 cursor-crosshair relative shadow-inner">
           <canvas
             ref={canvasRef}
             width={560}
@@ -97,13 +102,13 @@ function SignatureCanvas({ onSave, onClose }: { onSave: (b64: string) => void; o
         <div className="flex gap-3">
           <button
             onClick={clearCanvas}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-sm transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-black rounded-xl text-xs uppercase tracking-widest transition-colors"
           >
             <Trash2 className="size-4" /> साफ़ करें
           </button>
           <button
             onClick={saveSignature}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold rounded-xl text-sm hover:opacity-90 transition-all shadow"
+            className="flex-1 flex items-center justify-center gap-3 py-3 bg-indigo-600 text-white font-black rounded-xl text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg"
           >
             <CheckCircle className="size-4" /> Signature Save करें
           </button>
@@ -139,7 +144,6 @@ export function CertificateSettings() {
     })();
   }, []);
 
-  /* ── Upload image signature ── */
   const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -167,7 +171,6 @@ export function CertificateSettings() {
     reader.readAsDataURL(file);
   };
 
-  /* ── Save to Firestore ── */
   const handleSave = async () => {
     if (!settings.adminName.trim()) {
       toast.error("Admin का नाम जरूर भरें");
@@ -176,7 +179,7 @@ export function CertificateSettings() {
     setIsSaving(true);
     try {
       await certSettingsService.save(settings);
-      toast.success("Certificate settings save हो गई! सभी नए certificates में यह info आएगी।");
+      toast.success("Settings save हो गई! अब हर Membership Certificate पर यही info आएगी।");
     } catch {
       toast.error("Save नहीं हो सका। पुनः प्रयास करें।");
     } finally {
@@ -187,7 +190,7 @@ export function CertificateSettings() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <RefreshCw className="size-8 text-primary animate-spin" />
+        <RefreshCw className="size-8 text-indigo-600 animate-spin" />
       </div>
     );
   }
@@ -196,7 +199,6 @@ export function CertificateSettings() {
 
   return (
     <>
-      {/* ── Draw Canvas Modal ── */}
       {showDrawCanvas && (
         <SignatureCanvas
           onSave={(b64) => { setSettings(prev => ({ ...prev, signatureBase64: b64 })); setShowDrawCanvas(false); }}
@@ -204,64 +206,76 @@ export function CertificateSettings() {
         />
       )}
 
-      <div className="space-y-8 max-w-2xl mx-auto">
+      <div className="space-y-8 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-        {/* ── Header ── */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <div className="size-10 bg-orange-50 text-primary rounded-xl flex items-center justify-center">
-              <Award className="size-5" />
+        {/* ── Page Header ── */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="size-14 bg-indigo-600 text-white rounded-[1.5rem] flex items-center justify-center shadow-2xl relative group overflow-hidden">
+               <div className="absolute inset-0 bg-white/20 group-hover:scale-150 transition-transform duration-700 rounded-full scale-0"></div>
+               <Award className="size-7 relative z-10" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight">Certificate Settings</h1>
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest">Community Membership Certificate • Admin Panel</p>
+              <h1 className="text-2xl font-black text-slate-800 tracking-tight uppercase" style={{ fontFamily: "'Outfit', sans-serif" }}>Community Member card</h1>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] flex items-center gap-2">
+                 <ShieldCheck className="size-3 text-emerald-500" /> Administrative Dashboard
+              </p>
             </div>
           </div>
-          <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
-            <AlertCircle className="size-4 text-amber-600 mt-0.5 shrink-0" />
-            <p className="text-xs text-amber-800 font-semibold leading-relaxed">
-              यहाँ save की गई <strong>Signature</strong> और <strong>Admin Details</strong> हर नए{" "}
-              <strong>Membership Certificate PDF</strong> में automatically apply होंगी।
-              Changes के बाद नए members का certificate इसी signature के साथ generate होगा।
-            </p>
+          <div className="p-5 bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-3xl space-y-2 shadow-sm relative overflow-hidden">
+            <div className="size-32 bg-indigo-500/5 rounded-full absolute -right-10 -top-10"></div>
+            <div className="flex items-start gap-4 relative z-10">
+               <AlertCircle className="size-5 text-indigo-600 mt-0.5 shrink-0" />
+               <p className="text-xs text-indigo-900 font-bold leading-relaxed">
+                 यहाँ save की गई <strong>Signature</strong> और <strong>Admin Details</strong> हर नए{" "}
+                 <strong>Membership Certificate PDF</strong> में automatically apply होंगी।
+                 Changes के बाद नए members का certificate इसी signature के साथ generate होगा।
+               </p>
+            </div>
           </div>
         </div>
 
-        {/* ── Admin Name & Designation ── */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-sm">
-          <div className="border-l-4 border-primary pl-4">
-            <h2 className="text-base font-black text-slate-800 uppercase tracking-wider">Admin Details</h2>
-            <p className="text-xs text-slate-400 font-medium">Certificate पर दिखने वाली admin information</p>
+        {/* ── Admin Details Section ── */}
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] p-10 space-y-8 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5">
+             <User className="size-32" />
           </div>
 
-          <div className="grid grid-cols-1 gap-5">
-            <div className="space-y-2">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                <User className="size-3.5" /> Admin का पूरा नाम
+          <div className="border-l-5 border-indigo-600 pl-5">
+            <h2 className="text-lg font-black text-slate-800 uppercase tracking-widest" style={{ fontFamily: "'Outfit', sans-serif" }}>Admin Details</h2>
+            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-1">Certificate पर दिखने वाली admin information</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 relative z-10">
+            {/* Name Input */}
+            <div className="space-y-3">
+              <label className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em] flex items-center gap-2">
+                <User className="size-3.5 text-indigo-600" /> Admin का पूरा नाम
               </label>
               <input
                 type="text"
-                placeholder="जैसे: Rajesh Kumar Lakhara"
+                placeholder="Rakesh lakhara"
                 value={settings.adminName}
                 onChange={e => setSettings(prev => ({ ...prev, adminName: e.target.value }))}
-                className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 outline-none focus:border-primary transition-colors placeholder:text-slate-400"
+                className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                <Pen className="size-3.5" /> पद / Designation
+            {/* Designation Grid */}
+            <div className="space-y-4">
+              <label className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em] flex items-center gap-2">
+                <Pen className="size-3.5 text-indigo-600" /> पद / Designation
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {DESIGNATIONS.map(d => (
                   <button
                     key={d}
                     type="button"
                     onClick={() => setSettings(prev => ({ ...prev, adminDesignation: d }))}
-                    className={`py-2.5 px-3 rounded-xl font-bold text-xs border transition-all text-center ${
+                    className={`py-3.5 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest border transition-all ${
                       settings.adminDesignation === d
-                        ? "bg-primary text-white border-primary shadow-md"
-                        : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-xl scale-105"
+                        : "bg-white text-slate-500 border-slate-200 hover:border-indigo-300 hover:text-indigo-600"
                     }`}
                   >
                     {d}
@@ -273,139 +287,139 @@ export function CertificateSettings() {
                 placeholder="Custom पद लिखें..."
                 value={DESIGNATIONS.includes(settings.adminDesignation) ? "" : settings.adminDesignation}
                 onChange={e => setSettings(prev => ({ ...prev, adminDesignation: e.target.value }))}
-                className="w-full px-4 py-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-xl text-xs font-semibold text-slate-700 outline-none focus:border-primary transition-colors placeholder:text-slate-400"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-xl text-xs font-bold text-slate-600 outline-none focus:border-indigo-600 focus:bg-white transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* ── Signature Section ── */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-sm">
-          <div className="border-l-4 border-primary pl-4">
-            <h2 className="text-base font-black text-slate-800 uppercase tracking-wider">Admin Signature</h2>
-            <p className="text-xs text-slate-400 font-medium">Certificate के नीचे-बाईं ओर दिखेगी</p>
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] p-10 space-y-8 shadow-xl">
+          <div className="border-l-5 border-indigo-600 pl-5">
+            <h2 className="text-lg font-black text-slate-800 uppercase tracking-widest" style={{ fontFamily: "'Outfit', sans-serif" }}>Admin Signature</h2>
+            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-1">Certificate के नीचे-बाईं ओर दिखेगी</p>
           </div>
 
-          {settings.signatureBase64 ? (
-            /* ── Signature Preview ── */
-            <div className="space-y-4">
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col items-center gap-4">
-                <img
-                  src={settings.signatureBase64}
-                  alt="Admin Signature"
-                  className="max-h-28 max-w-xs object-contain"
-                />
-                <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs">
-                  <CheckCircle className="size-4" /> Signature ready for certificate
-                </div>
-              </div>
-              <div className="flex gap-3 justify-center">
-                <button
-                  type="button"
-                  onClick={() => setShowDrawCanvas(true)}
-                  className="flex items-center gap-2 px-5 py-2 text-xs font-black text-primary border border-primary/30 bg-orange-50 hover:bg-orange-100 rounded-xl uppercase tracking-widest transition-colors"
-                >
-                  <Edit3 className="size-3.5" /> फिर से Draw करें
-                </button>
-                <label className="flex items-center gap-2 px-5 py-2 text-xs font-black text-blue-600 border border-blue-200 bg-blue-50 hover:bg-blue-100 rounded-xl uppercase tracking-widest transition-colors cursor-pointer">
-                  <Image className="size-3.5" /> Image Upload करें
-                  <input
-                    ref={sigInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleSignatureUpload}
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSettings(prev => ({ ...prev, signatureBase64: "" }));
-                    if (sigInputRef.current) sigInputRef.current.value = "";
-                  }}
-                  className="flex items-center gap-2 px-5 py-2 text-xs font-black text-red-500 border border-red-200 bg-red-50 hover:bg-red-100 rounded-xl uppercase tracking-widest transition-colors"
-                >
-                  <Trash2 className="size-3.5" /> हटाएं
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* ── Upload / Draw options ── */
-            <div className="grid grid-cols-1 gap-4">
-              {/* Draw option */}
-              <button
-                type="button"
-                onClick={() => setShowDrawCanvas(true)}
-                className="border-2 border-dashed border-primary/40 rounded-2xl p-8 text-center hover:border-primary hover:bg-orange-50/50 transition-all group"
-              >
-                <div className="size-14 bg-orange-50 text-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Edit3 className="size-6" />
-                </div>
-                <p className="text-sm font-black text-slate-700">🖊️ Signature Draw करें</p>
-                <p className="text-xs text-slate-400 font-medium mt-1">माउस या उंगली से हस्ताक्षर करें</p>
-              </button>
+          <div className="relative z-10">
+             {settings.signatureBase64 ? (
+               <div className="space-y-6">
+                 <div className="bg-slate-50 border-2 border-dashed border-indigo-100 rounded-[2rem] p-8 flex flex-col items-center gap-4 shadow-inner relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                   <img
+                     src={settings.signatureBase64}
+                     alt="Admin Signature"
+                     className="max-h-24 max-w-full object-contain relative z-10 drop-shadow-md"
+                   />
+                   <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest bg-white px-4 py-1.5 rounded-full border border-indigo-100 shadow-sm relative z-10">
+                     <CheckCircle className="size-4 text-emerald-500" /> Signature Live
+                   </div>
+                 </div>
+                 <div className="flex flex-wrap gap-3 justify-center">
+                   <button
+                     onClick={() => setShowDrawCanvas(true)}
+                     className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl uppercase tracking-widest transition-all"
+                   >
+                     <Edit3 className="size-4" /> 🖊️ फिर से Draw करें
+                   </button>
+                   <label className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl uppercase tracking-widest transition-all cursor-pointer">
+                     <Image className="size-4" /> 📁 Image Upload करें
+                     <input
+                       ref={sigInputRef}
+                       type="file"
+                       accept="image/*"
+                       className="hidden"
+                       onChange={handleSignatureUpload}
+                     />
+                   </label>
+                   <button
+                     onClick={() => {
+                       setSettings(prev => ({ ...prev, signatureBase64: "" }));
+                       if (sigInputRef.current) sigInputRef.current.value = "";
+                     }}
+                     className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-rose-500 bg-rose-50 hover:bg-rose-100 rounded-xl uppercase tracking-widest transition-all"
+                   >
+                     <Trash2 className="size-4" /> हटाएं
+                   </button>
+                 </div>
+               </div>
+             ) : (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                 <button
+                   onClick={() => setShowDrawCanvas(true)}
+                   className="border-2 border-dashed border-indigo-200 rounded-3xl p-10 text-center hover:border-indigo-600 hover:bg-indigo-50/50 transition-all group flex flex-col items-center shadow-sm"
+                 >
+                   <div className="size-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                     <Edit3 className="size-8" />
+                   </div>
+                   <p className="text-sm font-black text-slate-800 uppercase tracking-widest">🖊️ Signature Draw करें</p>
+                   <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase">माउस या उंगली से हस्ताक्षर करें</p>
+                 </button>
 
-              {/* Upload option */}
-              <label className="block cursor-pointer">
-                <div className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${isUploadingSig ? "border-primary bg-orange-50" : "border-slate-300 hover:border-primary hover:bg-orange-50/50"}`}>
-                  <div className="size-14 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Upload className="size-6" />
-                  </div>
-                  <p className="text-sm font-black text-slate-700">
-                    {isUploadingSig ? "Upload हो रही है..." : "📁 Signature Image Upload करें"}
-                  </p>
-                  <p className="text-xs text-slate-400 font-medium mt-1">PNG (transparent background) • Max 2MB</p>
-                </div>
-                <input
-                  ref={sigInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleSignatureUpload}
-                  disabled={isUploadingSig}
-                />
-              </label>
-            </div>
-          )}
+                 <label className="block cursor-pointer">
+                   <div className={`border-2 border-dashed rounded-3xl p-10 text-center h-full transition-all group flex flex-col items-center shadow-sm ${isUploadingSig ? "border-indigo-600 bg-indigo-50" : "border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/50"}`}>
+                     <div className="size-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mb-5 group-hover:rotate-12 transition-transform">
+                       <Upload className="size-8" />
+                     </div>
+                     <p className="text-sm font-black text-slate-800 uppercase tracking-widest">
+                       {isUploadingSig ? "Uploading..." : "📁 Image Upload करें"}
+                     </p>
+                     <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wide">PNG (transparent) • Max 2MB</p>
+                   </div>
+                   <input
+                     ref={sigInputRef}
+                     type="file"
+                     accept="image/*"
+                     className="hidden"
+                     onChange={handleSignatureUpload}
+                     disabled={isUploadingSig}
+                   />
+                 </label>
+               </div>
+             )}
+          </div>
         </div>
 
-        {/* ── Live Certificate Preview ── */}
+        {/* ── Live Preview Section ── */}
         {(settings.adminName || settings.signatureBase64) && (
-          <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm space-y-5">
-            <div className="border-l-4 border-green-500 pl-4">
-              <h2 className="text-base font-black text-slate-800 uppercase tracking-wider">Live Preview</h2>
-              <p className="text-xs text-slate-400 font-medium">Certificate में नीचे-बाईं ओर ऐसा दिखेगा</p>
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-10 shadow-xl space-y-8 animate-in zoom-in duration-500">
+            <div className="border-l-5 border-emerald-500 pl-5">
+              <h2 className="text-lg font-black text-slate-800 uppercase tracking-widest" style={{ fontFamily: "'Outfit', sans-serif" }}>Live Preview</h2>
+              <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-1">Certificate में नीचे-बाईं ओर ऐसा दिखेगा</p>
             </div>
 
-            {/* Mini certificate preview */}
-            <div
-              className="rounded-2xl p-6 inline-flex flex-col items-start gap-1 min-w-[240px]"
-              style={{ background: "linear-gradient(135deg,#faf6eb,#f3e9cc)", border: "2px solid #c9a227" }}
-            >
-              {settings.signatureBase64 ? (
-                <img
-                  src={settings.signatureBase64}
-                  alt="sig preview"
-                  className="max-h-16 max-w-[200px] object-contain mb-1"
-                />
-              ) : (
-                <div className="h-12 flex items-end pb-1">
-                  <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
-                    <path d="M8 32 Q24 8 40 24 Q56 38 72 16 Q88 4 110 20" stroke="#333" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                  </svg>
-                </div>
-              )}
-              <div className="w-40 h-0.5 bg-slate-600"></div>
-              <p
-                className="text-xs font-bold text-slate-800 mt-1 uppercase tracking-wide"
-                style={{ fontFamily: "serif" }}
-              >
-                {settings.adminName || "Admin Name"}
-              </p>
-              <p className="text-xs font-semibold" style={{ color: "#0d4a28" }}>
-                {settings.adminDesignation}
-              </p>
-              <p className="text-xs text-slate-500 font-medium">LAKHARA SAMAJ COMMUNITY</p>
+            <div className="flex justify-center">
+               <div
+                 className="rounded-3xl p-8 flex flex-col items-center gap-1 min-w-[300px] shadow-lg relative overflow-hidden"
+                 style={{ 
+                    background: "linear-gradient(135deg, #fffbf0 0%, #fdf5e6 100%)", 
+                    border: "3px solid #0f5132",
+                    boxShadow: "inset 0 0 20px rgba(15,81,50,0.05)"
+                 }}
+               >
+                 <div className="absolute top-2 right-4 opacity-10">
+                    <img src="/brand-logo.png" className="size-16 object-contain" />
+                 </div>
+                 
+                 {settings.signatureBase64 ? (
+                   <img
+                     src={settings.signatureBase64}
+                     alt="sig preview"
+                     className="max-h-20 max-w-[240px] object-contain mb-2 drop-shadow-sm rotate-[-2deg]"
+                   />
+                 ) : (
+                    <div className="h-16 flex items-end pb-2 opacity-20">
+                       <Pen className="size-10 text-slate-300" />
+                    </div>
+                 )}
+                 <div className="w-48 h-0.5 bg-slate-800"></div>
+                 <p className="text-sm font-black text-slate-900 mt-2 uppercase tracking-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                   {settings.adminName || "Rakesh lakhara"}
+                 </p>
+                 <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: "#0d4a28" }}>
+                   {settings.adminDesignation}
+                 </p>
+                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1">LAKHARA SAMAJ COMMUNITY</p>
+               </div>
             </div>
           </div>
         )}
@@ -414,10 +428,11 @@ export function CertificateSettings() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="w-full py-4 bg-gradient-to-r from-primary to-orange-500 text-white font-black rounded-2xl text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-3"
+          className="w-full py-5 bg-slate-900 border-b-6 border-slate-950 text-white font-black rounded-3xl text-sm uppercase tracking-[0.3em] hover:bg-indigo-700 hover:border-indigo-900 transition-all shadow-2xl disabled:opacity-50 flex items-center justify-center gap-4 relative overflow-hidden group active:translate-y-1 active:border-b-2"
         >
-          <Save className="size-5" />
-          {isSaving ? "Saving..." : "Save Certificate Settings"}
+          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+          <Save className="size-6 group-hover:scale-125 transition-transform" />
+          {isSaving ? "SYNCING..." : "Save Certificate Settings"}
         </button>
       </div>
     </>

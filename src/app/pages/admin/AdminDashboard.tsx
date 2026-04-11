@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { 
   Users, Heart, Calendar, MessageCircle, Activity, 
   ShieldCheck, Megaphone, GraduationCap, Image as ImageIcon,
-  TrendingUp, Zap, Star, Bot, ShoppingBag, Package, Book
+  TrendingUp, Zap, Star, Bot, ShoppingBag, Package, Book, Bell, BarChart3
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { samajService } from "../../services/samajService";
@@ -186,9 +186,9 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {[
             { label: "स्टोर प्रबंधन", desc: "Sales & Orders", icon: ShoppingBag, color: "bg-primary", path: "/admin/store" },
-            { label: "ई-लाइब्रेरी", desc: "Books & PDFs", icon: Book, color: "bg-slate-900", path: "/admin/ebooks" },
             { label: "सदस्य प्रबंधन", desc: "Listings & Search", icon: Users, color: "bg-orange-600", path: "/admin/members" },
-            { label: "सामुदायिक संवाद", desc: "News & Alerts", icon: Megaphone, color: "bg-emerald-600", path: "/admin/news" }
+            { label: "सूचना पट्ट", desc: "Manage Notices", icon: Bell, color: "bg-emerald-600", path: "/admin/notices" },
+            { label: "एनालिटिक्स", desc: "System Metrics", icon: BarChart3, color: "bg-blue-600", path: "/admin/analytics" }
          ].map((action, i) => (
             <button key={i} onClick={() => navigate(action.path)} className="flex flex-col items-start gap-4 p-8 bg-white rounded-3xl border-2 border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all text-left group">
                <div className={`size-14 ${action.color} text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>

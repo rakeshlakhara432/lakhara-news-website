@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Megaphone, Users, Heart, Calendar, Image, GraduationCap, Phone, Zap, TrendingUp, Sparkles, ShoppingBag, Book, Info, ShieldCheck, Search, BookOpen } from 'lucide-react';
+import { ChevronDown, Megaphone, Users, Heart, Calendar, Image, GraduationCap, Phone, Zap, TrendingUp, Sparkles, ShoppingBag, Book, Info, ShieldCheck, Search, BookOpen, Bell, Cake } from 'lucide-react';
 
 const menuItems = [
   {
@@ -13,6 +13,8 @@ const menuItems = [
       { name: 'कार्यकारिणी', slug: 'committee', desc: 'समिति के सदस्य', icon: ShieldCheck },
       { name: 'सदस्य सूची', slug: 'directory', desc: 'पूरी डायरेक्टरी', icon: Search },
       { name: 'नियम', slug: 'rules', desc: 'समाज के नियम', icon: BookOpen },
+      { name: 'सूचना पट्ट', slug: 'notices', desc: 'महत्वपूर्ण सूचनाएं', icon: Bell },
+      { name: 'जन्मदिन बधाई', slug: 'birthday-wishes', desc: 'अपनों को विश करें', icon: Cake },
     ]
   },
   {

@@ -36,6 +36,8 @@ import {
   ShoppingBag,
   Book,
   Award,
+  BarChart3,
+  Cake,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
@@ -146,20 +148,22 @@ export function AdminLayout() {
   }
 
   const menuItems = [
-    { path: "/admin", label: "Overview", icon: LayoutDashboard },
-    { path: "/admin/committee", label: "Executive", icon: ShieldCheck },
-    { path: "/admin/members", label: "Members", icon: Users },
-    { path: "/admin/matrimonial", label: "Matrimonial", icon: Heart },
-    { path: "/admin/store", label: "Samaj Store", icon: ShoppingBag },
-    { path: "/admin/ebooks", label: "E-Library", icon: Book },
-    { path: "/admin/events", label: "Events", icon: Calendar },
-    { path: "/admin/gallery", label: "Archive", icon: Image },
-    { path: "/admin/news", label: "Samaj News", icon: Megaphone },
-    { path: "/admin/videos", label: "Broadcasts", icon: Play },
-    { path: "/admin/support", label: "Education", icon: GraduationCap },
-    { path: "/admin/messages", label: "Messages", icon: MessageCircle },
-    { path: "/admin/settings", label: "About Settings", icon: Settings },
-    { path: "/admin/certificate-settings", label: "Certificate Sign", icon: Award },
+    { path: "/admin",                    label: "Overview",        icon: LayoutDashboard },
+    { path: "/admin/analytics",          label: "Analytics",       icon: BarChart3       },
+    { path: "/admin/notices",            label: "Notice Board",    icon: Bell            },
+    { path: "/admin/committee",          label: "Executive",       icon: ShieldCheck     },
+    { path: "/admin/members",            label: "Members",         icon: Users           },
+    { path: "/admin/matrimonial",        label: "Matrimonial",     icon: Heart           },
+    { path: "/admin/store",              label: "Samaj Store",     icon: ShoppingBag     },
+    { path: "/admin/ebooks",             label: "E-Library",       icon: Book            },
+    { path: "/admin/events",             label: "Events",          icon: Calendar        },
+    { path: "/admin/gallery",            label: "Archive",         icon: Image           },
+    { path: "/admin/news",               label: "Samaj News",      icon: Megaphone       },
+    { path: "/admin/videos",             label: "Broadcasts",      icon: Play            },
+    { path: "/admin/support",            label: "Education",       icon: GraduationCap   },
+    { path: "/admin/messages",           label: "Messages",        icon: MessageCircle   },
+    { path: "/admin/settings",           label: "About Settings",  icon: Settings        },
+    { path: "/admin/certificate-settings", label: "Member Card Sign", icon: CreditCard      },
   ];
 
   const isActive = (path: string) => {

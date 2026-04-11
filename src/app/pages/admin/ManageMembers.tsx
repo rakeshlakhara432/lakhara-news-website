@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, CheckCircle, Trash2, User, MapPin } from "lucide-react";
+import { Search, Loader2, CheckCircle, Trash2, User, MapPin, CreditCard, FileText, Award } from "lucide-react";
 import { samajService, Member } from "../../services/samajService";
 import { smartSearch } from "../../../utils/mlUtils";
 import { toast } from "sonner";
+import { MemberIDCardModal } from "../../components/ui/MemberIDCardModal";
+import { generateMembershipPDF } from "../../utils/generateMembershipPDF";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,11 +16,13 @@ import {
   AlertDialogTitle,
 } from "../../components/ui/alert-dialog";
 
+
 export function ManageMembers() {
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [idCardMember, setIdCardMember] = useState<Member | null>(null);
 
   useEffect(() => {
     const unsubscribe = samajService.subscribeToMembers((data) => {
@@ -49,6 +53,28 @@ export function ManageMembers() {
     }
   };
 
+  const [isGenerating, setIsGenerating] = useState<string | null>(null);
+
+  const handleDownloadCert = async (m: Member) => {
+    setIsGenerating(m.id || "gen");
+    try {
+      await generateMembershipPDF({
+        memberId: m.memberId || `LSC2025XX`,
+        memberNumber: m.memberNumber || "0000",
+        name: m.name,
+        fatherName: m.fatherName,
+        address: m.city,
+        city: m.city,
+        dateOfIssue: new Date(m.createdAt?.seconds * 1000 || Date.now()).toLocaleDateString("hi-IN", { day: "2-digit", month: "long", year: "numeric" }),
+      });
+      toast.success("Certificate downloaded!");
+    } catch (err) {
+      toast.error("Generation failed");
+    } finally {
+      setIsGenerating(null);
+    }
+  };
+
   const filteredMembers = smartSearch(
     searchQuery,
     members,
@@ -58,6 +84,9 @@ export function ManageMembers() {
   return (
     <div className="space-y-6 animate-in fade-in duration-700 pb-24">
       
+      {idCardMember && (
+        <MemberIDCardModal member={idCardMember} onClose={() => setIdCardMember(null)} />
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-800 leading-none">Manage <span className="text-orange-600">Members</span></h1>
       </div>
@@ -115,7 +144,7 @@ export function ManageMembers() {
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-50 flex gap-3">
+              <div className="mt-6 pt-4 border-t border-slate-50 flex gap-2">
                 {!m.isApproved ? (
                   <button 
                     onClick={() => handleApprove(m.id!)}
@@ -128,6 +157,21 @@ export function ManageMembers() {
                     <CheckCircle className="size-4" /> Approved
                   </div>
                 )}
+                <button 
+                  onClick={() => handleDownloadCert(m)}
+                  disabled={isGenerating === m.id}
+                  title="Download Certificate"
+                  className="size-10 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center hover:bg-orange-600 hover:text-white transition-colors shadow-sm shrink-0 disabled:opacity-50"
+                >
+                  {isGenerating === m.id ? <Loader2 className="size-4 animate-spin" /> : <FileText className="size-4" />}
+                </button>
+                <button 
+                  onClick={() => setIdCardMember(m)}
+                  title="ID Card Download"
+                  className="size-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors shadow-sm shrink-0"
+                >
+                  <CreditCard className="size-4" />
+                </button>
                 <button 
                   onClick={() => setDeleteId(m.id!)}
                   className="size-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-colors shadow-sm shrink-0"

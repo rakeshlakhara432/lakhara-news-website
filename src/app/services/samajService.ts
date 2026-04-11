@@ -19,13 +19,26 @@ export interface Member {
   id?: string;
   name: string;
   fatherName: string;
-  city: string;
-  occupation: string;
+  birthDate?: string; // YYYY-MM-DD
+  gender?: "पुरुष" | "महिला" | "अन्य";
   phone: string;
   email?: string;
+  bloodGroup?: string;
+  occupation: string;
+  
+  // Address Fields
+  state: string;
+  district: string;
+  city: string;
+  pincode: string;
+  
   familyType: string;
   photoUrl?: string;
+  anniversaryDate?: string; // YYYY-MM-DD
+  memberNumber?: string;
+  memberId?: string;
   isApproved: boolean;
+  uid?: string; // Linked Auth UID
   createdAt: any;
 }
 
@@ -161,6 +174,61 @@ class SamajService {
 
   async updateMember(id: string, data: Partial<Member>) {
     return updateDoc(doc(db, "members", id), data);
+  }
+
+  async getMemberByEmail(email: string) {
+    const q = query(collection(db, "members"), where("email", "==", email), limit(1));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Member;
+    }
+    return null;
+  }
+
+  async getMemberByPhone(phone: string) {
+    const q = query(collection(db, "members"), where("phone", "==", phone), limit(1));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Member;
+    }
+    return null;
+  }
+
+  async linkMemberToUser(memberId: string, uid: string) {
+    return updateDoc(doc(db, "members", memberId), { uid });
+  }
+
+  async getMemberByUid(uid: string) {
+    const q = query(collection(db, "members"), where("uid", "==", uid), limit(1));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Member;
+    }
+    return null;
+  }
+
+  async getAllMembers() {
+    const q = query(collection(db, "members"), orderBy("createdAt", "asc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Member[];
+  }
+
+  async checkDuplicate(phone: string, email?: string) {
+    const results = { phoneExists: false, emailExists: false };
+    
+    // Check Phone
+    const qPhone = query(collection(db, "members"), where("phone", "==", phone), limit(1));
+    const snapPhone = await getDocs(qPhone);
+    if (!snapPhone.empty) results.phoneExists = true;
+    
+    // Check Email
+    if (email) {
+      const qEmail = query(collection(db, "members"), where("email", "==", email), limit(1));
+      const snapEmail = await getDocs(qEmail);
+      if (!snapEmail.empty) results.emailExists = true;
+    }
+    
+    return results;
   }
 
   // Matrimonial

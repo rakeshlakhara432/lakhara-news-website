@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Search, Home, User, ChevronRight, Menu, X, ArrowRight, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, GraduationCap, Mail, MapPin } from "lucide-react";
+import { Search, Home, User, ChevronRight, Menu, X, ArrowRight, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, GraduationCap, Mail, MapPin, Bell, Cake } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { ScrollToTop } from "../components/ScrollToTop";
@@ -119,8 +119,8 @@ export function PublicLayout() {
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">समाज लिंक्स</h4>
                </div>
                <ul className="space-y-3">
-                  {['directory', 'matrimonial', 'events', 'store', 'sitemap'].map(slug => (
-                    <li key={slug}><Link to={`/${slug}`} className="text-[13px] font-bold text-gray-400 hover:text-primary capitalize">{slug}</Link></li>
+                   {['directory', 'matrimonial', 'events', 'store', 'notices', 'birthday-wishes'].map(slug => (
+                    <li key={slug}><Link to={`/${slug}`} className="text-[13px] font-bold text-gray-400 hover:text-primary capitalize">{slug.replace('-', ' ')}</Link></li>
                   ))}
                </ul>
             </div>
@@ -179,14 +179,14 @@ export function PublicLayout() {
            
            <div className="relative h-full flex flex-col justify-center px-12 space-y-10">
               <div className="space-y-8">
-                {['/', '/news', '/directory', '/matrimonial', '/store', '/contact'].map((path) => (
+                {['/', '/news', '/directory', '/matrimonial', '/store', '/notices', '/birthday-wishes', '/contact'].map((path) => (
                   <Link 
                     key={path} 
                     to={path} 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-5xl font-black text-white tracking-tighter uppercase leading-none hover:pl-4 transition-all"
+                    className="block text-4xl font-black text-white tracking-tighter uppercase leading-none hover:pl-4 transition-all"
                   >
-                     {path === '/' ? 'Home' : path.slice(1)}
+                     {path === '/' ? 'Home' : path.slice(1).replace('-', ' ')}
                   </Link>
                 ))}
               </div>

@@ -35,55 +35,67 @@ import { StorePage } from "./pages/samaj/StorePage";
 import { SitemapPage } from "./pages/samaj/SitemapPage";
 import { EBooksPage } from "./pages/samaj/EBooksPage";
 
+// ── NEW PAGES ──────────────────────────────────────────────
+import { NoticeBoardPage } from "./pages/samaj/NoticeBoardPage";
+import { BirthdayWishesPage } from "./pages/samaj/BirthdayWishesPage";
+
 // Admin Management
 import { ManageStore } from "./pages/admin/ManageStore";
 import { ManageEBooks } from "./pages/admin/ManageEBooks";
 import { CertificateSettings } from "./pages/admin/CertificateSettings";
+import { ManageNotices } from "./pages/admin/ManageNotices";
+import { AnalyticsDashboard } from "./pages/admin/AnalyticsDashboard";
 
 export const router = createHashRouter([
   {
     path: "/",
     Component: PublicLayout,
     children: [
-      { index: true, Component: HomePage },
-      { path: "about", Component: AboutPage },
-      { path: "committee", Component: CommitteePage },
-      { path: "directory", Component: DirectoryPage },
-      { path: "matrimonial", Component: MatrimonialPage },
+      { index: true,                 Component: HomePage },
+      { path: "about",               Component: AboutPage },
+      { path: "committee",           Component: CommitteePage },
+      { path: "directory",           Component: DirectoryPage },
+      { path: "matrimonial",         Component: MatrimonialPage },
       { path: "matrimonial/register", Component: MatrimonialRegistrationPage },
-      { path: "events", Component: EventsPage },
-      { path: "gallery", Component: GalleryPage },
-      { path: "news", Component: NewsPage },
-      { path: "support", Component: SupportPage },
-      { path: "support/:id", Component: SupportDetailPage },
-      { path: "rules", Component: RulesPage },
-      { path: "contact", Component: ContactPage },
-      { path: "register", Component: RegistrationPage },
-      { path: "donate", Component: DonatePage },
-      { path: "profile", Component: ProfilePage },
-      { path: "store", Component: StorePage },
-      { path: "sitemap", Component: SitemapPage },
-      { path: "ebooks", Component: EBooksPage },
+      { path: "events",              Component: EventsPage },
+      { path: "gallery",             Component: GalleryPage },
+      { path: "news",                Component: NewsPage },
+      { path: "support",             Component: SupportPage },
+      { path: "support/:id",         Component: SupportDetailPage },
+      { path: "rules",               Component: RulesPage },
+      { path: "contact",             Component: ContactPage },
+      { path: "register",            Component: RegistrationPage },
+      { path: "donate",              Component: DonatePage },
+      { path: "profile",             Component: ProfilePage },
+      { path: "store",               Component: StorePage },
+      { path: "sitemap",             Component: SitemapPage },
+      { path: "ebooks",              Component: EBooksPage },
+      // ── New Routes ──
+      { path: "notices",             Component: NoticeBoardPage },
+      { path: "birthday-wishes",     Component: BirthdayWishesPage },
     ],
   },
   {
     path: "/admin",
     Component: AdminLayout,
     children: [
-      { index: true, Component: AdminDashboard },
-      { path: "members", Component: ManageMembers },
-      { path: "matrimonial", Component: ManageMatrimonial },
-      { path: "committee", Component: ManageCommittee },
-      { path: "events", Component: ManageEvents },
-      { path: "gallery", Component: ManageGallery },
-      { path: "news", Component: ManageSamajNews },
-      { path: "videos", Component: ManageVideos },
-      { path: "support", Component: ManageSupport },
-      { path: "messages", Component: ManageMessages },
-      { path: "store", Component: ManageStore },
-      { path: "ebooks", Component: ManageEBooks },
-      { path: "settings", Component: AdminSettings },
-      { path: "certificate-settings", Component: CertificateSettings },
+      { index: true,                       Component: AdminDashboard },
+      { path: "members",                   Component: ManageMembers },
+      { path: "matrimonial",               Component: ManageMatrimonial },
+      { path: "committee",                 Component: ManageCommittee },
+      { path: "events",                    Component: ManageEvents },
+      { path: "gallery",                   Component: ManageGallery },
+      { path: "news",                      Component: ManageSamajNews },
+      { path: "videos",                    Component: ManageVideos },
+      { path: "support",                   Component: ManageSupport },
+      { path: "messages",                  Component: ManageMessages },
+      { path: "store",                     Component: ManageStore },
+      { path: "ebooks",                    Component: ManageEBooks },
+      { path: "settings",                  Component: AdminSettings },
+      { path: "certificate-settings",      Component: CertificateSettings },
+      // ── New Admin Routes ──
+      { path: "notices",                   Component: ManageNotices },
+      { path: "analytics",                 Component: AnalyticsDashboard },
     ],
   },
   {

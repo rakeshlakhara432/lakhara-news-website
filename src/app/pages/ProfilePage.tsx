@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   User, Mail, Lock, LogIn, UserPlus, ShieldCheck, Camera,
-  Settings, Save, MapPin, Check, Zap, Play, Eye, Bookmark, Share2, LogOut, X, Loader2, ChevronRight
+  Settings, Save, MapPin, Check, Zap, Play, Eye, Bookmark, Share2, LogOut, X, Loader2, ChevronRight, CreditCard, Calendar, Bell, Heart, Edit3
 } from "lucide-react";
 import { auth, db, storage } from "../data/firebase";
 import {
@@ -13,8 +13,10 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
-import { getArticles } from "../data/mockData";
-import { ArticleCard } from "../components/ArticleCard";
+import { samajService, Member } from "../services/samajService";
+import { MemberIDCardModal } from "../components/ui/MemberIDCardModal";
+import { generateMembershipPDF } from "../utils/generateMembershipPDF";
+import { Link } from "react-router";
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export function ProfilePage() {
@@ -25,11 +27,11 @@ export function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
 
-  // OTP State
-  const [useOTP, setUseOTP] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [otpEmail, setOtpEmail] = useState("");
+  const [memberData, setMemberData] = useState<Member | null>(null);
+  const [isLoadingMember, setIsLoadingMember] = useState(false);
+  const [showIDCard, setShowIDCard] = useState(false);
+  const [searchMemberMode, setSearchMemberMode] = useState(false);
+  const [searchPhone, setSearchPhone] = useState("");
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
@@ -39,11 +41,19 @@ export function ProfilePage() {
   const [editForm, setEditForm] = useState({ name: "", bio: "", location: "" });
   const [isSavingEdit, setIsSavingEdit] = useState(false);
 
+  // Member Edit State
+  const [showMemberEditModal, setShowMemberEditModal] = useState(false);
+  const [memberEditForm, setMemberEditForm] = useState<Partial<Member>>({});
+  const [isSavingMemberEdit, setIsSavingMemberEdit] = useState(false);
+  const memberPhotoInputRef = useRef<HTMLInputElement>(null);
+
   const [displayName, setDisplayName] = useState("");
   const [displayBio, setDisplayBio] = useState("");
   const [displayLoc, setDisplayLoc] = useState("");
 
-  const [savedArticles, setSavedArticlesState] = useState<any[]>([]);
+  const memberId = memberData?.memberId || (memberData 
+    ? `LS-${(memberData.memberNumber || memberData.id?.slice(-5) || "000001").toUpperCase()}`
+    : "LS-XXXXX");
 
   useEffect(() => {
     if (!user) return;
@@ -56,76 +66,48 @@ export function ProfilePage() {
     setDisplayName(name);
     setDisplayBio(bio);
     setDisplayLoc(loc);
+
+    const fetchMember = async () => {
+      setIsLoadingMember(true);
+      const m = await samajService.getMemberByUid(user.uid);
+      if (m) {
+        setMemberData(m);
+        setMemberEditForm(m);
+      } else if (user.email) {
+        const existing = await samajService.getMemberByEmail(user.email);
+        if (existing && !existing.uid) {
+          await samajService.linkMemberToUser(existing.id!, user.uid);
+          setMemberData({ ...existing, uid: user.uid });
+          setMemberEditForm({ ...existing, uid: user.uid });
+        }
+      }
+      setIsLoadingMember(false);
+    };
+    fetchMember();
   }, [user, userData]);
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    const provider = new GoogleAuthProvider();
+  const handleLinkMember = async () => {
+    if (!searchPhone) return toast.error("कृपया मोबाइल नंबर दर्ज करें।");
+    setIsLoadingMember(true);
     try {
-      const result = await signInWithPopup(auth, provider);
-      toast.success("गूगल प्रवेश सफल।");
-      
-      const userRef = doc(db, "users", result.user.uid);
-      await setDoc(userRef, {
-        uid: result.user.uid,
-        name: result.user.displayName,
-        email: result.user.email,
-        photoURL: result.user.photoURL,
-        role: "member",
-        lastLogin: new Date().toISOString()
-      }, { merge: true });
-      
-      const sendLoginAlert = httpsCallable(functions, 'sendLoginAlert');
-      sendLoginAlert({ email: result.user.email, name: result.user.displayName, method: "Google Login" }).catch(e => console.error(e));
-      
-    } catch (error: any) {
-      toast.error("प्रवेश विफल: " + error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpEmail) return toast.error("कृपया ईमेल दर्ज करें।");
-    setIsLoading(true);
-    try {
-      const sendOTP = httpsCallable(functions, 'sendOTP');
-      await sendOTP({ email: otpEmail });
-      setOtpSent(true);
-      toast.success("OTP आपके ईमेल पर भेज दिया गया है।");
-    } catch (error: any) {
-      toast.error("OTP भेजने में विफल: " + error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otpCode.length !== 6) return toast.error("कृपया 6-अंकों का कोड दर्ज करें।");
-    setIsLoading(true);
-    try {
-      const verifyOTP = httpsCallable(functions, 'verifyOTP');
-      const result: any = await verifyOTP({ email: otpEmail, otp: otpCode });
-      
-      if (result.data.success) {
-        await signInWithCustomToken(auth, result.data.token);
-        
-        await setDoc(doc(db, "users", result.data.uid), {
-           uid: result.data.uid,
-           email: otpEmail,
-           lastLogin: new Date().toISOString()
-        }, { merge: true });
-
-        toast.success("सफलतापूर्वक प्रवेश किया गया।");
-        const sendLoginAlert = httpsCallable(functions, 'sendLoginAlert');
-        sendLoginAlert({ email: otpEmail, name: "Member", method: "Secure OTP" }).catch(e => console.error(e));
+      const m = await samajService.getMemberByPhone(searchPhone);
+      if (m) {
+        if (m.uid && m.uid !== user?.uid) {
+          toast.error("यह सदस्यता पहले से किसी अन्य खाते से जुड़ी है।");
+        } else {
+          await samajService.linkMemberToUser(m.id!, user!.uid);
+          setMemberData({ ...m, uid: user!.uid });
+          setMemberEditForm(m);
+          setSearchMemberMode(false);
+          toast.success("सदस्यता सफलतापूर्वक लिंक की गई! 🎉");
+        }
+      } else {
+        toast.error("इस नंबर से कोई सदस्यता नहीं मिली।");
       }
-    } catch (error: any) {
-      toast.error("वेरिफिकेशन विफल: " + error.message);
+    } catch (err) {
+      toast.error("त्रुटि: सदस्यता लिंक नहीं हो सकी।");
     } finally {
-      setIsLoading(false);
+      setIsLoadingMember(false);
     }
   };
 
@@ -169,6 +151,39 @@ export function ProfilePage() {
     }
   };
 
+  // ── Member Update Logic ──
+  const handleUpdateMember = async () => {
+    if (!memberData?.id) return;
+    setIsSavingMemberEdit(true);
+    try {
+      await samajService.updateMember(memberData.id, memberEditForm);
+      setMemberData(prev => prev ? { ...prev, ...memberEditForm } : null);
+      setShowMemberEditModal(false);
+      toast.success("सदस्यता विवरण अपडेट किया गया! ✅");
+    } catch (err) {
+      toast.error("अपडेट करने में त्रुटि।");
+    } finally {
+      setIsSavingMemberEdit(false);
+    }
+  };
+
+  const handleMemberPhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !memberData?.id) return;
+    const toastId = toast.loading("सदस्य फोटो अपलोड हो रही है...");
+    try {
+      const storageRef = ref(storage, `member_photos/${memberData.id}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      setMemberEditForm(prev => ({ ...prev, photoUrl: url }));
+      toast.dismiss(toastId);
+      toast.success("फोटो अपलोड सफल! अब 'सुरक्षित करें' पर क्लिक करें।");
+    } catch {
+      toast.dismiss(toastId);
+      toast.error("फोटो अपलोड विफल।");
+    }
+  };
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -187,18 +202,9 @@ export function ProfilePage() {
           bio: "लखारा डिजिटल न्यूज नेटवर्क का गर्वित सदस्य।", location: "भारत",
         });
       } else {
-        const result = await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        
-        await setDoc(doc(db, "users", result.user.uid), {
-           uid: result.user.uid,
-           email: result.user.email,
-           lastLogin: new Date().toISOString()
-        }, { merge: true });
-
-        const sendLoginAlert = httpsCallable(functions, 'sendLoginAlert');
-        sendLoginAlert({ email: result.user.email, name: result.user.displayName || "User", method: "Email/Password" }).catch(e => console.error(e));
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        toast.success("प्रवेश सफल!");
       }
-      toast.success("प्रक्रिया सफल!");
     } catch (err: any) {
       toast.error(err.message || "त्रुटि।");
     } finally {
@@ -223,142 +229,401 @@ export function ProfilePage() {
         <div className="container mx-auto px-6 py-12 max-w-5xl space-y-12">
           
           {/* 🏛️ BOLD PROFILE HEADER */}
-          <section className="bg-white rounded-3xl p-8 md:p-12 border border-slate-200 shadow-sm relative overflow-hidden">
+          <section className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-200 shadow-sm relative overflow-hidden">
              <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
                 <User className="size-48" />
              </div>
-             <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
+             <div className="flex flex-col md:flex-row items-center md:items-start gap-10 relative z-10">
                 <div className="relative shrink-0">
-                   <div className="size-32 md:size-40 rounded-full border-4 border-white bg-slate-50 shadow-md">
+                   <div className="size-32 md:size-44 rounded-[2rem] border-4 border-white bg-slate-50 shadow-2xl relative overflow-hidden">
                       {isUploadingPhoto ? (
-                         <div className="size-full flex items-center justify-center">
+                         <div className="size-full flex items-center justify-center bg-slate-50/50">
                             <Loader2 className="size-8 text-orange-600 animate-spin" />
                          </div>
                       ) : photoURL ? (
-                        <img src={photoURL} alt="Profile" className="size-full object-cover rounded-full" />
+                        <img src={photoURL} alt="Profile" className="size-full object-cover" />
                       ) : (
-                        <div className="size-full rounded-full flex items-center justify-center text-slate-300">
-                           <User className="size-16" />
+                        <div className="size-full flex items-center justify-center text-slate-300">
+                           <User className="size-20" />
                         </div>
                       )}
-                      <button 
-                        onClick={() => photoInputRef.current?.click()}
-                        className="absolute bottom-2 right-2 size-10 bg-orange-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-orange-500 transition-colors border-2 border-white"
-                      >
-                         <Camera className="size-4" />
-                      </button>
+                      {/* Photo Overlays */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                    </div>
+                   <button 
+                     onClick={() => photoInputRef.current?.click()}
+                     className="absolute -bottom-3 -right-3 size-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-2xl hover:bg-slate-900 transition-all border-4 border-white active:scale-95"
+                   >
+                      <Camera className="size-5" />
+                   </button>
                    <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                 </div>
 
-                <div className="flex-1 text-center md:text-left space-y-5">
-                   <div className="space-y-3">
-                      <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 leading-tight truncate">{displayName}</h1>
-                      <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                         <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-3 py-1 font-bold text-[10px] uppercase tracking-wider rounded-full border border-emerald-100">
-                            <ShieldCheck className="size-3" />
-                            <span>प्रमाणित सदस्य</span>
+                <div className="flex-1 text-center md:text-left space-y-6">
+                   <div className="space-y-4">
+                      <h1 className="text-4xl md:text-5xl font-black text-slate-800 leading-none tracking-tighter truncate uppercase italic" style={{ fontFamily: "'Outfit', sans-serif" }}>{displayName}</h1>
+                      <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                         <div className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl border border-emerald-100 shadow-sm">
+                            <ShieldCheck className="size-4" />
+                            <span>VERIFIED PROTOCOL</span>
                          </div>
-                         <div className="flex items-center gap-1.5 bg-slate-100 text-slate-600 px-3 py-1 font-bold text-[10px] uppercase tracking-wider rounded-full">
-                            <MapPin className="size-3" />
+                         <div className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl border border-slate-200">
+                            <MapPin className="size-4" />
                             <span>{displayLoc}</span>
                          </div>
                       </div>
                    </div>
-                   <p className="text-slate-600 font-medium text-sm md:text-base italic leading-relaxed">"{displayBio}"</p>
-                   <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
-                      <button onClick={() => setShowEditModal(true)} className="px-5 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-lg hover:bg-slate-800 transition-colors shadow-sm">
-                         प्रोफाइल सम्पादन
+                   <p className="text-slate-500 font-bold text-sm md:text-lg italic leading-relaxed max-w-2xl">"{displayBio}"</p>
+                   <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+                      <button onClick={() => setShowEditModal(true)} className="px-8 py-3.5 bg-slate-900 text-white font-black text-xs rounded-2xl hover:bg-indigo-600 transition-all shadow-xl uppercase tracking-widest active:scale-95">
+                         सम्पादन करें
                       </button>
-                      <button onClick={() => signOut(auth)} className="px-5 py-2.5 bg-white text-orange-600 font-bold border border-orange-200 text-xs rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors flex items-center gap-2">
-                         <LogOut className="size-3.5" /> प्रस्थान
+                      <button onClick={() => signOut(auth)} className="px-8 py-3.5 bg-white text-rose-500 font-black border border-rose-100 text-xs rounded-2xl hover:bg-rose-50 transition-all flex items-center gap-3 active:scale-95">
+                         <LogOut className="size-4" /> प्रस्थान
                       </button>
                    </div>
                 </div>
              </div>
           </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="space-y-12">
+             {/* 📊 PROTOCOL STATUS & MEMBER CARD */}
+             <div className="flex items-center gap-4 border-l-6 border-indigo-600 pl-5">
+                <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter italic">सिस्टम <span className="text-indigo-600">सुविधाएं</span></h2>
+             </div>
              
-             {/* 📊 PROTOCOL STATUS */}
-             <div className="col-span-12 space-y-6">
-                <div className="flex items-center gap-3 border-l-4 border-orange-600 pl-4">
-                   <h2 className="text-2xl font-bold text-slate-800">सिस्टम <span className="text-orange-600">सुविधाएं</span></h2>
-                </div>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {memberData ? (
+                  <div className="p-8 bg-white rounded-[2rem] border border-slate-200 shadow-lg flex flex-col justify-between group relative overflow-hidden transition-all hover:border-indigo-200 hover:shadow-xl">
+                    <div className="absolute top-0 right-0 p-6 opacity-[0.05] group-hover:rotate-12 transition-transform">
+                       <CreditCard className="size-20" />
+                    </div>
+                    <div className="flex items-start gap-5 relative z-10 mb-8">
+                      <div className="size-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+                         <CreditCard className="size-7" />
+                      </div>
+                      <div className="space-y-1">
+                         <span className="font-black text-xl text-slate-800 leading-none uppercase tracking-tight block">सदस्यता कार्ड</span>
+                         <span className="text-[11px] font-black text-indigo-500 uppercase tracking-[0.3em] block underline decoration-indigo-200 underline-offset-4">ID: {memberId}</span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setShowIDCard(true)}
+                      className="w-full h-12 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 transition-all active:scale-[0.98] shadow-lg"
+                    >
+                       आई-कार्ड देखें <ChevronRight className="size-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-8 bg-white rounded-[2rem] border-2 border-dashed border-slate-300 shadow-sm flex flex-col justify-center items-center text-center gap-6 group hover:border-indigo-400 transition-all">
+                    <div className="size-16 bg-slate-50 text-slate-300 rounded-3xl flex items-center justify-center">
+                       <UserPlus className="size-8" />
+                    </div>
+                    <div>
+                       <span className="font-black text-xl text-slate-400 leading-none uppercase tracking-tight block">डिजिटल कार्ड</span>
+                       <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-2 block italic">Not Linked to Database</span>
+                    </div>
+                    <button 
+                      onClick={() => setSearchMemberMode(true)}
+                      className="px-8 py-3 bg-slate-100 text-slate-700 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-indigo-600 hover:text-white transition-all shadow-sm active:scale-95"
+                    >
+                       Link Member Record
+                    </button>
+                  </div>
+                )}
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                   <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between group">
-                      <div className="flex items-center gap-4">
-                         <div className="size-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
-                            <Zap className="size-6" />
-                         </div>
-                         <div className="space-y-0.5">
-                            <span className="font-bold text-lg text-slate-800 leading-none">नेटवर्क एक्सेस</span>
-                            <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-widest block">Active</span>
-                         </div>
+                <Link to="/events" className="p-8 bg-white rounded-[2rem] border border-slate-200 shadow-lg flex flex-col justify-between group hover:border-emerald-200 transition-all hover:shadow-xl">
+                    <div className="flex items-start gap-5 mb-8">
+                       <div className="size-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+                          <Calendar className="size-7" />
+                       </div>
+                       <div className="space-y-1">
+                          <span className="font-black text-xl text-slate-800 leading-none uppercase tracking-tight block">कार्यक्रम</span>
+                          <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.3em] block italic">LATEST EVENTS</span>
+                       </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Schedule</span>
+                       <ChevronRight className="size-5 text-emerald-500 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                 </Link>
+
+                <Link to="/notices" className="p-8 bg-white rounded-[2rem] border border-slate-200 shadow-lg flex flex-col justify-between group hover:border-amber-200 transition-all hover:shadow-xl">
+                   <div className="flex items-start gap-5 mb-8">
+                      <div className="size-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+                         <Bell className="size-7" />
+                      </div>
+                      <div className="space-y-1">
+                         <span className="font-black text-xl text-slate-800 leading-none uppercase tracking-tight block">सूचना पट्ट</span>
+                         <span className="text-[11px] font-black text-amber-500 uppercase tracking-[0.3em] block italic">GLOBAL ALERTS</span>
                       </div>
                    </div>
-                   
-                   <div className="p-6 bg-slate-900 text-white rounded-2xl flex items-center justify-between shadow-sm group">
-                       <div className="flex items-center gap-4">
-                          <div className="size-12 bg-white/10 text-orange-400 rounded-xl flex items-center justify-center shrink-0">
-                             <ShieldCheck className="size-6" />
-                          </div>
-                          <div className="space-y-0.5">
-                             <span className="font-bold text-lg leading-none">सुरक्षा कवूँ</span>
-                             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block">Level 1 Verified</span>
-                          </div>
-                       </div>
-                    </div>
-
-                    <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between group">
-                       <div className="flex items-center gap-4">
-                          <div className="size-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center shrink-0">
-                             <Bookmark className="size-6" />
-                          </div>
-                          <div className="space-y-0.5">
-                             <span className="font-bold text-lg text-slate-800 leading-none">संग्रहित समाचार</span>
-                             <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest block">{savedArticles.length} Saved</span>
-                          </div>
-                       </div>
-                    </div>
-                </div>
+                   <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Urgent Updates</span>
+                      <ChevronRight className="size-5 text-amber-500 group-hover:translate-x-1 transition-transform" />
+                   </div>
+                </Link>
              </div>
 
+             {/* ── MEMBER SPECIFIC CONTENT ── */}
+             {memberData && (
+               <div className="bg-white rounded-[3rem] p-10 border border-slate-200 shadow-2xl space-y-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-10 opacity-[0.03] scale-150 rotate-[-15deg]">
+                     <ShieldCheck className="size-64" />
+                  </div>
+                  
+                  <div className="flex items-center justify-between relative z-10">
+                     <div className="space-y-1.5 underline decoration-indigo-200 underline-offset-8">
+                        <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tight italic" style={{ fontFamily: "'Outfit', sans-serif" }}>सदस्यता विवरण</h3>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] leading-none italic">OFFICIAL SAMAJ RECORD • {memberData.id?.toUpperCase()}</p>
+                     </div>
+                     <div className="flex items-center gap-3">
+                        {!memberData.isApproved && (
+                           <div className="bg-amber-50 text-amber-600 px-4 py-2 rounded-xl border border-amber-100 flex items-center gap-3 shadow-sm">
+                              <div className="size-2 bg-amber-500 rounded-full animate-pulse"></div>
+                              <span className="text-[10px] font-black uppercase tracking-widest">Wait Approval</span>
+                           </div>
+                        )}
+                        <button 
+                          onClick={() => setShowMemberEditModal(true)}
+                          className="size-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-95 group"
+                        >
+                           <Edit3 className="size-5 group-hover:scale-125 transition-transform" />
+                        </button>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-6 relative z-10">
+                     {[
+                        { label: "सदस्य नाम", val: memberData.name },
+                        { label: "पिता का नाम", val: memberData.fatherName },
+                        { label: "मोबाइल नंबर", val: memberData.phone },
+                        { label: "रक्त समूह", val: memberData.bloodGroup || "O+" }
+                     ].map((item, idx) => (
+                        <div key={idx} className="space-y-2 border-l-4 border-slate-100 pl-5 hover:border-indigo-600 transition-colors">
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{item.label}</p>
+                           <p className="font-black text-slate-800 text-lg uppercase tracking-tight truncate">{item.val}</p>
+                        </div>
+                     ))}
+                  </div>
+
+                  <div className="pt-8 flex flex-wrap gap-5 relative z-10">
+                     <Link to="/donate" className="px-10 py-4 bg-rose-600 text-white font-black text-xs rounded-2xl shadow-xl hover:bg-rose-700 transition-all flex items-center gap-4 uppercase tracking-widest group">
+                        <Heart className="size-5 group-hover:scale-125 transition-transform" /> समाज सहयोग
+                     </Link>
+                     <button onClick={() => setShowIDCard(true)} className="px-10 py-4 bg-indigo-600 text-white font-black text-xs rounded-2xl shadow-xl hover:bg-indigo-700 transition-all flex items-center gap-4 uppercase tracking-widest group">
+                        <CreditCard className="size-5 group-hover:scale-125 transition-transform" /> आई-कार्ड डाउनलोड
+                     </button>
+                  </div>
+               </div>
+             )}
+
+             {/* 👑 PREMIUM PORTAL LINKS */}
+             <div className="bg-slate-900 rounded-[3rem] p-12 text-white relative overflow-hidden border border-white/5 shadow-2xl">
+                <div className="absolute top-0 right-0 p-12 opacity-10 blur-xl">
+                   <Zap className="size-48" />
+                </div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+                   <div className="space-y-5 text-center md:text-left">
+                      <h3 className="text-3xl font-black italic tracking-tighter uppercase" style={{ fontFamily: "'Outfit', sans-serif" }}>विशेष सदस्य क्षेत्र</h3>
+                      <p className="text-sm font-bold text-slate-400 max-w-sm leading-relaxed opacity-70">अपनी समाज गतिविधियों, वैवाहिक प्रोफाइल और इवेंट रजिस्ट्रेशन को यहां से प्रबंधित करें।</p>
+                   </div>
+                   <div className="flex flex-wrap justify-center gap-6">
+                      <Link to="/matrimonial" className="px-10 py-5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-3xl transition-all flex items-center gap-5 group">
+                         <div className="size-14 bg-rose-500/10 rounded-2xl flex items-center justify-center p-1 group-hover:scale-110 transition-transform">
+                             <Heart className="size-8 text-rose-500" />
+                         </div>
+                         <div className="text-left">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">विवाह मंच</p>
+                            <p className="text-sm font-black uppercase tracking-tighter">My PROFILE</p>
+                         </div>
+                      </Link>
+                      <Link to="/register" className="px-10 py-5 bg-indigo-600 text-white rounded-3xl shadow-2xl hover:bg-indigo-700 transition-all flex items-center gap-5 group hover:scale-105 active:scale-95">
+                         <div className="size-14 bg-white/20 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform">
+                             <UserPlus className="size-8" />
+                         </div>
+                         <div className="text-left">
+                            <p className="text-[10px] font-black text-white/50 uppercase tracking-widest leading-none mb-1.5">सदस्यता</p>
+                            <p className="text-sm font-black uppercase tracking-tighter">APPLY NOW</p>
+                         </div>
+                      </Link>
+                   </div>
+                </div>
+             </div>
           </div>
         </div>
 
-        {/* 🏛️ EDIT MODAL */}
+        {/* 🏛️ USER PROFILE EDIT MODAL */}
         {showEditModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-             <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-xl relative animate-in zoom-in-95 duration-200">
-                <div className="flex justify-between items-start mb-6">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
+             <div className="bg-white w-full max-w-lg rounded-[2.5rem] p-10 shadow-bhagva relative animate-in zoom-in-95 duration-200 border border-slate-100">
+                <div className="flex justify-between items-start mb-10">
                    <div className="space-y-1">
-                      <h2 className="text-2xl font-bold text-slate-800 leading-none">प्रोफाइल <span className="text-orange-600">सम्पादन</span></h2>
+                      <h2 className="text-3xl font-black text-slate-800 tracking-tighter uppercase italic" style={{ fontFamily: "'Outfit', sans-serif" }}>प्रोफाइल <span className="text-indigo-600">सम्पादन</span></h2>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em]">UPDATE PUBLIC IDENTITY</p>
                    </div>
-                   <button onClick={() => setShowEditModal(false)} className="size-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors">
-                      <X className="size-4" />
+                   <button onClick={() => setShowEditModal(false)} className="size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all active:scale-95">
+                      <X className="size-6" />
                    </button>
                 </div>
                 
-                <div className="space-y-5">
+                <div className="space-y-6">
                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700">आपका पूर्ण नाम</label>
-                      <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-medium text-sm text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" />
+                      <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">आपका पूर्ण नाम</label>
+                      <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
                    </div>
                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700">स्थान</label>
-                      <input type="text" value={editForm.location} onChange={e => setEditForm({...editForm, location: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-medium text-sm text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" />
+                      <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">स्थान (CITY/TOWN)</label>
+                      <input type="text" value={editForm.location} onChange={e => setEditForm({...editForm, location: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
                    </div>
                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700">आपका परिचय (BIO)</label>
-                      <textarea rows={3} value={editForm.bio} onChange={e => setEditForm({...editForm, bio: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-medium text-sm text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all resize-none" />
+                      <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">आपका परिचय (BIO)</label>
+                      <textarea rows={3} value={editForm.bio} onChange={e => setEditForm({...editForm, bio: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-bold text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm resize-none" />
                    </div>
-                   <div className="pt-2">
-                      <button onClick={handleSaveEdit} disabled={isSavingEdit} className="w-full bg-orange-600 text-white rounded-xl py-3 font-bold text-sm shadow-sm hover:bg-orange-500 transition-colors flex items-center justify-center">
-                         {isSavingEdit ? <Loader2 className="size-4 animate-spin" /> : "सुरक्षित करें"}
+                   <div className="pt-6">
+                      <button onClick={handleSaveEdit} disabled={isSavingEdit} className="w-full bg-slate-900 border-b-4 border-slate-950 text-white rounded-2xl py-4.5 font-black text-xs uppercase tracking-[0.3em] shadow-xl hover:bg-indigo-600 hover:border-indigo-800 transition-all flex items-center justify-center active:translate-y-1 active:border-b-0">
+                         {isSavingEdit ? <Loader2 className="size-5 animate-spin" /> : "विवरण सुरक्षित करें"}
                       </button>
                    </div>
+                </div>
+             </div>
+          </div>
+        )}
+
+        {/* 🏛️ MEMBERSHIP DATA EDIT MODAL (सदस्यता विवरण) */}
+        {showMemberEditModal && memberData && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
+             <div className="bg-white w-full max-w-xl rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200 border border-slate-100 overflow-y-auto max-h-[95vh] no-scrollbar">
+                <div className="flex justify-between items-start mb-10">
+                   <div className="space-y-1.5 underline decoration-indigo-200 underline-offset-8 decoration-4">
+                      <h2 className="text-3xl font-black text-slate-800 tracking-tighter uppercase italic" style={{ fontFamily: "'Outfit', sans-serif" }}>सदस्य <span className="text-indigo-600">विवरण सम्पादन</span></h2>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">UPDATE ID CARD DATA PORTFOLIO</p>
+                   </div>
+                   <button onClick={() => setShowMemberEditModal(false)} className="size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all active:scale-95">
+                      <X className="size-6" />
+                   </button>
+                </div>
+
+                <div className="space-y-8">
+                   {/* Photo Upload Section */}
+                   <div className="flex flex-col items-center gap-4 py-4 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-inner">
+                      <div className="relative">
+                         <div className="size-32 rounded-3xl border-4 border-white bg-white shadow-lg overflow-hidden relative group">
+                            {memberEditForm.photoUrl ? (
+                               <img src={memberEditForm.photoUrl} alt="Member" className="size-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            ) : (
+                               <div className="size-full flex items-center justify-center text-slate-200">
+                                  <Camera className="size-12" />
+                               </div>
+                            )}
+                         </div>
+                         <button 
+                           onClick={() => memberPhotoInputRef.current?.click()}
+                           className="absolute -bottom-3 -right-3 size-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-xl border-4 border-white active:scale-95 group"
+                         >
+                            <Camera className="size-5 group-hover:rotate-12 transition-transform" />
+                         </button>
+                         <input ref={memberPhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleMemberPhotoChange} />
+                      </div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">ID कार्ड के लिए फोटो बदलें</p>
+                   </div>
+
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                       <div className="space-y-2">
+                          <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">आपका पूर्ण नाम</label>
+                          <input type="text" value={memberEditForm.name} onChange={e => setMemberEditForm({...memberEditForm, name: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">पिता का नाम</label>
+                          <input type="text" value={memberEditForm.fatherName} onChange={e => setMemberEditForm({...memberEditForm, fatherName: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">मोबाइल नंबर</label>
+                          <input type="text" value={memberEditForm.phone} onChange={e => setMemberEditForm({...memberEditForm, phone: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">शहर/गांव</label>
+                          <input type="text" value={memberEditForm.city} onChange={e => setMemberEditForm({...memberEditForm, city: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[11px] font-black text-slate-700 uppercase tracking-widest ml-1">रक्त समूह (BLOOD GROUP)</label>
+                          <select value={memberEditForm.bloodGroup} onChange={e => setMemberEditForm({...memberEditForm, bloodGroup: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-black text-sm text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm appearance-none">
+                             <option value="A+">A+</option>
+                             <option value="A-">A-</option>
+                             <option value="B+">B+</option>
+                             <option value="B-">B-</option>
+                             <option value="O+">O+</option>
+                             <option value="O-">O-</option>
+                             <option value="AB+">AB+</option>
+                             <option value="AB-">AB-</option>
+                          </select>
+                       </div>
+                   </div>
+
+                   <div className="pt-6">
+                      <button onClick={handleUpdateMember} disabled={isSavingMemberEdit} className="w-full bg-indigo-600 border-b-4 border-indigo-900 text-white rounded-3xl py-4.5 font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:bg-slate-900 hover:border-slate-950 hover:scale-[1.02] transition-all flex items-center justify-center active:translate-y-1 active:border-b-0">
+                         {isSavingMemberEdit ? <Loader2 className="size-5 animate-spin" /> : "विवरण सुरक्षित करें"}
+                      </button>
+                      <p className="text-center text-[8px] font-bold text-slate-400 mt-5 uppercase tracking-[0.3em] italic">Changes will reflect on ID Card instantly</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+        )}
+
+        {/* 🆔 ID CARD MODAL */}
+        {showIDCard && memberData && (
+           <MemberIDCardModal 
+             member={{
+               id: memberData.id!,
+               memberId: memberData.memberId,
+               name: memberData.name,
+               fatherName: memberData.fatherName,
+               city: memberData.city,
+               occupation: memberData.occupation,
+               phone: memberData.phone,
+               photoUrl: memberData.photoUrl,
+               memberNumber: memberData.memberNumber,
+               bloodGroup: memberData.bloodGroup
+             }} 
+             onClose={() => setShowIDCard(false)} 
+           />
+        )}
+
+        {/* 🔗 LINK MEMBER MODAL ... (same as before) */}
+        {searchMemberMode && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+             <div className="bg-white w-full max-w-sm rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 border border-slate-100">
+                <button onClick={() => setSearchMemberMode(false)} className="absolute top-6 right-6 p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                  <X className="size-6" />
+                </button>
+                <div className="text-center space-y-8">
+                   <div className="size-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
+                      <ShieldCheck className="size-10" />
+                   </div>
+                   <div className="space-y-2">
+                      <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter underline decoration-indigo-200 underline-offset-4 decoration-2">सदस्यता लिंक करें</h2>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Enter registered mobile number</p>
+                   </div>
+                   <div className="space-y-2 text-left">
+                      <input 
+                        type="tel" 
+                        placeholder="+91..."
+                        value={searchPhone}
+                        onChange={e => setSearchPhone(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-5 font-black text-center text-2xl outline-none focus:border-indigo-600 transition-all shadow-inner text-slate-800"
+                      />
+                   </div>
+                   <button 
+                     onClick={handleLinkMember}
+                     disabled={isLoadingMember}
+                     className="w-full py-5 bg-slate-900 text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.3em] shadow-2xl hover:bg-indigo-600 transition-all flex items-center justify-center gap-3 active:scale-95"
+                   >
+                      {isLoadingMember ? <Loader2 className="size-4 animate-spin" /> : "सत्यापित करें"}
+                   </button>
+                   <p className="text-[9px] font-bold text-slate-400 leading-relaxed italic border-t border-slate-50 pt-4">
+                      *यदि आपने अभी तक पंजीकरण नहीं किया है, तो कृपया <Link to="/register" className="text-indigo-600 hover:underline">यहां क्लिक करें</Link>।
+                   </p>
                 </div>
              </div>
           </div>
@@ -367,126 +632,72 @@ export function ProfilePage() {
     );
   }
 
-  // LOGGED OUT / AUTH FLOW
+  // LOGGED OUT / AUTH FLOW ... (kept simple for readability)
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 relative animate-in fade-in duration-700">
         <div className="w-full max-w-md relative z-10">
-          <div className="bg-white p-8 md:p-10 rounded-3xl border border-slate-200 shadow-sm text-center">
+          <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-2xl text-center">
             
-            <div className="flex justify-center mb-6">
-              <div className="size-16 bg-orange-50 text-orange-600 flex items-center justify-center rounded-2xl shadow-sm">
-                {useOTP ? <ShieldCheck className="size-8" /> : isLogin ? <LogIn className="size-8" /> : <UserPlus className="size-8" />}
+            <div className="flex justify-center mb-8">
+              <div className="size-20 bg-indigo-50 text-indigo-600 flex items-center justify-center rounded-[1.5rem] shadow-inner relative group">
+                <div className="absolute inset-0 bg-indigo-500/10 rounded-[1.5rem] scale-0 group-hover:scale-110 transition-transform"></div>
+                {isLogin ? <LogIn className="size-10 relative z-10" /> : <UserPlus className="size-10 relative z-10" />}
               </div>
             </div>
             
-            <h1 className="text-2xl font-extrabold text-slate-800 mb-1 leading-tight">LAKHARA DIGITAL NEWS</h1>
-            <p className="text-slate-500 font-semibold mb-8 text-[11px] uppercase tracking-widest">
-               {useOTP ? "OTP द्वारा सुरक्षित प्रवेश" : isLogin ? "सदस्य प्रवेश पोर्टल" : "नया सदस्य पंजीकरण सिस्टम्"}
+            <h1 className="text-3xl font-black text-slate-800 mb-2 leading-none tracking-tighter uppercase italic" style={{ fontFamily: "'Outfit', sans-serif" }}>LAKHARA <span className="text-indigo-600">NETWORK</span></h1>
+            <p className="text-slate-400 font-bold mb-10 text-[10px] uppercase tracking-[0.4em]">
+               {isLogin ? "MEMBER ACCESS PORTAL" : "STRATEGIC REGISTRATION SYSTEM"}
             </p>
 
-            <div className="space-y-4">
-              {useOTP ? (
-                /* ── OTP FLOW ── */
-                otpSent ? (
-                  <form onSubmit={handleVerifyOTP} className="space-y-6">
-                    <p className="text-sm font-medium text-slate-600 leading-relaxed px-2">हमने आपके सुरक्षित ईमेल <b>{otpEmail}</b> पर 6-अंकों का वेरिफिकेशन कोड भेजा है।</p>
-                    <input 
-                      type="text" 
-                      maxLength={6} 
-                      placeholder="000000" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 text-center text-3xl font-bold tracking-widest outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 placeholder:text-slate-300 transition-all"
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                    />
-                    <button type="submit" disabled={isLoading} className="w-full bg-orange-600 text-white rounded-xl py-3.5 text-sm font-bold tracking-wider hover:bg-orange-500 transition-colors flex justify-center shadow-sm">
-                       {isLoading ? <Loader2 className="size-4 animate-spin" /> : "सत्यापित करें"}
-                    </button>
-                    <button type="button" onClick={() => setOtpSent(false)} className="text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors">ईमेल बदलें</button>
-                  </form>
-                ) : (
-                  <form onSubmit={handleSendOTP} className="space-y-4 text-left">
-                    <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-slate-700 ml-1">सुरक्षित ईमेल दर्ज करें</label>
-                       <div className="relative">
-                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                          <input required type="email" placeholder="example@mail.com" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3.5 text-sm font-medium text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" value={otpEmail} onChange={e => setOtpEmail(e.target.value)} />
-                       </div>
-                    </div>
-                    <button type="submit" disabled={isLoading} className="w-full bg-slate-900 text-white rounded-xl py-3.5 text-sm font-bold transition-colors hover:bg-slate-800 flex items-center justify-center gap-2">
-                       {isLoading ? <Loader2 className="size-4 animate-spin" /> : "प्रवेश कोड प्राप्त करें"}
-                    </button>
-                  </form>
-                )
-              ) : (
-                /* ── EMAIL/PASS FLOW ── */
-                <form onSubmit={handleAuth} className="space-y-4 text-left">
-                  {!isLogin && (
-                    <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-slate-700 ml-1">पूर्ण नाम</label>
-                      <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                        <input required type="text" placeholder="आपका नाम" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-                      </div>
-                    </div>
-                  )}
-                  <div className="space-y-1.5">
-                     <label className="text-xs font-bold text-slate-700 ml-1">ईमेल पता</label>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                      <input required type="email" placeholder="ईमेल पता" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
-                    </div>
+            <form onSubmit={handleAuth} className="space-y-5 text-left">
+              {!isLogin && (
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">FULL NAME</label>
+                  <div className="relative">
+                    <User className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-slate-300" />
+                    <input required type="text" placeholder="John Doe" className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm font-black text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                   </div>
-                  <div className="space-y-1.5">
-                     <label className="text-xs font-bold text-slate-700 ml-1">पासवर्ड</label>
-                    <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                      <input required type="password" placeholder="पासवर्ड" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
-                    </div>
-                  </div>
-                  {!isLogin && (
-                    <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-slate-700 ml-1">पासवर्ड पुष्टि</label>
-                      <div className="relative">
-                        <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                        <input required type="password" placeholder="पासवर्ड पुष्टि" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all" value={formData.confirmPassword} onChange={e => setFormData({...formData, confirmPassword: e.target.value})} />
-                      </div>
-                    </div>
-                  )}
-                  <div className="pt-2">
-                     <button type="submit" disabled={isLoading} className="w-full bg-orange-600 text-white rounded-xl py-3.5 text-sm font-bold hover:bg-orange-500 transition-colors flex items-center justify-center gap-2 shadow-sm">
-                       {isLoading ? <Loader2 className="size-4 animate-spin" /> : (isLogin ? "प्रवेश करें" : "खाता बनाएं")}
-                     </button>
-                  </div>
-                </form>
+                </div>
               )}
-
-              {/* ── SOCIAL & OTHER OPTIONS ── */}
-              <div className="space-y-3 pt-6 mt-6 border-t border-slate-100">
-                <button 
-                  onClick={handleGoogleLogin} 
-                  disabled={isLoading}
-                  className="w-full bg-white border border-slate-200 rounded-xl flex items-center justify-center gap-3 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="size-4" alt="Google" />
-                   GOOGLE LOGIN
-                </button>
-                
-                <button 
-                  onClick={() => { setUseOTP(!useOTP); setOtpSent(false); }} 
-                  className="w-full bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center gap-3 py-3 text-xs font-bold hover:bg-slate-200 transition-colors"
-                >
-                   {useOTP ? "Back to Password Login" : "Login with Secure OTP"}
-                </button>
+              <div className="space-y-2">
+                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">SECURE EMAIL</label>
+                <div className="relative">
+                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-slate-300" />
+                  <input required type="email" placeholder="mail@example.com" className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm font-black text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                </div>
               </div>
-
+              <div className="space-y-2">
+                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">PASSWORD ACCESS</label>
+                <div className="relative">
+                  <Lock className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-slate-300" />
+                  <input required type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm font-black text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
+                </div>
+              </div>
+              {!isLogin && (
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">CONFIRM PAYLOAD</label>
+                  <div className="relative">
+                    <ShieldCheck className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-slate-300" />
+                    <input required type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm font-black text-slate-800 outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-sm" value={formData.confirmPassword} onChange={e => setFormData({...formData, confirmPassword: e.target.value})} />
+                  </div>
+                </div>
+              )}
               <div className="pt-6">
-                <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-slate-500 font-semibold text-xs hover:text-orange-600 transition-colors underline underline-offset-4 decoration-transparent hover:decoration-orange-600">
-                  {isLogin ? "नया पंजीकरण (New User?)" : "पहले से खाता है? लॉगिन करें"}
-                </button>
+                 <button type="submit" disabled={isLoading} className="w-full bg-indigo-600 border-b-6 border-indigo-900 text-white rounded-[1.5rem] py-4.5 font-black text-xs uppercase tracking-[0.3em] shadow-xl hover:bg-slate-900 hover:border-slate-950 transition-all flex items-center justify-center gap-3 active:translate-y-1 active:border-b-0">
+                   {isLoading ? <Loader2 className="size-5 animate-spin" /> : (isLogin ? "ESTABLISH CONNECTION" : "INITIALIZE PROTOCOL")}
+                 </button>
               </div>
+            </form>
+
+            <div className="pt-10 flex flex-col items-center gap-6">
+                <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-slate-400 font-black text-xs hover:text-indigo-600 transition-colors uppercase tracking-widest flex items-center gap-2 group">
+                  {isLogin ? "Request New Account Connection" : "Already have authorized access? Login"}
+                  <ChevronRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                </button>
             </div>
           </div>
         </div>
       </div>
-  );
+    );
 }
