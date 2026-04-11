@@ -41,58 +41,37 @@ export function CommitteePage() {
 
       {/* 🏢 PRESIDENT PROFILE */}
       {president && (
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="bg-slate-900 text-white rounded-3xl p-8 relative overflow-hidden group shadow-lg">
-              <div className="absolute inset-x-0 -bottom-1/2 h-full bg-orange-600/10 blur-3xl group-hover:bg-orange-600/20 transition-all"></div>
-              <div className="absolute top-6 left-6 text-orange-500/50">
-                <Star className="size-8 fill-current" />
+        <section className="max-w-3xl mx-auto items-center">
+          <div className="bg-slate-900 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden group shadow-xl text-center">
+              <div className="absolute inset-x-0 -bottom-1/2 h-full bg-orange-600/20 blur-[100px] group-hover:bg-orange-600/30 transition-all"></div>
+              <div className="absolute top-6 left-6 text-orange-500/30">
+                <Star className="size-10 fill-current" />
+              </div>
+              <div className="absolute top-6 right-6 text-orange-500/30">
+                <Shield className="size-10" />
               </div>
               <div className="relative z-10 space-y-6">
-                <div className="size-32 mx-auto bg-white rounded-full p-2 shadow-xl overflow-hidden">
+                <div className="size-40 md:size-48 mx-auto bg-white rounded-full p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden">
                     {president.photoUrl ? (
                       <img src={president.photoUrl} className="size-full object-cover rounded-full" alt={president.name} />
                     ) : (
-                      <div className="size-full bg-slate-100 flex items-center justify-center text-slate-400 text-4xl font-bold rounded-full">{president.name[0]}</div>
+                      <div className="size-full bg-slate-100 flex items-center justify-center text-slate-400 text-5xl font-black rounded-full">{president.name[0]}</div>
                     )}
                 </div>
-                <div className="text-center space-y-3">
-                    <h3 className="text-2xl font-bold text-white">{president.name}</h3>
-                    <div className="inline-flex items-center gap-2 bg-orange-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide">
+                <div className="space-y-3">
+                    <h3 className="text-3xl md:text-4xl font-extrabold text-white tracking-tighter">{president.name}</h3>
+                    <div className="inline-flex items-center gap-2 bg-orange-600 text-white px-6 py-2 rounded-full text-sm font-semibold tracking-widest uppercase">
                       {president.designation}
                     </div>
-                    <p className="text-slate-300 font-medium text-sm leading-relaxed mt-4 max-w-sm mx-auto">
+                    <p className="text-slate-300 font-bold text-base md:text-lg leading-relaxed mt-6 max-w-xl mx-auto italic">
                       "समाज की एकता ही हमारी सबसे बड़ी शक्ति है। हमें शिक्षा और संस्कारों के साथ आगे बढ़ना होगा।"
                     </p>
                 </div>
-                <div className="flex justify-center pt-4">
-                    <a href={`tel:${president.phone}`} className="size-10 bg-white/10 rounded-full flex items-center justify-center text-orange-400 hover:bg-orange-600 hover:text-white transition-colors "><Phone className="size-4" /></a>
+                <div className="flex justify-center pt-6">
+                    <a href={`tel:${president.phone}`} className="h-12 px-8 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-orange-600 hover:border-orange-600 font-bold gap-3 transition-colors shadow-lg shadow-black/20">
+                      <Phone className="size-4" /> संपर्क करें
+                    </a>
                 </div>
-              </div>
-          </div>
-
-          <div className="space-y-8">
-              <div className="flex items-center gap-3 text-orange-600 bg-orange-50 px-4 py-2 rounded-full w-fit">
-                <Users className="size-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">मुख्य पदाधिकारी</span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-800 leading-tight">समाज के <span className="text-orange-600">प्रमुख चेहरे</span></h2>
-              <div className="space-y-4">
-                {others.slice(0, 3).map((m, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow hover:border-orange-200">
-                      <div className="flex items-center gap-4">
-                        <div className="size-12 bg-slate-50 border border-slate-100 text-slate-500 rounded-full flex items-center justify-center text-lg font-bold">
-                            {m.name[0]}
-                        </div>
-                        <div>
-                            <h4 className="text-base font-bold text-slate-800">{m.name}</h4>
-                            <p className="text-xs font-semibold text-orange-600 mt-0.5">{m.designation}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs font-medium text-slate-500">{m.city}</p>
-                      </div>
-                  </div>
-                ))}
               </div>
           </div>
         </section>
