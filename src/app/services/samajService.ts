@@ -24,6 +24,7 @@ export interface Member {
   phone: string;
   email?: string;
   familyType: string;
+  photoUrl?: string;
   isApproved: boolean;
   createdAt: any;
 }
@@ -156,6 +157,10 @@ class SamajService {
 
   async deleteMember(id: string) {
     return deleteDoc(doc(db, "members", id));
+  }
+
+  async updateMember(id: string, data: Partial<Member>) {
+    return updateDoc(doc(db, "members", id), data);
   }
 
   // Matrimonial

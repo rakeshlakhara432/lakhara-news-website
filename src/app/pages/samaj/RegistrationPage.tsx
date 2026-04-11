@@ -12,17 +12,57 @@ export function RegistrationPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
     fatherName: "",
-    phone: "",
     city: "",
     email: "",
     familyType: "एकल",
     occupation: "",
+    photoUrl: "",
     agreed: false
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_SIZE = 400;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        setFormData(prev => ({ ...prev, photoUrl: compressedBase64 }));
+        setIsUploading(false);
+        toast.success("फ़ोटो अपलोड हो गई!");
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const nextStep = () => {
     if (step === 1) {
@@ -51,6 +91,7 @@ export function RegistrationPage() {
         phone: formData.phone,
         email: formData.email,
         familyType: formData.familyType,
+        photoUrl: formData.photoUrl,
       });
 
       try {
@@ -114,6 +155,24 @@ export function RegistrationPage() {
                           <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-orange-500 transition-colors">
                              <User className="size-5 text-slate-400" />
                              <input required type="text" placeholder="नाम..." className="bg-transparent border-none outline-none w-full text-sm font-medium text-slate-800" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                          </div>
+                       </div>
+                       
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-700">प्रोफ़ाइल फ़ोटो</label>
+                          <div className="bg-slate-50 border border-slate-200 rounded-xl flex items-center px-4 overflow-hidden h-[46px] focus-within:border-orange-500 transition-all">
+                             {formData.photoUrl ? (
+                               <div className="flex items-center gap-3 w-full">
+                                  <img src={formData.photoUrl} className="size-8 rounded-full object-cover" />
+                                  <span className="text-xs font-bold text-slate-600 flex-1 truncate">फ़ोटो अपलोड की गई</span>
+                                  <button type="button" onClick={() => setFormData({...formData, photoUrl: ""})} className="text-rose-500 hover:text-rose-600 text-[10px] uppercase font-bold tracking-widest bg-rose-50 px-2 py-1 rounded">हटाएं</button>
+                               </div>
+                             ) : (
+                               <label className="flex items-center gap-2 w-full cursor-pointer text-slate-500 hover:text-orange-600 transition-colors">
+                                  <span className="text-sm font-medium leading-none mt-1">{isUploading ? "प्रतीक्षा करें..." : "+ फ़ोटो अपलोड करें"}</span>
+                                  <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                               </label>
+                             )}
                           </div>
                        </div>
                        
