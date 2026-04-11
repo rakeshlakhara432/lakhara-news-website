@@ -45,9 +45,9 @@ export function PublicLayout() {
       <header className={`sticky top-0 z-[200] transition-all duration-300 ${isScrolled ? 'py-1.5 bg-white border-b-2 border-primary shadow-sm' : 'py-3 bg-white border-b border-gray-200'}`}>
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-between gap-6">
-            <Link to="/" className="flex items-center gap-4 group">
-               <div className="size-10 md:size-12 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-primary/20 border border-primary/30 shrink-0 group-hover:rotate-12 transition-transform p-1">
-                  <img src="/favicon.png" alt="Lakhara Samaj Logo" className="size-full object-contain" />
+            <Link to="/" className="flex items-center gap-3 group">
+               <div className="size-12 md:size-14 rounded-full bg-white flex items-center justify-center shadow-lg shadow-primary/20 border-2 border-primary/20 shrink-0 group-hover:scale-105 transition-transform p-0.5 overflow-hidden">
+                  <img src="/brand-logo.png" alt="Lakhara Samaj Logo" className="size-full object-contain rounded-full" />
                </div>
                <div className="flex flex-col items-start shrink-0">
                   <span className="text-xl md:text-2xl font-black text-primary leading-none tracking-tighter uppercase">LAKHARA</span>
@@ -92,9 +92,14 @@ export function PublicLayout() {
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
             <div className="col-span-1 md:col-span-2 space-y-8">
-               <Link to="/" className="flex flex-col items-start shrink-0">
-                  <span className="text-2xl md:text-3xl font-black text-primary leading-none tracking-tighter uppercase">LAKHARA</span>
-                  <span className="text-[12px] font-black text-white/50 tracking-[0.2em] -mt-1 uppercase">DIGITAL NETWORK</span>
+               <Link to="/" className="flex items-center gap-4 shrink-0 group">
+                  <div className="size-14 md:size-16 rounded-full bg-white flex items-center justify-center shadow-lg shadow-black/20 border border-white/20 shrink-0 group-hover:scale-105 transition-transform p-1 overflow-hidden">
+                     <img src="/brand-logo.png" alt="Lakhara Samaj Logo" className="size-full object-contain rounded-full" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                     <span className="text-2xl md:text-3xl font-black text-primary leading-none tracking-tighter uppercase">LAKHARA</span>
+                     <span className="text-[12px] font-black text-white/50 tracking-[0.2em] mt-1 uppercase leading-none">DIGITAL NETWORK</span>
+                  </div>
                </Link>
                <p className="text-gray-400 font-bold text-[13px] leading-relaxed max-w-md border-l-2 border-primary pl-5 italic">
                   लखारा समाज की एकता, संस्कृति और विकास के लिए समर्पित। एक समाज, एक शक्ति।

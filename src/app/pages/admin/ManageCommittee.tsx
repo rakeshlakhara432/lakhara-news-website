@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, ShieldCheck, MapPin, Phone } from "lucide-react";
+import { Search, Loader2, Plus, Trash2, ShieldCheck, MapPin, Phone, Upload, X, Camera } from "lucide-react";
 import { samajService, CommitteeMember } from "../../services/samajService";
 import { toast } from "sonner";
 
@@ -7,7 +7,8 @@ export function ManageCommittee() {
   const [members, setMembers] = useState<CommitteeMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newMember, setNewMember] = useState({ name: "", designation: "", city: "", phone: "", order: 1 });
+  const [newMember, setNewMember] = useState({ name: "", designation: "अध्यक्ष", city: "", phone: "", order: 1, photoUrl: "" });
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const unsub = samajService.subscribeToCommittee(setMembers);
@@ -15,13 +16,30 @@ export function ManageCommittee() {
     return () => unsub();
   }, []);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 1.5 * 1024 * 1024) {
+      toast.error("File is too large (max 1.5MB)");
+      return;
+    }
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewMember(prev => ({ ...prev, photoUrl: reader.result as string }));
+      setIsUploading(false);
+      toast.success("Photo ready!");
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await samajService.addCommittee(newMember);
-      toast.success("Designation added to committee");
+      toast.success("Member added to committee");
       setIsAdding(false);
-      setNewMember({ name: "", designation: "", city: "", phone: "", order: members.length + 1 });
+      setNewMember({ name: "", designation: "अध्यक्ष", city: "", phone: "", order: members.length + 1, photoUrl: "" });
     } catch (err) {
       toast.error("Failed to add member");
     }
@@ -51,9 +69,38 @@ export function ManageCommittee() {
              <label className="text-xs font-bold text-slate-700 ml-1">Name</label>
              <input required placeholder="Enter name..." className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} />
            </div>
+           
+           <div className="space-y-1.5">
+             <label className="text-xs font-bold text-slate-700 ml-1">Photo</label>
+             <div className="bg-slate-50 border border-slate-200 rounded-xl flex items-center px-4 overflow-hidden h-[46px] focus-within:border-orange-500 transition-all">
+                {newMember.photoUrl ? (
+                  <div className="flex items-center gap-3 w-full">
+                     <img src={newMember.photoUrl} className="size-8 rounded-full object-cover" />
+                     <span className="text-xs font-bold text-slate-600 flex-1 truncate">Photo added</span>
+                     <button type="button" onClick={() => setNewMember({...newMember, photoUrl: ""})} className="text-rose-500 hover:text-rose-600"><X className="size-4" /></button>
+                  </div>
+                ) : (
+                  <label className="flex items-center gap-2 w-full cursor-pointer text-slate-500 hover:text-orange-600 transition-colors">
+                     {isUploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+                     <span className="text-sm font-medium">{isUploading ? "Uploading..." : "Upload square photo"}</span>
+                     <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                  </label>
+                )}
+             </div>
+           </div>
+
            <div className="space-y-1.5">
              <label className="text-xs font-bold text-slate-700 ml-1">Designation</label>
-             <input required placeholder="e.g. President" className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.designation} onChange={e => setNewMember({...newMember, designation: e.target.value})} />
+             <select required className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 outline-none font-medium text-sm text-slate-800 focus:border-orange-500 transition-all" value={newMember.designation} onChange={e => setNewMember({...newMember, designation: e.target.value})}>
+               <option value="अध्यक्ष">अध्यक्ष</option>
+               <option value="उपाध्यक्ष">उपाध्यक्ष</option>
+               <option value="महासचिव">महासचिव</option>
+               <option value="कोषाध्यक्ष">कोषाध्यक्ष</option>
+               <option value="प्रचार मंत्री">प्रचार मंत्री</option>
+               <option value="सलाहकार">सलाहकार</option>
+               <option value="कार्यकारी सदस्य">कार्यकारी सदस्य</option>
+               <option value="मार्गदर्शक">मार्गदर्शक</option>
+             </select>
            </div>
            <div className="space-y-1.5">
              <label className="text-xs font-bold text-slate-700 ml-1">City</label>
@@ -76,16 +123,20 @@ export function ManageCommittee() {
       {isLoading ? <Loader2 className="size-8 animate-spin mx-auto text-orange-600 my-20" /> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
            {members.map(m => (
-             <div key={m.id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
-                <div className="size-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-4 border border-orange-100">
-                   <ShieldCheck className="size-6" />
-                </div>
-                <div className="space-y-1 mb-4 flex-grow">
-                   <h3 className="text-lg font-bold text-slate-800 leading-tight">{m.name}</h3>
-                   <p className="text-xs font-bold text-orange-600 uppercase tracking-widest">{m.designation}</p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
-                   <div className="flex flex-col gap-1.5 text-slate-500">
+              <div key={m.id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full items-center text-center">
+                 <div className="size-20 rounded-full overflow-hidden border-4 border-orange-50 shadow-sm mb-4 flex-shrink-0 bg-orange-50 flex items-center justify-center">
+                    {m.photoUrl ? (
+                      <img src={m.photoUrl} alt={m.name} className="size-full object-cover" />
+                    ) : (
+                      <ShieldCheck className="size-8 text-orange-600" />
+                    )}
+                 </div>
+                 <div className="space-y-1.5 mb-5 flex-grow">
+                    <h3 className="text-lg font-black text-slate-800 leading-tight">{m.name}</h3>
+                    <p className="text-[11px] font-black text-orange-600 uppercase tracking-widest">{m.designation}</p>
+                 </div>
+                 <div className="pt-4 border-t border-slate-100 flex flex-col w-full gap-3 mt-auto">
+                    <div className="flex flex-col gap-2 text-slate-500 mx-auto">
                       <div className="flex items-center gap-2">
                         <MapPin className="size-3.5 shrink-0" />
                         <span className="text-[10px] font-bold uppercase tracking-wider truncate">{m.city}</span>
@@ -94,11 +145,11 @@ export function ManageCommittee() {
                         <Phone className="size-3.5 shrink-0" />
                         <span className="text-[10px] font-bold uppercase tracking-wider">{m.phone}</span>
                       </div>
-                   </div>
-                   <button onClick={() => handleDelete(m.id!)} className="size-8 bg-slate-50 text-slate-400 rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0">
-                      <Trash2 className="size-4" />
-                   </button>
-                </div>
+                    </div>
+                    <button onClick={() => handleDelete(m.id!)} className="w-full py-2 bg-slate-50 text-slate-400 font-bold text-xs uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0 gap-2 mt-2">
+                       <Trash2 className="size-3.5" /> Remove
+                    </button>
+                 </div>
              </div>
            ))}
            {members.length === 0 && (

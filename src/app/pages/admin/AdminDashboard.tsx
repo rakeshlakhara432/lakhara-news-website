@@ -77,7 +77,7 @@ export function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border-b-4 border-primary shadow-lg">
          <div className="flex items-center gap-5">
                <div className="size-16 md:size-20 rounded-2xl bg-white text-white flex items-center justify-center border border-white/30 shadow-2xl drop-shadow-xl group-hover:rotate-12 transition-transform duration-500 p-2">
-                  <img src="/favicon.png" alt="Lakhara Logo" className="size-full object-contain drop-shadow-sm" />
+                  <img src="/brand-logo.png" alt="Lakhara Logo" className="size-full object-contain drop-shadow-sm" />
                </div>
             <div>
                <h1 className="text-3xl font-black text-slate-800 leading-none tracking-tighter uppercase">प्रशासन पैनल</h1>
@@ -208,7 +208,7 @@ export function AdminDashboard() {
             <div className="space-y-4">
                <div className="flex items-center gap-3">
                   <div className="size-10 bg-white rounded-xl flex items-center justify-center border border-primary/20 p-1">
-                     <img src="/favicon.png" alt="Logo" className="size-full object-contain" />
+                     <img src="/brand-logo.png" alt="Logo" className="size-full object-contain" />
                   </div>
                   <h3 className="text-lg font-bold leading-none tracking-tighter">प्रणाली जानकारी<br/><span className="text-[10px] font-black text-primary uppercase tracking-widest">System Architecture</span></h3>
                </div>
