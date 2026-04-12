@@ -9,6 +9,7 @@ import { telegramService } from "../../services/telegramService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { generateMembershipPDF } from "../../utils/generateMembershipPDF";
+import { GoogleAuthButton } from "../../components/ui/GoogleAuthButton";
 
 export function RegistrationPage() {
   const navigate = useNavigate();
@@ -248,6 +249,31 @@ export function RegistrationPage() {
                {/* STEP 1: PERSONAL PROFILE */}
                {step === 1 && (
                  <div className="space-y-10 animate-in slide-in-from-right-5 duration-500">
+                    
+                    <div className="space-y-6 bg-orange-50/50 p-8 rounded-3xl border border-orange-100">
+                       <h3 className="text-sm font-black text-orange-800 uppercase tracking-widest text-center">क्विक-स्टार्ट (Fast Track)</h3>
+                       <GoogleAuthButton 
+                         label="Google के साथ आगे बढ़ें" 
+                         className="shadow-bhagva" 
+                         onSuccess={(u) => {
+                           setFormData(prev => ({
+                             ...prev,
+                             name: u.displayName || prev.name,
+                             email: u.email || prev.email,
+                             photoUrl: u.photoURL || prev.photoUrl
+                           }));
+                           toast.success("विवरण गूगल प्रोफाइल से ले लिया गया है।");
+                         }} 
+                       />
+                       <p className="text-[9px] text-center text-orange-400 font-bold uppercase tracking-widest">गूगल से जुड़ने पर आपका नाम और ईमेल स्वतः भर जाएगा</p>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                       <div className="h-px flex-1 bg-slate-100"></div>
+                       <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">अथवा फॉर्म भरें</span>
+                       <div className="h-px flex-1 bg-slate-100"></div>
+                    </div>
+
                     <div className="space-y-2 border-l-6 border-orange-600 pl-6">
                        <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter italic">व्यक्तिगत <span className="text-orange-600">प्रोफाइल</span></h2>
                        <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.3em]">Basic Member Identification</p>

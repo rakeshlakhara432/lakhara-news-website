@@ -1,6 +1,7 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc, query, orderBy, where, limit, Timestamp, onSnapshot, increment } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../data/firebase";
+import { fastUploadImage } from "../utils/fastUpload";
 
 export interface Article {
   id?: string;
@@ -25,11 +26,10 @@ export interface Article {
 const COLLECTION_NAME = "news";
 
 export const newsService = {
-  // Upload Media
-  async uploadMedia(file: File, path: string): Promise<string> {
-    const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    return await getDownloadURL(snapshot.ref);
+  // Upload Media — compressed + fast
+  async uploadMedia(file: File, path: string, onProgress?: (pct: number) => void): Promise<string> {
+    const storagePath = `${path}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+    return fastUploadImage(file, storagePath, { preset: "news", onProgress });
   },
 
   // Create Article

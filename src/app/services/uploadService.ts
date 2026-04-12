@@ -56,48 +56,15 @@ export interface NewsPost {
   createdAt: any;
 }
 
-// ── Image Compression (client-side) ──────────────────────────────────────────
+import { compressImageFast } from "../utils/fastUpload";
 
-/**
- * Compress an image file to target maxWidthPx / quality via canvas.
- * Returns a Blob of type image/jpeg.
- */
-export async function compressImage(
-  file: File,
-  maxWidthPx = 1280,
-  quality = 0.82
-): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      const scale = Math.min(1, maxWidthPx / img.width);
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error("Canvas toBlob failed"));
-        },
-        "image/jpeg",
-        quality
-      );
-    };
-    img.onerror = reject;
-    img.src = url;
-  });
-}
+// Re-export under old name for backward compatibility
+export const compressImage = (file: File, maxWidthPx = 1280, quality = 0.82) =>
+  compressImageFast(file, maxWidthPx, quality);
 
-/**
- * Compress + generate a small thumbnail blob (300px wide, q=0.70)
- */
-export async function makeThumbnail(file: File): Promise<Blob> {
-  return compressImage(file, 300, 0.7);
-}
+export const makeThumbnail = (file: File) =>
+  compressImageFast(file, 300, 0.65);
+
 
 // ── Generic upload helper ────────────────────────────────────────────────────
 
