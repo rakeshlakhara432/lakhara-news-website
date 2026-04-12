@@ -38,6 +38,7 @@ import {
   Award,
   BarChart3,
   Cake,
+  CreditCard,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../data/database";
