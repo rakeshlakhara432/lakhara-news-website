@@ -3,7 +3,7 @@ import {
   Upload, Save, Pen, User, Award, CheckCircle,
   RefreshCw, AlertCircle, Trash2, Edit3, Image, X, CreditCard, ShieldCheck
 } from "lucide-react";
-import { certSettingsService, CertAdminSettings } from "../../services/certSettingsService";
+import { certSettingsService, CertAdminSettings, uploadSignatureToStorage } from "../../services/certSettingsService";
 import { toast } from "sonner";
 
 /* ─── Signature Draw Canvas ─────────────────────────── */
@@ -58,10 +58,17 @@ function SignatureCanvas({ onSave, onClose }: { onSave: (b64: string) => void; o
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }, []);
 
-  const saveSignature = () => {
+  const saveSignature = async () => {
     const canvas = canvasRef.current!;
-    onSave(canvas.toDataURL("image/png"));
-    toast.success("Signature save हो गई!");
+    const b64 = canvas.toDataURL("image/png");
+    try {
+      toast.loading("Signature upload हो रही है...", { id: "sig-draw" });
+      const url = await uploadSignatureToStorage(b64);
+      toast.success("Signature save हो गई!", { id: "sig-draw" });
+      onSave(url);
+    } catch {
+      toast.error("Upload failed। पुनः प्रयास करें।", { id: "sig-draw" });
+    }
   };
 
   return (
@@ -144,31 +151,59 @@ export function CertificateSettings() {
     })();
   }, []);
 
-  const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignatureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       toast.error("केवल Image file upload करें (PNG recommended)");
       return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image 5MB से छोटी होनी चाहिए");
+      return;
+    }
     setIsUploadingSig(true);
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img   = new Image();
-      img.onload  = () => {
-        const canvas  = document.createElement("canvas");
-        const maxW    = 500;
-        const scale   = img.width > maxW ? maxW / img.width : 1;
-        canvas.width  = img.width  * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
-        setSettings(prev => ({ ...prev, signatureBase64: canvas.toDataURL("image/png") }));
-        setIsUploadingSig(false);
-        toast.success("Signature upload हो गई!");
+    toast.loading("Signature upload हो रही है...", { id: "sig-upload" });
+    try {
+      // Resize on canvas first, then upload directly to Firebase Storage
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const img = new Image();
+        img.onload = async () => {
+          const canvas = document.createElement("canvas");
+          const maxW   = 600;
+          const scale  = img.width > maxW ? maxW / img.width : 1;
+          canvas.width  = img.width  * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const b64 = canvas.toDataURL("image/png");
+          try {
+            const downloadUrl = await uploadSignatureToStorage(b64);
+            setSettings(prev => ({ ...prev, signatureBase64: downloadUrl, signatureUrl: downloadUrl }));
+            toast.success("✅ Signature upload हो गई!", { id: "sig-upload" });
+          } catch (uploadErr) {
+            console.error(uploadErr);
+            toast.error("Firebase upload failed। Internet check करें।", { id: "sig-upload" });
+          } finally {
+            setIsUploadingSig(false);
+            if (sigInputRef.current) sigInputRef.current.value = "";
+          }
+        };
+        img.onerror = () => {
+          toast.error("Image read नहीं हो सकी।", { id: "sig-upload" });
+          setIsUploadingSig(false);
+        };
+        img.src = ev.target?.result as string;
       };
-      img.src = ev.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+      reader.onerror = () => {
+        toast.error("File read error।", { id: "sig-upload" });
+        setIsUploadingSig(false);
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      toast.error("Upload failed।", { id: "sig-upload" });
+      setIsUploadingSig(false);
+    }
   };
 
   const handleSave = async () => {

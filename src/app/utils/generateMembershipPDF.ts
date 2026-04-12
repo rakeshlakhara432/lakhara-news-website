@@ -57,7 +57,9 @@ export async function generateMembershipPDF(data: MembershipCertData): Promise<v
 
   const adminName  = adminSettings?.adminName        || "RAKESH LAKHARA";
   const adminDesig = adminSettings?.adminDesignation || "CHAIRMAN / ADHYAKSH";
-  const sigB64     = adminSettings?.signatureBase64  || "";
+  const rawSig     = adminSettings?.signatureBase64  || adminSettings?.signatureUrl || "";
+  // If the stored value is a Firebase Storage URL (https://...), convert to base64 for html2canvas
+  const sigB64     = rawSig.startsWith("http") ? await imgToBase64(rawSig) : rawSig;
 
   /* Landscape A4 = 1123 × 794 px @ 96 dpi */
   const W = 1123;
