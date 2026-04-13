@@ -120,7 +120,7 @@ export function PublicLayout() {
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">समाज लिंक्स</h4>
                </div>
                <ul className="space-y-3">
-                   {['directory', 'matrimonial', 'events', 'store', 'notices', 'birthday-wishes'].map(slug => (
+                   {['directory', 'matrimonial', 'events', 'gallery', 'ebooks', 'store', 'notices', 'birthday-wishes'].map(slug => (
                     <li key={slug}><Link to={`/${slug}`} className="text-[13px] font-bold text-gray-400 hover:text-primary capitalize">{slug.replace('-', ' ')}</Link></li>
                   ))}
                </ul>

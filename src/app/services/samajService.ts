@@ -97,6 +97,16 @@ export interface GalleryImage {
   createdAt: any;
 }
 
+export interface GalleryAlbum {
+  id?: string;
+  title: string;
+  date: string;
+  description?: string;
+  images: string[]; // Array of image URLs
+  coverImage?: string;
+  createdAt: any;
+}
+
 export interface ContactMessage {
   id?: string;
   name: string;
@@ -333,6 +343,33 @@ class SamajService {
 
   async deleteGalleryImage(id: string) {
     return deleteDoc(doc(db, "gallery", id));
+  }
+
+  // Gallery Albums (Multi-Image Events)
+  subscribeToGalleryAlbums(callback: (albums: GalleryAlbum[]) => void) {
+    const q = query(collection(db, "gallery_albums"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as GalleryAlbum[];
+      callback(data);
+    });
+  }
+
+  async addGalleryAlbum(album: Omit<GalleryAlbum, "id" | "createdAt">) {
+    return addDoc(collection(db, "gallery_albums"), {
+      ...album,
+      createdAt: serverTimestamp()
+    });
+  }
+
+  async updateGalleryAlbum(id: string, data: Partial<GalleryAlbum>) {
+    return updateDoc(doc(db, "gallery_albums", id), data);
+  }
+
+  async deleteGalleryAlbum(id: string) {
+    return deleteDoc(doc(db, "gallery_albums", id));
   }
 
   // Messages
