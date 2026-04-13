@@ -75,6 +75,7 @@
     "@tailwindcss/vite": "4.1.12",
     "@types/node": "^25.5.0",
     "@vitejs/plugin-react": "4.7.0",
+    "firebase-admin": "^13.8.0",
     "gh-pages": "^6.1.1",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"

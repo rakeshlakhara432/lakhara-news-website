@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2, Plus, Trash2, Camera, Upload, X } from "lucide-react";
+import { Search, Loader2, Plus, Trash2, Camera, X } from "lucide-react";
 import { samajService, GalleryImage } from "../../services/samajService";
 import { toast } from "sonner";
+import { FileUpload } from "../../components/ui/FileUpload";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +26,6 @@ export function ManageGallery() {
     url: "",
     caption: "",
   });
-  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = samajService.subscribeToGallery((data) => {
@@ -34,25 +34,6 @@ export function ManageGallery() {
     });
     return () => unsubscribe();
   }, []);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("File is too large (max 2MB for base64 storage)");
-      return;
-    }
-
-    setIsUploading(true);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewImage(prev => ({ ...prev, url: reader.result as string }));
-      setIsUploading(false);
-      toast.success("Photo ready for archive!");
-    };
-    reader.readAsDataURL(file);
-  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -121,23 +102,12 @@ export function ManageGallery() {
               
               <form onSubmit={handleAddSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-1.5">
-                   <label className="text-xs font-bold text-slate-700 ml-1">Upload Image (Max 2MB)</label>
-                   <div className="relative aspect-video rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center overflow-hidden hover:border-orange-500 transition-colors">
-                      {newImage.url ? (
-                        <>
-                          <img src={newImage.url} className="size-full object-cover" />
-                          <button onClick={() => setNewImage({...newImage, url: ""})} className="absolute top-2 right-2 size-8 bg-rose-600 text-white rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-500 transition-colors"><X className="size-4"/></button>
-                        </>
-                      ) : (
-                        <label className="flex flex-col items-center justify-center size-full cursor-pointer group">
-                           <div className="size-12 bg-white rounded-xl border border-slate-100 flex items-center justify-center text-slate-400 shadow-sm group-hover:text-orange-600 group-hover:border-orange-200 mb-3 transition-colors">
-                              {isUploading ? <Loader2 className="size-6 animate-spin" /> : <Upload className="size-6" />}
-                           </div>
-                           <span className="text-xs font-semibold text-slate-500">Click to Select</span>
-                           <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                        </label>
-                      )}
-                   </div>
+                   <FileUpload 
+                     path="gallery"
+                     label="Upload Image"
+                     onUploadComplete={(url) => setNewImage(prev => ({ ...prev, url }))}
+                     previewUrl={newImage.url}
+                   />
                 </div>
 
                 <div className="flex flex-col justify-end space-y-4">
@@ -146,8 +116,8 @@ export function ManageGallery() {
                      <input required placeholder="E.g., वार्षिक मिलन 2026..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-sm text-slate-800 focus:border-orange-500 outline-none transition-all" value={newImage.caption} onChange={e => setNewImage({...newImage, caption: e.target.value})} />
                   </div>
                   <div className="pt-2">
-                    <button type="submit" disabled={!newImage.url || isUploading} className="w-full py-3.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-sm text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-colors">
-                      {isUploading ? "Uploading..." : "Save to Archive"} <Camera className="size-4" />
+                    <button type="submit" disabled={!newImage.url} className="w-full py-3.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-sm text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-colors">
+                      Save to Archive <Camera className="size-4" />
                     </button>
                   </div>
                 </div>

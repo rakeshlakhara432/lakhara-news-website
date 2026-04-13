@@ -73,17 +73,28 @@ export function NoticeBoardPage() {
                     <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${cfg.badge} uppercase tracking-wider`}>{cfg.label}</span>
                     <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 uppercase">📌 Pinned</span>
                   </div>
-                  <div className="flex items-start gap-4 pr-28">
-                    <div className={`size-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm`}>
-                      <Icon className={`size-5 ${cfg.icon_color}`} />
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-black text-slate-800">{n.title}</h3>
-                      <p className="text-sm text-slate-600 font-medium leading-relaxed whitespace-pre-line">{n.content}</p>
-                      <div className="flex items-center gap-2 pt-2 text-slate-400">
-                        <Clock className="size-3" />
-                        <span className="text-xs font-semibold">{formatDate(n.createdAt)}</span>
+                  
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col md:flex-row items-start gap-6 border-b border-white/50 pb-4 pr-16">
+                      <div className={`size-12 rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-sm border border-slate-100`}>
+                        <Icon className={`size-6 ${cfg.icon_color}`} />
                       </div>
+                      <div className="space-y-2 flex-1">
+                        <h3 className="text-xl font-black text-slate-800 leading-tight">{n.title}</h3>
+                        <div className="flex items-center gap-2 text-slate-400">
+                          <Clock className="size-3 text-orange-600" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">{formatDate(n.createdAt)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {n.imageUrl && (
+                        <div className="w-full md:w-64 aspect-video rounded-2xl overflow-hidden border border-white/50 shadow-inner shrink-0 bg-white">
+                          <img src={n.imageUrl} className="size-full object-cover" alt="" />
+                        </div>
+                      )}
+                      <p className="text-sm text-slate-600 font-bold leading-relaxed whitespace-pre-line flex-1 uppercase tracking-tight">{n.content}</p>
                     </div>
                   </div>
                 </div>
@@ -93,15 +104,15 @@ export function NoticeBoardPage() {
         )}
 
         {/* Filter buttons */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 justify-center">
           {["all", "urgent", "info", "celebration", "meeting"].map(f => (
             <button
               key={f}
               onClick={() => setFilter(f as any)}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+              className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 filter === f
-                  ? "bg-orange-600 text-white shadow"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                  ? "bg-orange-600 text-white shadow-lg shadow-orange-600/20"
+                  : "bg-white border border-slate-100 text-slate-400 hover:border-orange-200"
               }`}
             >
               {f === "all" ? "सभी" : TYPE_CONFIG[f as Notice["type"]].label}
@@ -115,33 +126,41 @@ export function NoticeBoardPage() {
             <RefreshCw className="size-8 text-orange-600 animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20 text-slate-400">
+          <div className="text-center py-24 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
             <Bell className="size-12 mx-auto mb-3 opacity-30" />
-            <p className="font-semibold">कोई सूचना नहीं मिली</p>
+            <p className="font-bold uppercase tracking-widest text-xs text-slate-400">कोई सूचना नहीं मिली</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filtered.map(n => {
               const cfg = TYPE_CONFIG[n.type];
               const Icon = cfg.icon;
               return (
-                <div key={n.id} className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-all group">
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`size-9 rounded-xl ${cfg.bg} flex items-center justify-center`}>
-                        <Icon className={`size-4 ${cfg.icon_color}`} />
+                <div key={n.id} className="bg-white border border-slate-100 rounded-[2rem] p-8 hover:shadow-xl transition-all group relative overflow-hidden flex flex-col">
+                  <div className="flex items-start justify-between gap-3 mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className={`size-10 rounded-xl ${cfg.bg} flex items-center justify-center border ${cfg.border}`}>
+                        <Icon className={`size-5 ${cfg.icon_color}`} />
                       </div>
-                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${cfg.badge} uppercase tracking-wider`}>{cfg.label}</span>
+                      <span className={`text-[10px] font-black px-3 py-1 rounded-full ${cfg.badge} uppercase tracking-widest`}>{cfg.label}</span>
                     </div>
-                    <button onClick={() => shareNotice(n)} className="p-1.5 hover:bg-green-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100" title="WhatsApp Share">
-                      <Share2 className="size-4 text-green-600" />
+                    <button onClick={() => shareNotice(n)} className="size-9 bg-slate-50 flex items-center justify-center rounded-xl hover:bg-emerald-50 transition-colors opacity-0 group-hover:opacity-100" title="WhatsApp Share">
+                      <Share2 className="size-4 text-emerald-600" />
                     </button>
                   </div>
-                  <h3 className="text-base font-black text-slate-800 mb-2">{n.title}</h3>
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed whitespace-pre-line">{n.content}</p>
-                  <div className="flex items-center gap-2 mt-4 text-slate-400">
-                    <Calendar className="size-3" />
-                    <span className="text-xs font-semibold">{formatDate(n.createdAt)}</span>
+
+                  {n.imageUrl && (
+                    <div className="w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-50 shadow-inner">
+                      <img src={n.imageUrl} className="size-full object-cover group-hover:scale-105 transition-transform duration-700" alt="" />
+                    </div>
+                  )}
+
+                  <h3 className="text-lg font-black text-slate-800 mb-3 group-hover:text-orange-600 transition-colors leading-tight">{n.title}</h3>
+                  <p className="text-sm text-slate-600 font-bold leading-relaxed whitespace-pre-line line-clamp-4 flex-1">{n.content}</p>
+                  
+                  <div className="flex items-center gap-2 mt-8 pt-4 border-t border-slate-50 text-slate-400">
+                    <Calendar className="size-3.5 text-orange-600" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">{formatDate(n.createdAt)}</span>
                   </div>
                 </div>
               );

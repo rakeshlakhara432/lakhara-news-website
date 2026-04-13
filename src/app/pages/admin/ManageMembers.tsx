@@ -102,6 +102,10 @@ async function parseAndImportCSV(file: File, onDone: (count: number) => void) {
 
 // ── Member Edit Modal ─────────────────────────────────────────────────────────
 
+import { FileUpload } from "../../components/ui/FileUpload";
+
+// ... (helpers)
+
 function MemberEditModal({ member, onClose, onSave }: { member: Member; onClose: () => void; onSave: (data: Partial<Member>) => void }) {
   const [form, setForm] = useState<Partial<Member>>(member);
   const [saving, setSaving] = useState(false);
@@ -132,6 +136,14 @@ function MemberEditModal({ member, onClose, onSave }: { member: Member; onClose:
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="md:col-span-2 mb-4">
+             <FileUpload 
+               path="members"
+               label="सदस्य फोटो (Passport Size)"
+               onUploadComplete={(url) => setForm(prev => ({ ...prev, photoUrl: url }))}
+               previewUrl={form.photoUrl}
+             />
+          </div>
           {[
             { label: "पूरा नाम", key: "name", type: "text" },
             { label: "पिता/पति का नाम", key: "fatherName", type: "text" },

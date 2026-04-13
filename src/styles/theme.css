@@ -30,7 +30,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   
-  --font-main: "Noto Sans Devanagari", "Outfit", "Inter", sans-serif;
+  --font-main: "Inter", "Poppins", "Noto Sans Devanagari", sans-serif;
   
   /* NO SHADOWS */
   --shadow-bhagva: none;
@@ -38,6 +38,16 @@
 }
 
 @layer base {
+  html {
+    font-size: 15px; /* Slightly reduced base font size */
+  }
+  
+  @media (max-width: 768px) {
+    html {
+      font-size: 14px; /* Even smaller for mobile */
+    }
+  }
+
   body {
     @apply bg-background text-foreground font-main antialiased selection:bg-primary/20 selection:text-primary;
     transition: none !important;

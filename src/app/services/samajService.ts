@@ -143,6 +143,26 @@ export interface VideoPost {
   createdAt: any;
 }
 
+export interface EBook {
+  id?: string;
+  title: string;
+  author: string;
+  category: string;
+  description: string;
+  pdfUrl: string;
+  thumbnailUrl?: string;
+  downloads?: number;
+  createdAt: any;
+}
+
+export interface Notice {
+  id?: string;
+  title: string;
+  content: string;
+  priority: "low" | "medium" | "high";
+  createdAt: any;
+}
+
 class SamajService {
   // Members / Directory
   subscribeToMembers(callback: (members: Member[]) => void) {
@@ -400,6 +420,38 @@ class SamajService {
 
   async deleteVideo(id: string) {
     return deleteDoc(doc(db, "samaj_videos", id));
+  }
+
+  // EBooks / Digital Books
+  subscribeToEBooks(callback: (ebooks: EBook[]) => void) {
+    const q = query(collection(db, "ebooks"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as EBook[]);
+    });
+  }
+
+  async addEBook(ebook: Omit<EBook, "id" | "createdAt">) {
+    return addDoc(collection(db, "ebooks"), { ...ebook, createdAt: serverTimestamp() });
+  }
+
+  async deleteEBook(id: string) {
+    return deleteDoc(doc(db, "ebooks", id));
+  }
+
+  // Notices
+  subscribeToNotices(callback: (notices: Notice[]) => void) {
+    const q = query(collection(db, "notices"), orderBy("createdAt", "desc"));
+    return onSnapshot(q, (snapshot) => {
+      callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Notice[]);
+    });
+  }
+
+  async addNotice(notice: Omit<Notice, "id" | "createdAt">) {
+    return addDoc(collection(db, "notices"), { ...notice, createdAt: serverTimestamp() });
+  }
+
+  async deleteNotice(id: string) {
+    return deleteDoc(doc(db, "notices", id));
   }
 }
 

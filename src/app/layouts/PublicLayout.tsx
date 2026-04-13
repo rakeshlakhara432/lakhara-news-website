@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Search, Home, User, ChevronRight, Menu, X, ArrowRight, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, GraduationCap, Mail, MapPin, Bell, Cake } from "lucide-react";
+import { Search, Home, User, ChevronRight, Menu, X, ArrowRight, Radio, MessageCircle, Heart, Users, Calendar, Image, Phone, GraduationCap, Mail, MapPin, Bell, Cake, Award, ShieldCheck, ShoppingBag, Book, Info } from "lucide-react";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { ScrollToTop } from "../components/ScrollToTop";
 import { MegaMenu } from "../components/navigation/MegaMenu";
@@ -156,9 +157,9 @@ export function PublicLayout() {
            <Radio className="size-6" />
            <span className="text-[9px] font-black uppercase tracking-wider">News</span>
         </Link>
-        <Link to="/store" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/store' ? 'text-primary' : 'text-gray-400'}`}>
-           <Search className="size-6" />
-           <span className="text-[9px] font-black uppercase tracking-wider">Store</span>
+        <Link to="/directory" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/directory' ? 'text-primary' : 'text-gray-400'}`}>
+           <Users className="size-6" />
+           <span className="text-[9px] font-black uppercase tracking-wider">Members</span>
         </Link>
         <Link to="/profile" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/profile' ? 'text-primary' : 'text-gray-400'}`}>
            <User className="size-6" />
@@ -166,36 +167,77 @@ export function PublicLayout() {
         </Link>
       </nav>
 
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[400] bg-primary">
-           <div className="absolute top-6 right-6">
-              <button 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="size-14 bg-white/10 text-white flex items-center justify-center border border-white/20 hover:rotate-90 transition-transform"
-              >
-                 <X className="size-8" />
-              </button>
-           </div>
-           
-           <div className="relative h-full flex flex-col justify-center px-12 space-y-10">
-              <div className="space-y-8">
-                {['/', '/news', '/directory', '/matrimonial', '/store', '/notices', '/birthday-wishes', '/contact'].map((path) => (
-                  <Link 
-                    key={path} 
-                    to={path} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-4xl font-black text-white tracking-tighter uppercase leading-none hover:pl-4 transition-all"
-                  >
-                     {path === '/' ? 'Home' : path.slice(1).replace('-', ' ')}
-                  </Link>
-                ))}
-              </div>
-              <div className="pt-10 border-t border-white/20">
-                 <p className="text-xs font-black text-white/50 uppercase tracking-[0.4em]">॥ संघे शक्तिः कलौ युगे ॥</p>
-              </div>
-           </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-[400] overflow-hidden">
+             <motion.div 
+               initial={{ opacity: 0 }} 
+               animate={{ opacity: 1 }} 
+               exit={{ opacity: 0 }} 
+               onClick={() => setIsMobileMenuOpen(false)} 
+               className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" 
+             />
+             <motion.aside 
+               initial={{ x: '-100%' }} 
+               animate={{ x: 0 }} 
+               exit={{ x: '-100%' }} 
+               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+               className="absolute inset-y-0 left-0 w-80 bg-white shadow-2xl flex flex-col"
+             >
+                <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                   <div className="flex items-center gap-3">
+                      <img src="/brand-logo.png" className="size-10 object-contain" alt="Logo" />
+                      <div>
+                         <span className="text-lg font-black text-primary leading-none block">LAKHARA</span>
+                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">DIGITAL NETWORK</span>
+                      </div>
+                   </div>
+                   <button onClick={() => setIsMobileMenuOpen(false)} className="size-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all">
+                      <X className="size-5" />
+                   </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+                   {[
+                     { label: "Home", path: "/", icon: Home },
+                     { label: "Members", path: "/directory", icon: Users },
+                     { label: "Certificate", path: "/profile", icon: Award },
+                     { label: "Gallery", path: "/gallery", icon: Image },
+                     { label: "Digital Book (PDF)", path: "/ebooks", icon: Book },
+                     { label: "Samaj News", path: "/news", icon: Radio },
+                     { label: "Committee", path: "/committee", icon: ShieldCheck },
+                     { label: "Matrimonial", path: "/matrimonial", icon: Heart },
+                     { label: "Store", path: "/store", icon: ShoppingBag },
+                     { label: "Notices", path: "/notices", icon: Bell },
+                     { label: "Contact", path: "/contact", icon: Phone },
+                     { label: "About", path: "/about", icon: Info },
+                   ].map((item) => {
+                     const Icon = item.icon || Info;
+                     const active = location.pathname === item.path;
+                     return (
+                       <Link 
+                         key={item.path} 
+                         to={item.path} 
+                         onClick={() => setIsMobileMenuOpen(false)}
+                         className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all ${active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-600 hover:bg-slate-50 hover:translate-x-1'}`}
+                       >
+                          <Icon className={`size-5 ${active ? 'text-white' : 'text-primary/60'}`} />
+                          <span className="text-xs font-black uppercase tracking-wide">{item.label}</span>
+                       </Link>
+                     );
+                   })}
+                </div>
+
+                <div className="p-6 border-t border-slate-50 mt-auto">
+                   <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+                      <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2 font-noto">॥ संघे शक्तिः कलौ युगे ॥</p>
+                      <p className="text-[9px] font-bold text-slate-500 leading-relaxed uppercase">लखारा समाज का सशक्त डिजिटल मंच।</p>
+                   </div>
+                </div>
+             </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

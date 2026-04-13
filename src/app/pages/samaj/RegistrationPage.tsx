@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { generateMembershipPDF } from "../../utils/generateMembershipPDF";
 import { GoogleAuthButton } from "../../components/ui/GoogleAuthButton";
+import { uploadFile } from "../../utils/storage";
 
 export function RegistrationPage() {
   const navigate = useNavigate();
@@ -131,15 +132,32 @@ export function RegistrationPage() {
 
     setIsSubmitting(true);
     try {
-      // 1. Get Count for Member ID
+      // 1. Upload Photo to Storage if it exists and is base64 (local)
+      let photoUrl = formData.photoUrl;
+      if (photoUrl && photoUrl.startsWith('data:')) {
+        try {
+          // We need to convert base64 back to a blob/file or just use the local file if we had it.
+          // Since we compressed it to base64, let's fetch it and upload.
+          const res = await fetch(photoUrl);
+          const blob = await res.blob();
+          const file = new File([blob], `member_${Date.now()}.jpg`, { type: 'image/jpeg' });
+          photoUrl = await uploadFile(file, 'members');
+        } catch (uploadErr) {
+          console.error("Storage upload failed:", uploadErr);
+          toast.error("Photo upload failed. Using local preview for now.");
+        }
+      }
+
+      // 2. Get Count for Member ID
       const allMembers = await samajService.getAllMembers();
       const count = allMembers.length + 1;
       const memberNumber = count.toString().padStart(6, "0");
       const memberId = `LS-${memberNumber}`;
 
-      // 2. Add to Firestore
+      // 3. Add to Firestore
       await samajService.addMember({
         ...formData,
+        photoUrl,
         memberId,
         memberNumber,
         isApproved: false,

@@ -11,6 +11,7 @@ export interface Notice {
   type: "urgent" | "info" | "celebration" | "meeting";
   isPinned: boolean;
   expiresAt?: string;
+  imageUrl?: string;
   createdAt: any;
 }
 
