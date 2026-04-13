@@ -78,7 +78,7 @@
     "firebase-admin": "^13.8.0",
     "gh-pages": "^6.1.1",
     "tailwindcss": "4.1.12",
-    "vite": "6.3.5"
+    "vite": "6.4.2"
   },
   "peerDependencies": {
     "react": "18.3.1",
@@ -94,7 +94,7 @@
   },
   "pnpm": {
     "overrides": {
-      "vite": "6.3.5"
+      "vite": "6.4.2"
     }
   }
 }
