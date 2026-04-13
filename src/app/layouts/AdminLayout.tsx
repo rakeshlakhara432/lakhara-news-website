@@ -219,10 +219,17 @@ export function AdminLayout() {
              <LogOut className="size-4" />
              TERMINATE SESSION
            </button>
-           <div className="bg-gray-50/50 rounded-xl p-3 flex items-center gap-3 border border-gray-100 shadow-inner">
-              <div className="size-1.5 bg-green-500 rounded-full animate-pulse shadow-sm shadow-green-500/50"></div>
-              <span className="text-[7px] font-black text-gray-400 uppercase tracking-[0.3em] italic">Network Online</span>
-           </div>
+            <div className="bg-gray-50/50 rounded-xl p-3 flex flex-col gap-3 border border-gray-100 shadow-inner overflow-hidden">
+               <div className="flex items-center gap-2">
+                 <div className="size-1.5 bg-green-500 rounded-full animate-pulse shadow-sm shadow-green-500/50"></div>
+                 <span className="text-[7px] font-black text-gray-400 uppercase tracking-[0.3em] italic">Network Online</span>
+               </div>
+               <div className="pt-2 border-t border-gray-100 flex flex-col items-center">
+                  <span className="text-[6px] font-black text-slate-300 uppercase tracking-widest mb-1 self-start">Official Seal</span>
+                  <img src="/admin-signature.png" alt="Admin Signature" className="h-10 w-auto object-contain brightness-90 contrast-125" />
+                  <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] mt-1 italic">Rakesh Lakhara</span>
+               </div>
+            </div>
         </div>
       </aside>
 

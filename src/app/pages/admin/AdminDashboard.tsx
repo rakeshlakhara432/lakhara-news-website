@@ -227,8 +227,9 @@ export function AdminDashboard() {
                </div>
             </div>
             <div className="flex flex-col justify-center items-end gap-2 text-right">
+               <img src="/admin-signature.png" alt="Admin Signature" className="h-12 w-auto object-contain invert grayscale brightness-200" />
                <span className="text-3xl font-black text-white leading-none tracking-tighter">॥ संघे शक्तिः कलौ युगे ॥</span>
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">United Excellence</span>
+               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">United Excellence • Rakesh Lakhara</span>
             </div>
          </div>
       </div>

@@ -351,6 +351,12 @@ export function CertificateSettings() {
                  </div>
                  <div className="flex flex-wrap gap-3 justify-center">
                    <button
+                     onClick={() => setSettings(prev => ({ ...prev, signatureBase64: "/admin-signature.png", signatureUrl: "/admin-signature.png" }))}
+                     className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl uppercase tracking-widest transition-all border border-emerald-100"
+                   >
+                     <ShieldCheck className="size-4" /> ✅ Official Sign
+                   </button>
+                   <button
                      onClick={() => setShowDrawCanvas(true)}
                      className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl uppercase tracking-widest transition-all"
                    >
@@ -378,38 +384,49 @@ export function CertificateSettings() {
                  </div>
                </div>
              ) : (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                 <button
-                   onClick={() => setShowDrawCanvas(true)}
-                   className="border-2 border-dashed border-indigo-200 rounded-3xl p-10 text-center hover:border-indigo-600 hover:bg-indigo-50/50 transition-all group flex flex-col items-center shadow-sm"
-                 >
-                   <div className="size-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                     <Edit3 className="size-8" />
-                   </div>
-                   <p className="text-sm font-black text-slate-800 uppercase tracking-widest">🖊️ Signature Draw करें</p>
-                   <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase">माउस या उंगली से हस्ताक्षर करें</p>
-                 </button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <button
+                    onClick={() => setSettings(prev => ({ ...prev, signatureBase64: "/admin-signature.png", signatureUrl: "/admin-signature.png" }))}
+                    className="border-2 border-dashed border-emerald-200 rounded-3xl p-10 text-center hover:border-emerald-600 hover:bg-emerald-50/50 transition-all group flex flex-col items-center shadow-sm"
+                  >
+                    <div className="size-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                      <ShieldCheck className="size-8" />
+                    </div>
+                    <p className="text-sm font-black text-slate-800 uppercase tracking-widest">✅ Official Sign</p>
+                    <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wide">Cursive Signature</p>
+                  </button>
 
-                 <label className="block cursor-pointer">
-                   <div className={`border-2 border-dashed rounded-3xl p-10 text-center h-full transition-all group flex flex-col items-center shadow-sm ${isUploadingSig ? "border-indigo-600 bg-indigo-50" : "border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/50"}`}>
-                     <div className="size-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mb-5 group-hover:rotate-12 transition-transform">
-                       <Upload className="size-8" />
-                     </div>
-                     <p className="text-sm font-black text-slate-800 uppercase tracking-widest">
-                       {isUploadingSig ? "Uploading..." : "📁 Image Upload करें"}
-                     </p>
-                     <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wide">PNG (transparent) • Max 2MB</p>
-                   </div>
-                   <input
-                     ref={sigInputRef}
-                     type="file"
-                     accept="image/*"
-                     className="hidden"
-                     onChange={handleSignatureUpload}
-                     disabled={isUploadingSig}
-                   />
-                 </label>
-               </div>
+                  <button
+                    onClick={() => setShowDrawCanvas(true)}
+                    className="border-2 border-dashed border-indigo-200 rounded-3xl p-10 text-center hover:border-indigo-600 hover:bg-indigo-50/50 transition-all group flex flex-col items-center shadow-sm"
+                  >
+                    <div className="size-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                      <Edit3 className="size-8" />
+                    </div>
+                    <p className="text-sm font-black text-slate-800 uppercase tracking-widest">🖊️ signature draw...</p>
+                    <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase">माउस या उंगली से हस्ताक्षर करें</p>
+                  </button>
+
+                  <label className="block cursor-pointer">
+                    <div className={`border-2 border-dashed rounded-3xl p-10 text-center h-full transition-all group flex flex-col items-center shadow-sm ${isUploadingSig ? "border-indigo-600 bg-indigo-50" : "border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/50"}`}>
+                      <div className="size-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mb-5 group-hover:rotate-12 transition-transform">
+                        <Upload className="size-8" />
+                      </div>
+                      <p className="text-sm font-black text-slate-800 uppercase tracking-widest">
+                        {isUploadingSig ? "Uploading..." : "📁 Image Upload करें"}
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wide">PNG (transparent) • Max 2MB</p>
+                    </div>
+                    <input
+                      ref={sigInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleSignatureUpload}
+                      disabled={isUploadingSig}
+                    />
+                  </label>
+                </div>
              )}
           </div>
         </div>

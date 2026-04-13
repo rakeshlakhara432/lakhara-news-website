@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Upload, X, Loader2, Camera, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, X, Loader2, Camera, Image as ImageIcon, Plus, Zap } from "lucide-react";
 import { uploadFile } from "../../utils/storage";
+import { compressImage } from "../../utils/imageCompression";
 import { toast } from "sonner";
 
 interface MultiFileUploadProps {
@@ -21,7 +22,7 @@ export function MultiFileUpload({
   className = ""
 }: MultiFileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [previews, setPreviews] = useState<{ file: File; preview: string; status: 'waiting' | 'uploading' | 'done' | 'error'; url?: string }[]>([]);
+  const [previews, setPreviews] = useState<{ file: File; preview: string; status: 'waiting' | 'compressing' | 'uploading' | 'done' | 'error'; url?: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,7 @@ export function MultiFileUpload({
 
     const newPreviews = files.map(file => ({
       file,
-      preview: URL.createObjectURL(file),
+      preview: URL.createObjectURL(file), // Still use original for preview
       status: 'waiting' as const
     }));
 
@@ -56,10 +57,16 @@ export function MultiFileUpload({
       }
 
       try {
+        // Step 1: Compress
+        updatedPreviews[i].status = 'compressing';
+        setPreviews([...updatedPreviews]);
+        const compressedFile = await compressImage(updatedPreviews[i].file);
+        
+        // Step 2: Upload
         updatedPreviews[i].status = 'uploading';
         setPreviews([...updatedPreviews]);
         
-        const url = await uploadFile(updatedPreviews[i].file, path);
+        const url = await uploadFile(compressedFile, path);
         updatedPreviews[i].url = url;
         updatedPreviews[i].status = 'done';
         uploadedUrls.push(url);
@@ -67,7 +74,7 @@ export function MultiFileUpload({
       } catch (error) {
         updatedPreviews[i].status = 'error';
         setPreviews([...updatedPreviews]);
-        toast.error(`Failed to upload ${updatedPreviews[i].file.name}`);
+        toast.error(`Failed to process ${updatedPreviews[i].file.name}`);
       }
     }
 
@@ -128,9 +135,17 @@ export function MultiFileUpload({
               <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 bg-white group/item">
                 <img src={item.preview} className="size-full object-cover" alt="Preview" />
                 
+                {item.status === 'compressing' && (
+                  <div className="absolute inset-0 bg-orange-600/40 flex flex-col items-center justify-center text-white gap-1 animate-pulse">
+                    <Zap className="size-6 fill-current" />
+                    <span className="text-[8px] font-black uppercase">Optimizing</span>
+                  </div>
+                )}
+
                 {item.status === 'uploading' && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <Loader2 className="size-6 text-white animate-spin" />
+                  <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center text-white gap-1">
+                    <Loader2 className="size-6 animate-spin" />
+                    <span className="text-[8px] font-black uppercase">Uploading</span>
                   </div>
                 )}
                 
@@ -185,16 +200,25 @@ export function MultiFileUpload({
           onClick={startUpload}
           className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-2xl shadow-lg shadow-orange-600/20 flex items-center justify-center gap-3 transition-all hover:scale-[1.01] active:scale-[0.99]"
         >
-          <ImageIcon className="size-5" /> Start Upload ({previews.length} Images)
+          <Zap className="size-5" /> Optimize & Upload ({previews.length} Images)
         </button>
       )}
 
       {isUploading && (
-        <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-          <div 
-            className="bg-orange-600 h-full transition-all duration-500" 
-            style={{ width: `${(previews.filter(p => p.status === 'done').length / previews.length) * 100}%` }}
-          ></div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500 px-2">
+            <span className="flex items-center gap-2">
+              <Loader2 className="size-3 animate-spin text-orange-600" /> 
+              {previews.filter(p => p.status === 'done').length === previews.length ? "Done!" : "Processing Archive..."}
+            </span>
+            <span>{Math.round((previews.filter(p => p.status === 'done').length / previews.length) * 100)}%</span>
+          </div>
+          <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200 p-0.5">
+            <div 
+              className="bg-orange-600 h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(234,88,12,0.5)]" 
+              style={{ width: `${(previews.filter(p => p.status === 'done').length / previews.length) * 100}%` }}
+            ></div>
+          </div>
         </div>
       )}
     </div>
