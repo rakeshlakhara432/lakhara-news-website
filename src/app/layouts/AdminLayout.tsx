@@ -54,9 +54,15 @@ export function AdminLayout() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [loginError, setLoginError] = useState("");
 
+  const ALLOWED_ADMIN_EMAILS = [
+    "rakeshlakhara432@gmail.com",
+    "lakharasamajnews@gmail.com",
+    "lakharaadmin@gmail.com"
+  ];
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (user && user.email === "rakeshlakhara432@gmail.com") {
+      if (user && user.email && ALLOWED_ADMIN_EMAILS.includes(user.email)) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
@@ -73,9 +79,9 @@ export function AdminLayout() {
       provider.setCustomParameters({ prompt: 'select_account' });
       const result = await signInWithPopup(auth, provider);
       
-      if (result.user.email !== "rakeshlakhara432@gmail.com") {
+      if (!result.user.email || !ALLOWED_ADMIN_EMAILS.includes(result.user.email)) {
         await signOut(auth);
-        setLoginError("ACCESS DENIED: You are not the owner of this website.");
+        setLoginError("ACCESS DENIED: You are not authorized to access this admin panel.");
       }
     } catch (err: any) {
       setLoginError(err.message || "Authentication Failed.");
