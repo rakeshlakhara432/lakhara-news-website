@@ -46,6 +46,7 @@ import { ManageEBooks } from "./pages/admin/ManageEBooks";
 import { CertificateSettings } from "./pages/admin/CertificateSettings";
 import { ManageNotices } from "./pages/admin/ManageNotices";
 import { AnalyticsDashboard } from "./pages/admin/AnalyticsDashboard";
+import { WebsiteShield } from "./pages/admin/WebsiteShield";
 
 export const router = createHashRouter([
   {
@@ -98,6 +99,7 @@ export const router = createHashRouter([
       // ── New Admin Routes ──
       { path: "notices",                   Component: ManageNotices },
       { path: "analytics",                 Component: AnalyticsDashboard },
+      { path: "shield",                    Component: WebsiteShield },
     ],
   },
   {

@@ -168,6 +168,7 @@ export function AdminLayout() {
     { path: "/admin/news",               label: "Samaj News",      icon: Megaphone       },
     { path: "/admin/videos",             label: "Broadcasts",      icon: Play            },
     { path: "/admin/support",            label: "Education",       icon: GraduationCap   },
+    { path: "/admin/shield",             label: "Web Shield AI",   icon: Shield          },
     { path: "/admin/messages",           label: "Messages",        icon: MessageCircle   },
     { path: "/admin/settings",           label: "About Settings",  icon: Settings        },
     { path: "/admin/certificate-settings", label: "Member Card Sign", icon: CreditCard      },
