@@ -12,6 +12,7 @@ export interface Notice {
   isPinned: boolean;
   expiresAt?: string;
   imageUrl?: string;
+  actionUrl?: string;
   createdAt: any;
 }
 

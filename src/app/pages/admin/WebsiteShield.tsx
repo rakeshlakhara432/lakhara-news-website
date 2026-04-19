@@ -256,7 +256,7 @@ export function WebsiteShield() {
       overflow: "hidden"
     }}>
       {/* Animated CSS */}
-      <style>{\`
+      <style>{`
         @keyframes pulse-ring {
           0%   { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
           70%  { box-shadow: 0 0 0 8px transparent; opacity: 0.4; }
@@ -283,7 +283,7 @@ export function WebsiteShield() {
         .tab-btn:hover    { background: #161b27 !important; }
         .card-hover:hover { border-color: #30363d !important; }
         textarea:focus    { outline: none; border-color: #00ff9d !important; }
-      \`}</style>
+      `}</style>
 
       {/* HEADER */}
       <div style={{
@@ -319,7 +319,7 @@ export function WebsiteShield() {
           <textarea
             value={code}
             onChange={e => setCode(e.target.value)}
-            placeholder={\`// Example:\\nimport React, { useState, useEffect } from 'react';\\n\\nexport default function MyComponent() {\\n  const [data, setData] = useState();\\n  \\n  useEffect(() => {\\n    fetch('/api/data').then(r => r.json()).then(setData);\\n  }, []);\\n  \\n  return <div dangerouslySetInnerHTML={{__html: data}} />;\\n}\`}
+            placeholder={`// Example:\nimport React, { useState, useEffect } from 'react';\n\nexport default function MyComponent() {\n  const [data, setData] = useState();\n  \n  useEffect(() => {\n    fetch('/api/data').then(r => r.json()).then(setData);\n  }, []);\n  \n  return <div dangerouslySetInnerHTML={{__html: data}} />;\n}`}
             style={{
               width: "100%", minHeight: 200, background: "#0d1117",
               border: "1px solid #30363d", borderRadius: 8, padding: "14px 16px",
@@ -330,7 +330,7 @@ export function WebsiteShield() {
           />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
             <span style={{ color: "#8b949e", fontSize: 11 }}>
-              {code.length} characters · {code.split('\\n').length} lines
+              {code.length} characters · {code.split('\n').length} lines
             </span>
             <button
               onClick={runScan}
@@ -357,7 +357,7 @@ export function WebsiteShield() {
               <div style={{
                 height: "100%", borderRadius: 99,
                 background: "linear-gradient(90deg,#00ff9d,#00ccff)",
-                width: \`\${scanProgress}%\`, transition: "width 0.6s ease",
+                width: `${scanProgress}%`, transition: "width 0.6s ease",
                 boxShadow: "0 0 12px #00ff9d88",
               }} />
             </div>
@@ -395,9 +395,9 @@ export function WebsiteShield() {
                 🎯 <strong>Critical Finding:</strong> {result.summary?.criticalFindings}
               </div>
               <div style={{ display: "flex", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
-                <Badge text={\`\${result.summary?.totalBugs} Bugs\`} color="#ff6600" />
-                <Badge text={\`\${result.summary?.totalPerformanceIssues} Perf Issues\`} color="#ffcc00" />
-                <Badge text={\`\${result.summary?.totalSecurityThreats} Threats\`} color="#ff2244" />
+                <Badge text={`${result.summary?.totalBugs} Bugs`} color="#ff6600" />
+                <Badge text={`${result.summary?.totalPerformanceIssues} Perf Issues`} color="#ffcc00" />
+                <Badge text={`${result.summary?.totalSecurityThreats} Threats`} color="#ff2244" />
               </div>
             </Card>
 
@@ -429,7 +429,7 @@ export function WebsiteShield() {
                 {result.bugs?.length === 0 ? (
                   <Card><div style={{ color: "#00ff9d", textAlign: "center", padding: 20 }}>✅ Koi bugs nahi mile!</div></Card>
                 ) : result.bugs?.map((bug: any) => (
-                  <Card key={bug.id} className="card-hover" style={{ borderLeft: \`3px solid \${severityColor[bug.severity] || "#888"}\` }}>
+                  <Card key={bug.id} className="card-hover" style={{ borderLeft: `3px solid ${severityColor[bug.severity] || "#888"}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <PulsingDot color={severityColor[bug.severity] || "#888"} />
@@ -470,11 +470,11 @@ export function WebsiteShield() {
                 {result.performance?.length === 0 ? (
                   <Card><div style={{ color: "#00ff9d", textAlign: "center", padding: 20 }}>✅ Performance already optimized hai!</div></Card>
                 ) : result.performance?.map((p: any) => (
-                  <Card key={p.id} className="card-hover" style={{ borderLeft: \`3px solid \${severityColor[p.impact] || "#ffcc00"}\` }}>
+                  <Card key={p.id} className="card-hover" style={{ borderLeft: `3px solid ${severityColor[p.impact] || "#ffcc00"}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
                       <span style={{ fontWeight: 700, fontSize: 15 }}>⚡ {p.title}</span>
                       <div style={{ display: "flex", gap: 6 }}>
-                        {p.speedGain && <Badge text={\`+\${p.speedGain}\`} color="#00ff9d" />}
+                        {p.speedGain && <Badge text={`+${p.speedGain}`} color="#00ff9d" />}
                         <Badge text={p.impact} color={severityColor[p.impact] || "#ffcc00"} />
                       </div>
                     </div>
@@ -501,7 +501,7 @@ export function WebsiteShield() {
                 {result.security?.length === 0 ? (
                   <Card><div style={{ color: "#00ff9d", textAlign: "center", padding: 20 }}>✅ Koi security threats nahi mile!</div></Card>
                 ) : result.security?.map((s: any) => (
-                  <Card key={s.id} className="card-hover" style={{ borderLeft: \`3px solid \${severityColor[s.severity] || "#ff2244"}\` }}>
+                  <Card key={s.id} className="card-hover" style={{ borderLeft: `3px solid ${severityColor[s.severity] || "#ff2244"}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
                       <span style={{ fontWeight: 700, fontSize: 15 }}>
                         {threatIcon[s.threat] || "⚠️"} {s.title}

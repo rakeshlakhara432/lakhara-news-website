@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Plus, Trash2, Pin, RefreshCw, Save, X, AlertTriangle, PartyPopper, Users2, ImageIcon } from "lucide-react";
+import { Bell, Plus, Trash2, Pin, RefreshCw, Save, X, AlertTriangle, PartyPopper, Users2, ImageIcon, ArrowRight, ExternalLink } from "lucide-react";
 import { noticeBoardService, Notice } from "../../services/noticeBoardService";
 import { toast } from "sonner";
 import { FileUpload } from "../../components/ui/FileUpload";
@@ -19,6 +19,7 @@ const EMPTY: Omit<Notice, "id" | "createdAt"> = {
   isPinned:  false,
   expiresAt: "",
   imageUrl:  "",
+  actionUrl: "",
 };
 
 export function ManageNotices() {
@@ -135,7 +136,12 @@ export function ManageNotices() {
                         
                         <div className="space-y-1.5">
                            <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">विवरण (Content)</label>
-                           <textarea value={form.content} onChange={e => setForm({...form, content: e.target.value})} rows={6} required className="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-3.5 text-sm font-bold focus:bg-white focus:border-slate-200 outline-none transition-all shadow-sm resize-none" placeholder="पूरी जानकारी लिखें..." />
+                           <textarea value={form.content} onChange={e => setForm({...form, content: e.target.value})} rows={4} required className="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-3.5 text-sm font-bold focus:bg-white focus:border-slate-200 outline-none transition-all shadow-sm resize-none" placeholder="पूरी जानकारी लिखें..." />
+                        </div>
+
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">वेबसाइट लिंक / URL (Optional)</label>
+                           <input type="url" value={form.actionUrl} onChange={e => setForm({...form, actionUrl: e.target.value})} className="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-3.5 text-sm font-bold focus:bg-white focus:border-slate-200 outline-none transition-all shadow-sm" placeholder="https://example.com" />
                         </div>
 
                         <div className="flex items-center gap-4 pt-2">
@@ -205,7 +211,13 @@ export function ManageNotices() {
                     <div className="flex items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest">
                        EXPIRY: {n.expiresAt || "PERMANENT"}
                     </div>
-                    <button className="text-[10px] font-black text-orange-600 uppercase tracking-widest flex items-center gap-2">DETAILS <ArrowRight className="size-3" /></button>
+                    {n.actionUrl ? (
+                        <a href={n.actionUrl} target="_blank" rel="noreferrer" className="text-[10px] font-black text-orange-600 uppercase tracking-widest flex items-center gap-2 hover:underline">
+                           LINK DEKHEIN <ExternalLink className="size-3" />
+                        </a>
+                    ) : (
+                        <button className="text-[10px] font-black text-orange-600 uppercase tracking-widest flex items-center gap-2">DETAILS <ArrowRight className="size-3" /></button>
+                    )}
                  </div>
               </div>
             );
