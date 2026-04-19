@@ -5,8 +5,12 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "next-themes";
 import { useEffect } from "react";
 import { db } from "./data/database";
+import useWebsiteProtection from "./hooks/useWebsiteProtection";
 
 export default function App() {
+  // Complete Website Protection - Blocks right click, copying, DevTools etc.
+  useWebsiteProtection();
+
   useEffect(() => {
     const settings = db.getTable('settings');
     if (settings?.primaryColor) {

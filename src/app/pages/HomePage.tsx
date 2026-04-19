@@ -238,10 +238,18 @@ export function HomePage() {
                   <div className="absolute -right-4 -top-4 opacity-[0.03]">
                      <Newspaper className="size-48" />
                   </div>
+
                   <div className="flex items-center gap-2 text-sm font-bold text-orange-600 uppercase tracking-wider relative z-10">
-                     <span className="size-2 rounded-full bg-orange-600"></span>
-                     फ्लैश न्यूज़
+                     <span className="size-2 rounded-full bg-orange-600 animate-pulse"></span>
+                     सुर्खियां (Featured News)
                   </div>
+
+                  {(latestAnnouncement as any).imageUrl && (
+                    <div className="aspect-video lg:aspect-[21/9] w-full rounded-xl bg-slate-100 overflow-hidden relative z-10 border border-slate-100">
+                      <img src={(latestAnnouncement as any).imageUrl} alt={latestAnnouncement.title} className="size-full object-cover hover:scale-105 transition-transform duration-700" />
+                    </div>
+                  )}
+
                   <div className="space-y-4 relative z-10 flex-1">
                      <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-tight">
                         {latestAnnouncement.title}
@@ -250,9 +258,9 @@ export function HomePage() {
                         {latestAnnouncement.content}
                      </p>
                   </div>
-                  <div className="relative z-10 pt-4">
-                     <Link to="/news" className="inline-flex items-center gap-2 text-sm font-semibold bg-orange-50 text-orange-700 px-4 py-2 rounded-lg hover:bg-orange-100 transition-colors">
-                        विस्तृत जानकारी <ArrowRight className="size-4" />
+                  <div className="relative z-10 pt-4 border-t border-slate-100 max-h-min">
+                     <Link to={latestAnnouncement.id ? `/news/${latestAnnouncement.id}` : "/news"} className="inline-flex items-center gap-2 text-sm font-semibold bg-orange-600 text-white px-5 py-2.5 rounded-xl hover:bg-slate-900 transition-colors uppercase tracking-widest shadow-md">
+                        सम्पूर्ण जानकारी <ArrowRight className="size-4" />
                      </Link>
                   </div>
                </div>

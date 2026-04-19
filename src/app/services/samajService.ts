@@ -419,6 +419,20 @@ class SamajService {
     });
   }
 
+  async getSamajNewsById(id: string): Promise<NewsPost | null> {
+    try {
+      const { getDoc } = await import("firebase/firestore");
+      const docRef = doc(db, "samaj_news", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as NewsPost;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
   async addSamajNews(news: Omit<NewsPost, "id" | "createdAt">) {
     return addDoc(collection(db, "samaj_news"), { ...news, createdAt: serverTimestamp() });
   }

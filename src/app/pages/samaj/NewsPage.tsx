@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { Megaphone, Calendar, ArrowRight, Bookmark, Loader2, Image, Play, Radio } from "lucide-react";
 import { samajService, NewsPost, VideoPost } from "../../services/samajService";
 import { VoiceNewsReader } from "../../components/ai/VoiceNewsReader";
@@ -162,9 +163,9 @@ export function NewsPage() {
                      </div>
 
                      <div className="pt-5 mt-auto border-t border-slate-100">
-                        <button className="flex items-center gap-2 text-xs font-bold text-orange-600 group-hover:gap-3 transition-all">
+                        <Link to={`/news/${item.id}`} className="inline-flex items-center gap-2 text-xs font-bold text-orange-600 group-hover:gap-3 transition-all">
                            पूरा पढ़ें <ArrowRight className="size-3.5" />
-                        </button>
+                        </Link>
                      </div>
                   </div>
                </div>
