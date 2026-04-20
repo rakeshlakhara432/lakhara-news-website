@@ -1,10 +1,99 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // ── HELPERS ──────────────────────────────────────────────────
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user has admin/superadmin role
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'superadmin');
+    }
+
+    // Check if user is the owner of the document
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // ── COLLECTIONS ──────────────────────────────────────────────
+
+    // User profiles and roles
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(uid) || isAdmin();
+    }
+
+    // Members collection (Community Registry)
+    match /members/{memberId} {
+      allow read: if true; 
+      allow create: if true; // Public registration
+      allow update, delete: if isAdmin(); // Only admins can moderate members
+    }
+
+    // Matrimonial collection
+    match /matrimonial/{id} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    // News, Events, Videos, Notices (Public Read, Admin Write)
+    match /samaj_news/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /events/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /samaj_videos/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /notices/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Gallery and Albums
+    match /gallery/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /gallery_albums/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Messages (Public can send, Admin can read/manage)
+    match /messages/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Committee, Support, EBooks
+    match /committee/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /support/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /ebooks/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Default: Deny everything else unless authenticated
     match /{document=**} {
-      // Basic Firebase security: allow public read, but require authentication for any writes.
-      // This protects against unauthenticated data deletion and spam (NoSQL injection).
-      allow read, write: if true;
+      allow read, write: if isAdmin();
     }
   }
 }

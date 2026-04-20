@@ -20,4 +20,19 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router'],
+          'vendor-firebase': ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage'],
+          'vendor-ui': ['lucide-react', 'motion', 'clsx', 'tailwind-merge'],
+          'vendor-charts': ['recharts'],
+          'vendor-utils': ['jspdf', 'html2canvas', 'canvas-confetti', 'qrcode'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+  }
 })

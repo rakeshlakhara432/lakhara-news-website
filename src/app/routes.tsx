@@ -1,109 +1,122 @@
+import React, { lazy, Suspense } from "react";
 import { createHashRouter } from "react-router";
-import { HomePage } from "./pages/HomePage";
+// Layouts remain static for structure
 import { PublicLayout } from "./layouts/PublicLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
-import { AdminDashboard } from "./pages/admin/AdminDashboard";
-import { ManageMembers } from "./pages/admin/ManageMembers";
-import { ManageMatrimonial } from "./pages/admin/ManageMatrimonial";
-import { ManageEvents } from "./pages/admin/ManageEvents";
-import { ManageGallery } from "./pages/admin/ManageGallery";
-import { ManageMessages } from "./pages/admin/ManageMessages";
-import { ManageCommittee } from "./pages/admin/ManageCommittee";
-import { ManageSamajNews } from "./pages/admin/ManageSamajNews";
-import { ManageSupport } from "./pages/admin/ManageSupport";
-import { ManageVideos } from "./pages/admin/ManageVideos";
-import { AdminSettings } from "./pages/admin/Settings";
-import { ProfilePage } from "./pages/ProfilePage";
-import { NotFound } from "./pages/NotFound";
 
-// Samaj Pages
-import { AboutPage } from "./pages/samaj/AboutPage";
-import { CommitteePage } from "./pages/samaj/CommitteePage";
-import { DirectoryPage } from "./pages/samaj/DirectoryPage";
-import { MatrimonialPage } from "./pages/samaj/MatrimonialPage";
-import { MatrimonialRegistrationPage } from "./pages/samaj/MatrimonialRegistrationPage";
-import { RegistrationPage } from "./pages/samaj/RegistrationPage";
-import { EventsPage } from "./pages/samaj/EventsPage";
-import { ContactPage } from "./pages/samaj/ContactPage";
-import { NewsPage } from "./pages/samaj/NewsPage";
-import { NewsDetailPage } from "./pages/samaj/NewsDetailPage";
-import { GalleryPage } from "./pages/samaj/GalleryPage";
-import { DonatePage } from "./pages/samaj/DonatePage";
-import { SupportPage } from "./pages/samaj/SupportPage";
-import { SupportDetailPage } from "./pages/samaj/SupportDetailPage";
-import { RulesPage } from "./pages/samaj/RulesPage";
-import { StorePage } from "./pages/samaj/StorePage";
-import { SitemapPage } from "./pages/samaj/SitemapPage";
-import { EBooksPage } from "./pages/samaj/EBooksPage";
+// Samaj Pages (Lazy)
+const HomePage = lazy(() => import("./pages/HomePage").then(m => ({ default: m.HomePage })));
+const AboutPage = lazy(() => import("./pages/samaj/AboutPage").then(m => ({ default: m.AboutPage })));
+const CommitteePage = lazy(() => import("./pages/samaj/CommitteePage").then(m => ({ default: m.CommitteePage })));
+const DirectoryPage = lazy(() => import("./pages/samaj/DirectoryPage").then(m => ({ default: m.DirectoryPage })));
+const MatrimonialPage = lazy(() => import("./pages/samaj/MatrimonialPage").then(m => ({ default: m.MatrimonialPage })));
+const MatrimonialRegistrationPage = lazy(() => import("./pages/samaj/MatrimonialRegistrationPage").then(m => ({ default: m.MatrimonialRegistrationPage })));
+const RegistrationPage = lazy(() => import("./pages/samaj/RegistrationPage").then(m => ({ default: m.RegistrationPage })));
+const EventsPage = lazy(() => import("./pages/samaj/EventsPage").then(m => ({ default: m.EventsPage })));
+const ContactPage = lazy(() => import("./pages/samaj/ContactPage").then(m => ({ default: m.ContactPage })));
+const NewsPage = lazy(() => import("./pages/samaj/NewsPage").then(m => ({ default: m.NewsPage })));
+const NewsDetailPage = lazy(() => import("./pages/samaj/NewsDetailPage").then(m => ({ default: m.NewsDetailPage })));
+const GalleryPage = lazy(() => import("./pages/samaj/GalleryPage").then(m => ({ default: m.GalleryPage })));
+const DonatePage = lazy(() => import("./pages/samaj/DonatePage").then(m => ({ default: m.DonatePage })));
+const SupportPage = lazy(() => import("./pages/samaj/SupportPage").then(m => ({ default: m.SupportPage })));
+const SupportDetailPage = lazy(() => import("./pages/samaj/SupportDetailPage").then(m => ({ default: m.SupportDetailPage })));
+const RulesPage = lazy(() => import("./pages/samaj/RulesPage").then(m => ({ default: m.RulesPage })));
+const StorePage = lazy(() => import("./pages/samaj/StorePage").then(m => ({ default: m.StorePage })));
+const SitemapPage = lazy(() => import("./pages/samaj/SitemapPage").then(m => ({ default: m.SitemapPage })));
+const EBooksPage = lazy(() => import("./pages/samaj/EBooksPage").then(m => ({ default: m.EBooksPage })));
+const NoticeBoardPage = lazy(() => import("./pages/samaj/NoticeBoardPage").then(m => ({ default: m.NoticeBoardPage })));
+const BirthdayWishesPage = lazy(() => import("./pages/samaj/BirthdayWishesPage").then(m => ({ default: m.BirthdayWishesPage })));
 
-// ── NEW PAGES ──────────────────────────────────────────────
-import { NoticeBoardPage } from "./pages/samaj/NoticeBoardPage";
-import { BirthdayWishesPage } from "./pages/samaj/BirthdayWishesPage";
+// Admin Pages (Lazy)
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard").then(m => ({ default: m.AdminDashboard })));
+const ManageMembers = lazy(() => import("./pages/admin/ManageMembers").then(m => ({ default: m.ManageMembers })));
+const ManageMatrimonial = lazy(() => import("./pages/admin/ManageMatrimonial").then(m => ({ default: m.ManageMatrimonial })));
+const ManageEvents = lazy(() => import("./pages/admin/ManageEvents").then(m => ({ default: m.ManageEvents })));
+const ManageGallery = lazy(() => import("./pages/admin/ManageGallery").then(m => ({ default: m.ManageGallery })));
+const ManageMessages = lazy(() => import("./pages/admin/ManageMessages").then(m => ({ default: m.ManageMessages })));
+const ManageCommittee = lazy(() => import("./pages/admin/ManageCommittee").then(m => ({ default: m.ManageCommittee })));
+const ManageSamajNews = lazy(() => import("./pages/admin/ManageSamajNews").then(m => ({ default: m.ManageSamajNews })));
+const ManageSupport = lazy(() => import("./pages/admin/ManageSupport").then(m => ({ default: m.ManageSupport })));
+const ManageVideos = lazy(() => import("./pages/admin/ManageVideos").then(m => ({ default: m.ManageVideos })));
+const AdminSettings = lazy(() => import("./pages/admin/Settings").then(m => ({ default: m.AdminSettings })));
+const ManageStore = lazy(() => import("./pages/admin/ManageStore").then(m => ({ default: m.ManageStore })));
+const ManageEBooks = lazy(() => import("./pages/admin/ManageEBooks").then(m => ({ default: m.ManageEBooks })));
+const CertificateSettings = lazy(() => import("./pages/admin/CertificateSettings").then(m => ({ default: m.CertificateSettings })));
+const ManageNotices = lazy(() => import("./pages/admin/ManageNotices").then(m => ({ default: m.ManageNotices })));
+const AnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })));
+const WebsiteShield = lazy(() => import("./pages/admin/WebsiteShield").then(m => ({ default: m.WebsiteShield })));
+const ProfilePage = lazy(() => import("./pages/ProfilePage").then(m => ({ default: m.ProfilePage })));
+const NotFound = lazy(() => import("./pages/NotFound").then(m => ({ default: m.NotFound })));
 
-// Admin Management
-import { ManageStore } from "./pages/admin/ManageStore";
-import { ManageEBooks } from "./pages/admin/ManageEBooks";
-import { CertificateSettings } from "./pages/admin/CertificateSettings";
-import { ManageNotices } from "./pages/admin/ManageNotices";
-import { AnalyticsDashboard } from "./pages/admin/AnalyticsDashboard";
-import { WebsiteShield } from "./pages/admin/WebsiteShield";
+// Loading Component
+const PageLoader = () => (
+   <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="size-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+   </div>
+);
+
+const LazyLoad = ({ children }: { children: React.ReactNode }) => (
+   <Suspense fallback={<PageLoader />}>
+      {children}
+   </Suspense>
+);
 
 export const router = createHashRouter([
   {
     path: "/",
-    Component: PublicLayout,
+    element: <LazyLoad><PublicLayout /></LazyLoad>,
     children: [
-      { index: true,                 Component: HomePage },
-      { path: "about",               Component: AboutPage },
-      { path: "committee",           Component: CommitteePage },
-      { path: "directory",           Component: DirectoryPage },
-      { path: "matrimonial",         Component: MatrimonialPage },
-      { path: "matrimonial/register", Component: MatrimonialRegistrationPage },
-      { path: "events",              Component: EventsPage },
-      { path: "gallery",             Component: GalleryPage },
-      { path: "news",                Component: NewsPage },
-      { path: "news/:id",            Component: NewsDetailPage },
-      { path: "support",             Component: SupportPage },
-      { path: "support/:id",         Component: SupportDetailPage },
-      { path: "rules",               Component: RulesPage },
-      { path: "contact",             Component: ContactPage },
-      { path: "register",            Component: RegistrationPage },
-      { path: "donate",              Component: DonatePage },
-      { path: "profile",             Component: ProfilePage },
-      { path: "store",               Component: StorePage },
-      { path: "sitemap",             Component: SitemapPage },
-      { path: "ebooks",              Component: EBooksPage },
-      // ── New Routes ──
-      { path: "notices",             Component: NoticeBoardPage },
-      { path: "birthday-wishes",     Component: BirthdayWishesPage },
+       { index: true,                 element: <HomePage /> },
+       { path: "about",               element: <AboutPage /> },
+       { path: "committee",           element: <CommitteePage /> },
+       { path: "directory",           element: <DirectoryPage /> },
+       { path: "matrimonial",         element: <MatrimonialPage /> },
+       { path: "matrimonial/register", element: <MatrimonialRegistrationPage /> },
+       { path: "events",              element: <EventsPage /> },
+       { path: "gallery",             element: <GalleryPage /> },
+       { path: "news",                element: <NewsPage /> },
+       { path: "news/:id",            element: <NewsDetailPage /> },
+       { path: "support",             element: <SupportPage /> },
+       { path: "support/:id",         element: <SupportDetailPage /> },
+       { path: "rules",               element: <RulesPage /> },
+       { path: "contact",             element: <ContactPage /> },
+       { path: "register",            element: <RegistrationPage /> },
+       { path: "donate",              element: <DonatePage /> },
+       { path: "profile",             element: <ProfilePage /> },
+       { path: "store",               element: <StorePage /> },
+       { path: "sitemap",             element: <SitemapPage /> },
+       { path: "ebooks",              element: <EBooksPage /> },
+       // ── New Routes ──
+       { path: "notices",             element: <NoticeBoardPage /> },
+       { path: "birthday-wishes",     element: <BirthdayWishesPage /> },
     ],
   },
   {
     path: "/admin",
-    Component: AdminLayout,
+    element: <LazyLoad><AdminLayout /></LazyLoad>,
     children: [
-      { index: true,                       Component: AdminDashboard },
-      { path: "members",                   Component: ManageMembers },
-      { path: "matrimonial",               Component: ManageMatrimonial },
-      { path: "committee",                 Component: ManageCommittee },
-      { path: "events",                    Component: ManageEvents },
-      { path: "gallery",                   Component: ManageGallery },
-      { path: "news",                      Component: ManageSamajNews },
-      { path: "videos",                    Component: ManageVideos },
-      { path: "support",                   Component: ManageSupport },
-      { path: "messages",                  Component: ManageMessages },
-      { path: "store",                     Component: ManageStore },
-      { path: "ebooks",                    Component: ManageEBooks },
-      { path: "settings",                  Component: AdminSettings },
-      { path: "certificate-settings",      Component: CertificateSettings },
-      // ── New Admin Routes ──
-      { path: "notices",                   Component: ManageNotices },
-      { path: "analytics",                 Component: AnalyticsDashboard },
-      { path: "shield",                    Component: WebsiteShield },
+       { index: true,                       element: <AdminDashboard /> },
+       { path: "members",                   element: <ManageMembers /> },
+       { path: "matrimonial",               element: <ManageMatrimonial /> },
+       { path: "committee",                 element: <ManageCommittee /> },
+       { path: "events",                    element: <ManageEvents /> },
+       { path: "gallery",                   element: <ManageGallery /> },
+       { path: "news",                      element: <ManageSamajNews /> },
+       { path: "videos",                    element: <ManageVideos /> },
+       { path: "support",                   element: <ManageSupport /> },
+       { path: "messages",                  element: <ManageMessages /> },
+       { path: "store",                     element: <ManageStore /> },
+       { path: "ebooks",                    element: <ManageEBooks /> },
+       { path: "settings",                  element: <AdminSettings /> },
+       { path: "certificate-settings",      element: <CertificateSettings /> },
+       // ── New Admin Routes ──
+       { path: "notices",                   element: <ManageNotices /> },
+       { path: "analytics",                 element: <AnalyticsDashboard /> },
+       { path: "shield",                    element: <WebsiteShield /> },
     ],
   },
   {
     path: "*",
-    Component: NotFound,
+    element: <LazyLoad><NotFound /></LazyLoad>,
   },
 ]);

@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { db } from "./data/database";
 import useWebsiteProtection from "./hooks/useWebsiteProtection";
 
+import { ErrorBoundary } from "./components/ui/ErrorBoundary";
+
 export default function App() {
   // Complete Website Protection - Blocks right click, copying, DevTools etc.
   useWebsiteProtection();
@@ -19,12 +21,14 @@ export default function App() {
   }, []);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <Toaster position="top-right" />
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider attribute="class" defaultTheme="light">
+        <AuthProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-right" />
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
