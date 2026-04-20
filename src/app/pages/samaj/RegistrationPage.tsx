@@ -14,7 +14,6 @@ import { uploadFile } from "../../utils/storage";
 
 export function RegistrationPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -83,48 +82,17 @@ export function RegistrationPage() {
     reader.readAsDataURL(file);
   };
 
-  const validateStep = async () => {
-    if (step === 1) {
-      if (!formData.name || !formData.fatherName || !formData.birthDate) {
-         toast.error("कृपया सभी अनिवार्य व्यक्तिगत जानकारी भरें");
-         return false;
-      }
-    }
-    if (step === 2) {
-      if (!formData.phone || !formData.city || !formData.state || !formData.pincode) {
-         toast.error("कृपया संपर्क विवरण और पूरा पता भरें");
-         return false;
-      }
-      
-      // Duplicate Check
-      setIsSubmitting(true);
-      try {
-        const duplicates = await samajService.checkDuplicate(formData.phone, formData.email);
-        if (duplicates.phoneExists) {
-          toast.error("यह मोबाइल नंबर पहले से पंजीकृत है!");
-          return false;
-        }
-        if (duplicates.emailExists) {
-          toast.error("यह ईमेल आईडी पहले से पंजीकृत है!");
-          return false;
-        }
-      } catch (err) {
-        toast.error("सत्यापन विफल रहा।");
-        return false;
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-    return true;
-  };
-
-  const nextStep = async () => {
-    const isValid = await validateStep();
-    if (isValid) setStep(step + 1);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.name || !formData.fatherName || !formData.birthDate) {
+       toast.error("कृपया सभी अनिवार्य व्यक्तिगत जानकारी भरें");
+       return;
+    }
+    if (!formData.phone || !formData.city || !formData.state || !formData.pincode) {
+       toast.error("कृपया संपर्क विवरण और पूरा पता भरें");
+       return;
+    }
     if (!formData.agreed) {
        toast.error("कृपया नियमों और शर्तों को स्वीकार करें");
        return;
@@ -132,6 +100,18 @@ export function RegistrationPage() {
 
     setIsSubmitting(true);
     try {
+      // Duplicate Check
+      const duplicates = await samajService.checkDuplicate(formData.phone, formData.email);
+      if (duplicates.phoneExists) {
+        toast.error("यह मोबाइल नंबर पहले से पंजीकृत है!");
+        setIsSubmitting(false);
+        return;
+      }
+      if (duplicates.emailExists) {
+        toast.error("यह ईमेल आईडी पहले से पंजीकृत है!");
+        setIsSubmitting(false);
+        return;
+      }
       // 1. Upload Photo to Storage if it exists and is base64 (local)
       let photoUrl = formData.photoUrl;
       if (photoUrl && photoUrl.startsWith('data:')) {
@@ -175,7 +155,6 @@ export function RegistrationPage() {
       }
 
       setMemberCertData({ memberId, memberNumber });
-      setStep(4);
       toast.success("पंजीकरण सफलतापूर्वक संपन्न हुआ! 🎉");
 
       // 4. Auto-download Certificate
@@ -239,34 +218,16 @@ export function RegistrationPage() {
          </div>
       </section>
 
-      {/* 📊 STEP INDICATOR */}
-      {step < 4 && (
-        <section className="max-w-xl mx-auto flex items-center justify-between px-10 relative">
-           <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-slate-200 -z-10 rounded-full"></div>
-           {[1, 2, 3].map((s) => (
-             <div key={s} className="flex flex-col items-center gap-3">
-                <div className={`size-12 rounded-2xl flex items-center justify-center font-black text-sm transition-all border-4 ${step === s ? 'bg-orange-600 text-white border-orange-200 scale-110 shadow-bhagva' : step > s ? 'bg-emerald-500 text-white border-emerald-100 shadow-lg' : 'bg-white text-slate-300 border-slate-100'}`}>
-                   {step > s ? <CheckCircle2 className="size-6" /> : s}
-                </div>
-                <span className={`text-[9px] font-black uppercase tracking-widest ${step === s ? 'text-orange-600' : 'text-slate-400'}`}>
-                  {s === 1 ? 'Personal' : s === 2 ? 'Contact' : 'Professional'}
-                </span>
-             </div>
-           ))}
-        </section>
-      )}
-
       {/* 📋 FORM AREA */}
       <section className="max-w-4xl mx-auto px-6">
-         {step < 4 ? (
-            <div className="bg-white border border-slate-200 rounded-[3rem] p-8 md:p-14 space-y-10 shadow-2xl relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-10 opacity-[0.02] rotate-12 scale-150">
+         {!memberCertData ? (
+            <div className="bg-white border border-slate-200 rounded-[3rem] p-8 md:p-14 space-y-16 shadow-2xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-10 opacity-[0.02] rotate-12 scale-150 pointer-events-none">
                   <ShieldAlert className="size-64" />
                </div>
 
-               {/* STEP 1: PERSONAL PROFILE */}
-               {step === 1 && (
-                 <div className="space-y-10 animate-in slide-in-from-right-5 duration-500">
+               {/* SECTION 1: PERSONAL PROFILE */}
+               <div className="space-y-10 animate-in slide-in-from-right-5 duration-500">
                     
                     <div className="space-y-6 bg-orange-50/50 p-8 rounded-3xl border border-orange-100">
                        <h3 className="text-sm font-black text-orange-800 uppercase tracking-widest text-center">क्विक-स्टार्ट (Fast Track)</h3>
@@ -367,15 +328,11 @@ export function RegistrationPage() {
                           </div>
                        </div>
                     </div>
-
-                    <button onClick={nextStep} className="w-full py-5 bg-slate-900 border-b-6 border-slate-950 text-white font-black rounded-2xl text-xs uppercase tracking-[0.3em] hover:bg-orange-600 hover:border-orange-800 transition-all shadow-2xl flex items-center justify-center gap-3 active:translate-y-1 active:border-b-0">
-                       संपर्क विवरण दर्ज करें <ArrowRight className="size-4" />
-                    </button>
                  </div>
-               )}
 
-               {/* STEP 2: ADDRESS & CONTACT */}
-               {step === 2 && (
+                  <div className="h-px w-full bg-slate-100 my-10"></div>
+
+               {/* SECTION 2: ADDRESS & CONTACT */}
                  <div className="space-y-10 animate-in slide-in-from-right-5 duration-500">
                     <div className="space-y-2 border-l-6 border-orange-600 pl-6">
                        <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter italic">संपर्क एवं <span className="text-orange-600">पता</span></h2>
@@ -418,19 +375,11 @@ export function RegistrationPage() {
                        </div>
                     </div>
 
-                    <div className="flex gap-4 pt-4">
-                       <button onClick={() => setStep(1)} className="px-8 py-5 bg-slate-100 text-slate-600 font-black rounded-2xl text-xs uppercase tracking-widest hover:bg-slate-200 transition-all flex items-center justify-center gap-3">
-                          <ArrowLeft className="size-4" /> Back
-                       </button>
-                       <button onClick={nextStep} disabled={isSubmitting} className="flex-grow py-5 bg-slate-900 border-b-6 border-slate-950 text-white font-black rounded-2xl text-xs uppercase tracking-[0.3em] hover:bg-orange-600 transition-all shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50">
-                          {isSubmitting ? "CHECKING REPOSITORY..." : "पेशेवर विवरण दर्ज करें"} <ArrowRight className="size-4" />
-                       </button>
-                    </div>
-                 </div>
-               )}
+                  </div>
 
-               {/* STEP 3: PROFESSIONAL & FINAL REVIEW */}
-               {step === 3 && (
+                  <div className="h-px w-full bg-slate-100 my-10"></div>
+
+               {/* SECTION 3: PROFESSIONAL & FINAL REVIEW */}
                  <div className="space-y-10 animate-in slide-in-from-right-5 duration-500">
                     <div className="space-y-2 border-l-6 border-orange-600 pl-6">
                        <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter italic">अंतिम <span className="text-orange-600">प्रमाणीकरण</span></h2>
@@ -482,19 +431,17 @@ export function RegistrationPage() {
                     </div>
 
                     <div className="flex gap-4 pt-4">
-                       <button onClick={() => setStep(2)} className="px-8 py-5 bg-slate-100 text-slate-600 font-black rounded-2xl text-xs uppercase tracking-widest hover:bg-slate-200 transition-all flex items-center justify-center gap-3">
-                          <ArrowLeft className="size-4" /> Back
-                       </button>
-                       <button 
-                         onClick={handleSubmit} 
-                         disabled={isSubmitting}
-                         className="flex-grow py-5 bg-orange-600 border-b-6 border-orange-800 text-white font-black rounded-2xl text-xs uppercase tracking-[0.3em] hover:bg-slate-900 hover:border-slate-950 transition-all shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50"
-                       >
-                          {isSubmitting ? <Sparkles className="size-5 animate-spin" /> : "पंजीकरण समाप्त करें"} <ArrowRight className="size-4" />
-                       </button>
-                    </div>
-                 </div>
-               )}
+                     <div className="flex gap-4 pt-6 mt-6 border-t border-slate-100">
+                        <button
+                          onClick={handleSubmit}
+                          disabled={isSubmitting}
+                          className="w-full py-6 bg-orange-600 border-b-6 border-orange-800 text-white font-black rounded-2xl text-sm uppercase tracking-[0.3em] hover:bg-slate-900 hover:border-slate-950 transition-all shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50"
+                        >
+                           {isSubmitting ? <Sparkles className="size-6 animate-spin" /> : "पंजीकरण फॉर्म सबमिट करें"} <CheckCircle2 className="size-5" />
+                        </button>
+                     </div>
+                  </div>
+               </div>
             </div>
          ) : (
             <div className="bg-white rounded-[4rem] p-10 md:p-16 space-y-12 shadow-2xl border border-slate-200 text-center relative overflow-hidden">

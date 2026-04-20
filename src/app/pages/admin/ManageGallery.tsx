@@ -33,7 +33,23 @@ export function ManageGallery() {
 
   useEffect(() => {
     const unsubscribe = samajService.subscribeToGalleryAlbums((data) => {
-      setAlbums(data);
+      const hasSpecial = data.some(a => a.id === "special-album-recent");
+      const isDeletedLocally = localStorage.getItem("deleted-special-recent") === "true";
+
+      if (!hasSpecial && !isDeletedLocally) {
+        const specialAlbum: GalleryAlbum = {
+          id: "special-album-recent",
+          title: "Latest Image Highlights",
+          date: new Date().toISOString().split('T')[0],
+          description: "Special collection featuring our newest additions.",
+          images: ["/gallery/1.jpeg", "/gallery/2.jpeg", "/gallery/3.jpeg"],
+          coverImage: "/gallery/1.jpeg",
+          createdAt: new Date().toISOString()
+        };
+        setAlbums([specialAlbum, ...data]);
+      } else {
+        setAlbums(data);
+      }
       setIsLoading(false);
     });
     return () => unsubscribe();
@@ -42,6 +58,10 @@ export function ManageGallery() {
   const handleDeleteAlbum = async () => {
     if (!deleteId) return;
     try {
+      if (deleteId === "special-album-recent") {
+        localStorage.setItem("deleted-special-recent", "true");
+        setAlbums(prev => prev.filter(a => a.id !== deleteId));
+      }
       await samajService.deleteGalleryAlbum(deleteId);
       toast.success("Album deleted successfully");
     } catch (err) {

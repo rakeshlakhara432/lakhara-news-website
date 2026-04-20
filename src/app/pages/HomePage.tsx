@@ -15,7 +15,7 @@ export function HomePage() {
   const [eventCount, setEventCount] = useState(0);
 
   useEffect(() => {
-    const unsub1 = samajService.subscribeToSamajNews(data => setNews(data.slice(0, 3)));
+    const unsub1 = samajService.subscribeToSamajNews(data => setNews(data.slice(0, 5)));
     const unsub2 = samajService.subscribeToMembers(data => setMemberCount(data.length));
     const unsub3 = samajService.subscribeToEvents(data => setEventCount(data.length));
     const unsub4 = samajService.subscribeToVideos(data => setVideos(data));
@@ -129,6 +129,93 @@ export function HomePage() {
             ))}
          </section>
       </div>
+
+      {/* TRENDING NEWS SECTION (DAINIK BHASKAR STYLE) */}
+      {news.length > 0 && (
+         <div className="container mx-auto px-6">
+            <section className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+               {/* Section Header */}
+               <div className="bg-slate-900 px-6 py-4 flex items-center justify-between border-b-4 border-orange-600">
+                  <h2 className="text-xl md:text-2xl font-black text-white tracking-wider uppercase flex items-center gap-3">
+                     <span className="relative flex size-3">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                     </span>
+                     ट्रेंडिंग न्यूज़
+                  </h2>
+               </div>
+
+               <div className="p-6 grid grid-cols-1 gap-6">
+                  {/* Hero News (Top) */}
+                  <Link to={`/news/${news[0].id}`} className="group relative block bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition-all duration-300 h-80 md:h-[28rem]">
+                        {news[0].imageUrl ? (
+                           <img src={news[0].imageUrl} alt={news[0].title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700" />
+                        ) : (
+                           <div className="w-full h-full flex items-center justify-center text-slate-300 bg-slate-100 opacity-20">
+                              <Newspaper className="size-32" />
+                           </div>
+                        )}
+                        <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded uppercase tracking-widest shadow-lg flex items-center gap-2">
+                           <Activity className="size-3 animate-pulse" /> BREAKING
+                        </div>
+                        {/* Gradient overlay for text readability */}
+                        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
+                           <div className="flex items-center gap-3 text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">
+                              <span className="bg-orange-500/20 px-2 py-1 rounded backdrop-blur-sm border border-orange-500/30">{news[0].category}</span>
+                              <span className="text-slate-300 font-medium">{news[0].createdAt?.toDate?.().toLocaleDateString('hi-IN', { day: 'numeric', month: 'long' }) || "आज की ताज़ा ख़बर"}</span>
+                           </div>
+                           <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight group-hover:text-orange-400 transition-colors">
+                              {news[0].title}
+                           </h3>
+                        </div>
+                  </Link>
+
+                  {/* Side News List (Bottom / Stacked) */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                     {news.slice(1, 4).map((item) => (
+                        <Link key={item.id} to={`/news/${item.id}`} className="group flex flex-col bg-slate-50 rounded-2xl border border-slate-200 hover:border-orange-500/50 hover:bg-white hover:shadow-lg transition-all overflow-hidden h-full">
+                           <div className="h-48 shrink-0 overflow-hidden bg-slate-200 relative">
+                              {item.imageUrl ? (
+                                 <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                              ) : (
+                                 <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                    <Newspaper className="size-10" />
+                                 </div>
+                              )}
+                              <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                                 {item.category}
+                              </div>
+                           </div>
+                           <div className="p-5 flex flex-col flex-1">
+                              <h4 className="text-base md:text-lg font-bold text-slate-800 leading-snug line-clamp-2 group-hover:text-orange-600 transition-colors mb-2">
+                                 {item.title}
+                              </h4>
+                              {/* Short Description */}
+                              <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-4">
+                                {item.content}
+                              </p>
+                              <div className="mt-auto flex items-center justify-between">
+                                 <p className="text-xs text-slate-500 font-bold flex items-center gap-1">
+                                    <Calendar className="size-3" /> {item.createdAt?.toDate?.().toLocaleDateString('hi-IN', { day: 'numeric', month: 'short' }) || "आज"}
+                                 </p>
+                                 <span className="text-orange-600 group-hover:translate-x-1 transition-transform">
+                                    <ArrowRight className="size-4" />
+                                 </span>
+                              </div>
+                           </div>
+                        </Link>
+                     ))}
+                  </div>
+               </div>
+
+               {/* View All Button (Bottom) */}
+               <Link to="/news" className="block w-full bg-slate-50 border-t border-slate-200 p-4 text-center text-sm font-black text-slate-600 hover:text-orange-600 hover:bg-orange-50 transition-colors flex items-center justify-center gap-2 uppercase tracking-widest">
+                  सभी खबरें देखें <ArrowRight className="size-4" />
+               </Link>
+            </section>
+         </div>
+      )}
 
       {/* SERVICES GRID (From Lakhara) */}
       <div className="container mx-auto px-6">

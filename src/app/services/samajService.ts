@@ -11,7 +11,8 @@ import {
   serverTimestamp,
   where,
   limit,
-  getDocs
+  getDocs,
+  setDoc
 } from "firebase/firestore";
 import { db } from "../data/firebase";
 
@@ -365,7 +366,7 @@ class SamajService {
   }
 
   async updateGalleryAlbum(id: string, data: Partial<GalleryAlbum>) {
-    return updateDoc(doc(db, "gallery_albums", id), data);
+    return setDoc(doc(db, "gallery_albums", id), data, { merge: true });
   }
 
   async deleteGalleryAlbum(id: string) {

@@ -11,16 +11,23 @@ export function GalleryPage() {
 
   useEffect(() => {
     const unsubscribe = samajService.subscribeToGalleryAlbums((data) => {
-      const specialAlbum: GalleryAlbum = {
-        id: "special-album-recent",
-        title: "Latest Image Highlights",
-        date: new Date().toISOString(),
-        description: "Special collection featuring our newest additions.",
-        images: ["/gallery/1.jpeg", "/gallery/2.jpeg", "/gallery/3.jpeg"],
-        coverImage: "/gallery/1.jpeg",
-        createdAt: new Date().toISOString()
-      };
-      setAlbums([specialAlbum, ...data]);
+      const hasSpecial = data.some(a => a.id === "special-album-recent");
+      const isDeletedLocally = localStorage.getItem("deleted-special-recent") === "true";
+
+      if (!hasSpecial && !isDeletedLocally) {
+        const specialAlbum: GalleryAlbum = {
+          id: "special-album-recent",
+          title: "Latest Image Highlights",
+          date: new Date().toISOString(),
+          description: "Special collection featuring our newest additions.",
+          images: ["/gallery/1.jpeg", "/gallery/2.jpeg", "/gallery/3.jpeg"],
+          coverImage: "/gallery/1.jpeg",
+          createdAt: new Date().toISOString()
+        };
+        setAlbums([specialAlbum, ...data]);
+      } else {
+        setAlbums(data);
+      }
       setIsLoading(false);
     });
     return () => unsubscribe();
