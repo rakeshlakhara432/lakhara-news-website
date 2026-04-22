@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import { samajService, NewsPost, VideoPost } from "../services/samajService";
+import SamajVideos from "../components/home/SamajVideos";
 
 export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -297,6 +298,9 @@ export function HomePage() {
             </div>
          </section>
       </div>
+
+      {/* SAMAJ VIDEOS */}
+      <SamajVideos />
 
       {/* LIVE BROADCAST */}
       {liveVideo && (

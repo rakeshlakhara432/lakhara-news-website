@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { useEffect } from "react";
 import { db } from "./data/database";
 import useWebsiteProtection from "./hooks/useWebsiteProtection";
+import { initGlobalErrorHandling } from "./utils/errorHandler";
 
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 
@@ -14,6 +15,7 @@ export default function App() {
   useWebsiteProtection();
 
   useEffect(() => {
+    initGlobalErrorHandling();
     const settings = db.getTable('settings');
     if (settings?.primaryColor) {
       document.documentElement.style.setProperty('--primary', settings.primaryColor);

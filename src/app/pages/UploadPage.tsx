@@ -1,12 +1,15 @@
 import { useState, useRef } from "react";
 import {
-  Upload, X, Loader2, Plus, Film, Camera, Newspaper, Zap, Cpu, Shield, Hash, Send, ChevronRight
+  Upload, X, Loader2, Film, Camera, Newspaper, Zap, Shield, Send, ChevronRight,
+  LucideIcon
 } from "lucide-react";
 import { videoService } from "../services/videoService";
 import { uploadPhoto, uploadNews } from "../services/uploadService";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { User } from "firebase/auth";
+import { handleError } from "../utils/errorHandler";
 
 const CATEGORIES = [
   "पॉलिटिक्स", "स्पोर्ट्स", "बी-टाउन", "मार्केट", "साइबर", "लाइफ", "ग्लोबल",
@@ -16,11 +19,24 @@ const ACCEPTED_VIDEO = ["video/mp4", "video/webm", "video/ogg"];
 
 type UploadMode = "video" | "photo" | "news";
 
-const TABS: { mode: UploadMode; label: string; icon: any; desc: string }[] = [
+interface TabItem {
+  mode: UploadMode;
+  label: string;
+  icon: LucideIcon;
+  desc: string;
+}
+
+const TABS: TabItem[] = [
   { mode: "news", label: "समाचार / न्यूज़", icon: Newspaper, desc: "TEXT • MEDIA" },
   { mode: "video", label: "वीडियो / रील", icon: Film, desc: "MP4 • 100MB" },
   { mode: "photo", label: "फोटो / दृश्य", icon: Camera, desc: "IMAGE • 20MB" },
 ];
+
+interface FormProps {
+  user: User;
+  userData: any;
+  navigate: (path: string) => void;
+}
 
 export function UploadPage() {
   const { user, userData } = useAuth();
@@ -70,9 +86,9 @@ export function UploadPage() {
 
       {/* 🚀 FORM CONTAINER */}
       <div className="bg-white border-4 border-gray-950 p-8 md:p-16 relative overflow-hidden">
-        {mode === "video" && <VideoUploadForm user={user} userData={userData} navigate={navigate} />}
-        {mode === "photo" && <PhotoUploadForm user={user} userData={userData} navigate={navigate} />}
-        {mode === "news"  && <NewsUploadForm  user={user} userData={userData} navigate={navigate} />}
+        {mode === "video" && <VideoUploadForm user={user!} userData={userData} navigate={navigate} />}
+        {mode === "photo" && <PhotoUploadForm user={user!} userData={userData} navigate={navigate} />}
+        {mode === "news"  && <NewsUploadForm  user={user!} userData={userData} navigate={navigate} />}
       </div>
     </div>
   );
@@ -80,7 +96,7 @@ export function UploadPage() {
 
 // ── Sub-Forms ───────────────────────────────────────────────────────────────
 
-function NewsUploadForm({ user, userData, navigate }: any) {
+function NewsUploadForm({ user, userData, navigate }: FormProps) {
   const [headline, setHeadline] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
@@ -98,7 +114,9 @@ function NewsUploadForm({ user, userData, navigate }: any) {
       }, setProgress);
       toast.success("समाचार प्रकाशित हुआ!");
       navigate("/");
-    } catch { toast.error("प्रकाशित करने में त्रुटि"); } finally { setUploading(false); }
+    } catch (error) { 
+      handleError(error, "समाचार प्रकाशित करने में त्रुटि"); 
+    } finally { setUploading(false); }
   };
 
   return (
@@ -119,7 +137,7 @@ function NewsUploadForm({ user, userData, navigate }: any) {
   );
 }
 
-function VideoUploadForm({ user, userData, navigate }: any) {
+function VideoUploadForm({ user, userData, navigate }: FormProps) {
   const videoInputRef = useRef<HTMLInputElement>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -146,7 +164,9 @@ function VideoUploadForm({ user, userData, navigate }: any) {
         authorPhotoURL: userData?.photoURL || user.photoURL || "",
       }, setProgress);
       toast.success("वीडियो लाइव हुआ!"); navigate("/reels");
-    } catch { toast.error("अपलोड फ़ेल रहा"); } finally { setUploading(false); }
+    } catch (error) { 
+      handleError(error, "वीडियो अपलोड करने में त्रुटि"); 
+    } finally { setUploading(false); }
   };
 
   return (
@@ -182,7 +202,7 @@ function VideoUploadForm({ user, userData, navigate }: any) {
   );
 }
 
-function PhotoUploadForm({ user, userData, navigate }: any) {
+function PhotoUploadForm({ user, userData, navigate }: FormProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -201,11 +221,15 @@ function PhotoUploadForm({ user, userData, navigate }: any) {
     try {
       await uploadPhoto(file, {
         title: title.trim(), caption: "", hashtags: [], category,
-        authorId: user.uid, authorName: userData?.name || "Admin", authorPhotoURL: "",
+        authorId: user.uid, 
+        authorName: userData?.name || user.displayName || "Admin", 
+        authorPhotoURL: userData?.photoURL || user.photoURL || "",
       }, setProgress);
       toast.success("फोटो अपलोड सफल!");
       navigate("/gallery");
-    } catch { toast.error("अपलोड त्रुटि"); } finally { setUploading(false); }
+    } catch (error) { 
+      handleError(error, "फोटो अपलोड करने में त्रुटि"); 
+    } finally { setUploading(false); }
   };
 
   return (
@@ -242,7 +266,7 @@ function PhotoUploadForm({ user, userData, navigate }: any) {
 
 // ── Components ─────────────────────────────────────────────────────────────
 
-function FormField({ label, children }: any) {
+function FormField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-3">
       <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">{label}</label>
@@ -251,7 +275,13 @@ function FormField({ label, children }: any) {
   );
 }
 
-function CategoryPicker({ categories, selected, onSelect }: any) {
+interface CategoryPickerProps {
+  categories: string[];
+  selected: string;
+  onSelect: (cat: string) => void;
+}
+
+function CategoryPicker({ categories, selected, onSelect }: CategoryPickerProps) {
   return (
     <FormField label="श्रेणी चयन (CATEGORY)">
        <div className="flex flex-wrap gap-2">
