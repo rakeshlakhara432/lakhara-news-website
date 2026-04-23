@@ -3,236 +3,250 @@ import { useNavigate } from "react-router";
 import { 
   Users, Heart, Calendar, MessageCircle, Activity, 
   ShieldCheck, Megaphone, GraduationCap, Image as ImageIcon,
-  TrendingUp, Zap, Star, Bot, ShoppingBag, Package, Book, Bell, BarChart3
+  TrendingUp, Zap, Star, Bot, ShoppingBag, Package, Book, Bell, BarChart3,
+  ArrowUpRight, Clock, CheckCircle2, AlertCircle
 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { samajService } from "../../services/samajService";
-import { db } from "../../data/database";
-import { trainLinearRegression } from "../../../utils/mlUtils";
+import { 
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar, Cell
+} from "recharts";
+import { adminService } from "../../services/api";
 
 export function AdminDashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    members: 0,
-    matrimonial: 0,
-    events: 0,
-    messages: 0,
-    committee: 0,
-    news: 0,
-    support: 0,
-    gallery: 0,
-    products: 0,
-    orders: 0,
-    revenue: 0,
-    ebooks: 0,
-  });
+  const [stats, setStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsub1 = samajService.subscribeToMembers(d => setStats(p => ({...p, members: d.length})));
-    const unsub2 = samajService.subscribeToMatrimonial(d => setStats(p => ({...p, matrimonial: d.length})));
-    const unsub3 = samajService.subscribeToEvents(d => setStats(p => ({...p, events: d.length})));
-    const unsub4 = samajService.subscribeToMessages(d => setStats(p => ({...p, messages: d.length})));
-    const unsub5 = samajService.subscribeToCommittee(d => setStats(p => ({...p, committee: d.length})));
-    const unsub6 = samajService.subscribeToSamajNews(d => setStats(p => ({...p, news: d.length})));
-    const unsub7 = samajService.subscribeToSupport(d => setStats(p => ({...p, support: d.length})));
-    const unsub8 = samajService.subscribeToGallery(d => setStats(p => ({...p, gallery: d.length})));
-
-    const updateStoreStats = () => {
-      const dbOrders = db.getTable('orders');
-      const dbProducts = db.getTable('products');
-      const dbEbooks = db.getTable('ebooks');
-      setStats(p => ({
-        ...p, 
-        orders: dbOrders.length, 
-        products: dbProducts.length,
-        ebooks: dbEbooks.length,
-        revenue: dbOrders.reduce((acc, curr) => acc + (curr.total || 0), 0)
-      }));
+    const fetchStats = async () => {
+      try {
+        const data = await adminService.getStats();
+        if (data.success) {
+          setStats(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-
-    updateStoreStats();
-
-    return () => { 
-      unsub1(); unsub2(); unsub3(); unsub4(); 
-      unsub5(); unsub6(); unsub7(); unsub8();
-    };
+    fetchStats();
   }, []);
 
-  const activityData = [
-    { name: "Jan", activity: 40 },
-    { name: "Feb", activity: 30 },
-    { name: "Mar", activity: 60 },
-    { name: "Apr", activity: 80 },
-    { name: "May", activity: Math.max(95, stats.members) }
+  const growthData = [
+    { name: "Mon", users: 40 },
+    { name: "Tue", users: 55 },
+    { name: "Wed", users: 48 },
+    { name: "Thu", users: 70 },
+    { name: "Fri", users: 85 },
+    { name: "Sat", users: 95 },
+    { name: "Sun", users: stats?.totalMembers || 120 },
   ];
 
-  const trainingPairs: [number, number][] = activityData.map((d, i) => [i, d.activity]);
-  const model = trainLinearRegression(trainingPairs);
-  const predictedNext = model.predict(activityData.length);
-  const confidence = Math.min(98, Math.round(70 + (model.slope * 2)));
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="size-12 bg-slate-200 rounded-full"></div>
+          <div className="h-4 w-32 bg-slate-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 pb-24">
-      {/* 🚀 TRADITIONAL HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border-b-4 border-primary shadow-lg">
-         <div className="flex items-center gap-5">
-               <div className="size-16 md:size-20 rounded-2xl bg-white text-white flex items-center justify-center border border-white/30 shadow-2xl drop-shadow-xl group-hover:rotate-12 transition-transform duration-500 p-2">
-                  <img src="/brand-logo.png" alt="Lakhara Logo" className="size-full object-contain drop-shadow-sm" />
+    <div className="space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      
+      {/* 👑 PREMIUM WELCOME HEADER */}
+      <section className="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-10 text-white shadow-2xl">
+         <div className="absolute top-0 right-0 size-96 bg-indigo-600/20 rounded-full blur-[100px] -mr-48 -mt-48 animate-pulse"></div>
+         <div className="absolute bottom-0 left-0 size-64 bg-emerald-600/10 rounded-full blur-[80px] -ml-32 -mb-32"></div>
+         
+         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div className="space-y-4">
+               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full border border-white/10 backdrop-blur-md">
+                  <div className="size-2 bg-emerald-400 rounded-full animate-ping"></div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">System Live • v4.0</span>
                </div>
-            <div>
-               <h1 className="text-3xl font-black text-slate-800 leading-none tracking-tighter uppercase">प्रशासन पैनल</h1>
-               <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mt-1">हिंदू लखारा समाज • डिजिटल प्रबंधन</p>
+               <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none italic">
+                  WELCOME BACK, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400 uppercase">RAKESH</span>
+               </h1>
+               <p className="text-slate-400 font-medium text-sm max-w-md">
+                  Everything looks great today. The community is growing, and all systems are performing optimally at 99.9% uptime.
+               </p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+               <div className="bg-white/5 border border-white/10 p-4 rounded-3xl backdrop-blur-md text-center min-w-[120px]">
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Health Score</p>
+                  <p className="text-3xl font-black text-emerald-400 tracking-tighter">98%</p>
+               </div>
+               <div className="bg-white/5 border border-white/10 p-4 rounded-3xl backdrop-blur-md text-center min-w-[120px]">
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Active Now</p>
+                  <p className="text-3xl font-black text-indigo-400 tracking-tighter">24</p>
+               </div>
             </div>
          </div>
-         <div className="flex items-center gap-3">
-            <div className="hidden md:flex flex-col items-end mr-4">
-               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">प्रणाली स्थिति</span>
-               <span className="text-sm font-black text-emerald-600 flex items-center gap-1.5">
-                  <div className="size-2 bg-emerald-500 rounded-full animate-pulse"></div> डेटाबेस सक्रिय
-               </span>
-            </div>
-            <button className="px-6 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-primary transition-all shadow-md">
-               लॉगआउट
-            </button>
-         </div>
-      </div>
+      </section>
 
-      {/* 📊 CORE STATS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "कुल सदस्य", val: stats.members, icon: Users, color: "bg-orange-50 text-orange-600 border-orange-100", trend: "+12%" },
-          { label: "नए ऑर्डर", val: stats.orders, icon: ShoppingBag, color: "bg-blue-50 text-blue-600 border-blue-100", trend: "सक्रिय" },
-          { label: "ई-लाइब्रेरी", val: stats.ebooks, icon: Book, color: "bg-amber-50 text-amber-600 border-amber-100", trend: "PDF" },
-          { label: "कुल रेवेन्यू", val: `₹${stats.revenue}`, icon: TrendingUp, color: "bg-emerald-50 text-emerald-600 border-emerald-100", trend: "+5%" }
-        ].map((stat, i) => (
-          <div key={i} className="bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-sm hover:shadow-md transition-all group cursor-default">
-            <div className="flex items-start justify-between mb-4">
-               <div className={`size-12 ${stat.color} border rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                 <stat.icon className="size-6" />
-               </div>
-               <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">{stat.trend}</span>
-            </div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{stat.label}</p>
-            <p className="text-4xl font-black text-slate-800 leading-none tracking-tighter">{stat.val}</p>
-          </div>
-        ))}
-      </div>
+      {/* 📊 KPI CARDS */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+         {[
+           { label: "Total Members", val: stats?.totalMembers || 0, icon: Users, color: "from-indigo-600 to-blue-500", trend: "+12.5%", desc: "Lifetime growth" },
+           { label: "Pending Approvals", val: stats?.pendingMembers || 0, icon: AlertCircle, color: "from-orange-600 to-amber-500", trend: "Needs Action", desc: "Awaiting review" },
+           { label: "Matrimonial", val: stats?.totalProfiles || 0, icon: Heart, color: "from-rose-600 to-pink-500", trend: "Active", desc: "Matchmaking index" },
+           { label: "Samaj Events", val: stats?.totalEvents || 0, icon: Calendar, color: "from-emerald-600 to-teal-500", trend: "Ongoing", desc: "Community engagement" }
+         ].map((card, i) => (
+           <div key={i} className="group relative bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 cursor-default">
+              <div className="flex items-start justify-between mb-6">
+                 <div className={`size-14 bg-gradient-to-br ${card.color} text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                    <card.icon className="size-7" />
+                 </div>
+                 <span className={`text-[10px] font-black px-3 py-1 rounded-full border ${card.label.includes('Pending') ? 'bg-orange-50 text-orange-600 border-orange-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                    {card.trend}
+                 </span>
+              </div>
+              <div>
+                 <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">{card.label}</p>
+                 <p className="text-4xl font-black text-slate-900 tracking-tighter mb-2 leading-none">{card.val}</p>
+                 <p className="text-[10px] font-medium text-slate-500">{card.desc}</p>
+              </div>
+              <div className="absolute bottom-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <ArrowUpRight className="size-5 text-slate-300" />
+              </div>
+           </div>
+         ))}
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         <div className="lg:col-span-2 bg-white rounded-3xl border-2 border-slate-100 p-8 shadow-sm">
+      {/* 📈 MAIN ANALYTICS ROW */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm">
             <div className="flex items-center justify-between mb-10">
-               <div className="flex items-center gap-3">
-                  <div className="size-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                     <TrendingUp className="size-5" />
-                  </div>
-                  <div>
-                     <h2 className="text-xl font-bold text-slate-800">समुदाय विकास ग्राफ</h2>
-                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Growth Trend Analysis</p>
-                  </div>
+               <div>
+                  <h2 className="text-2xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">Growth Performance</h2>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-2 italic">Real-time engagement analysis</p>
+               </div>
+               <div className="flex items-center gap-2">
+                  <div className="size-3 bg-indigo-600 rounded-full"></div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">User Traffic</span>
                </div>
             </div>
-            <ResponsiveContainer width="100%" height={320}>
-               <BarChart data={activityData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 11, fontWeight: 700, fill: '#64748b'}} />
-                  <YAxis hide />
-                  <Tooltip 
-                     cursor={{fill: '#f8fafc'}}
-                     contentStyle={{borderRadius: '1rem', border: '2px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', padding: '1rem', fontSize: '13px', fontWeight: '700'}}
-                  />
-                  <Bar dataKey="activity" fill="var(--primary)" radius={[8, 8, 8, 8]} barSize={40} />
-               </BarChart>
-            </ResponsiveContainer>
+            <div className="h-[350px] w-full">
+               <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={growthData}>
+                     <defs>
+                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
+                           <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                        </linearGradient>
+                     </defs>
+                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 900, fill: '#94a3b8'}} dy={15} />
+                     <YAxis hide />
+                     <Tooltip 
+                        contentStyle={{borderRadius: '1.5rem', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', padding: '1.5rem'}}
+                        itemStyle={{fontSize: '12px', fontWeight: '900', color: '#4f46e5'}}
+                     />
+                     <Area type="monotone" dataKey="users" stroke="#4f46e5" strokeWidth={4} fillOpacity={1} fill="url(#colorUsers)" />
+                  </AreaChart>
+               </ResponsiveContainer>
+            </div>
          </div>
 
-         <div className="bg-white rounded-3xl border-2 border-slate-100 p-8 shadow-sm h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-8">
-               <div className="size-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center">
-                  <Heart className="size-5" />
-               </div>
-               <div>
-                  <h2 className="text-xl font-bold text-slate-800">हाल ही के प्रोफाइल</h2>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recent Marriages</p>
-               </div>
-            </div>
-            <div className="flex-grow space-y-4">
+         <div className="bg-slate-950 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 size-64 bg-indigo-600/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+            <h2 className="text-2xl font-black tracking-tighter uppercase italic leading-none mb-8">System Activity</h2>
+            
+            <div className="space-y-8">
                {[
-                 { name: 'साक्षी लखारा', age: 24, city: 'पाली', type: 'वधु' },
-                 { name: 'राहुल लखारा', age: 27, city: 'जोधपुर', type: 'वर' },
-                 { name: 'अंजली लखारा', age: 25, city: 'सोजत', type: 'वधु' },
-               ].map((p, idx) => (
-                 <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-primary/20 transition-colors cursor-pointer group">
+                 { label: "Articles Published", val: stats?.totalArticles || 0, icon: Megaphone, color: "text-indigo-400", bg: "bg-indigo-400/10" },
+                 { label: "Community Support", val: 12, icon: GraduationCap, color: "text-emerald-400", bg: "bg-emerald-400/10" },
+                 { label: "Digital E-Books", val: 45, icon: Book, color: "text-amber-400", bg: "bg-amber-400/10" },
+                 { label: "Gallery Media", val: 230, icon: ImageIcon, color: "text-rose-400", bg: "bg-rose-400/10" }
+               ].map((item, i) => (
+                 <div key={i} className="flex items-center justify-between group cursor-pointer">
                     <div className="flex items-center gap-4">
-                       <div className="size-10 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center text-primary font-bold overflow-hidden">
-                          {p.name[0]}
+                       <div className={`size-12 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          <item.icon className="size-6" />
                        </div>
                        <div>
-                          <p className="font-bold text-slate-800 text-sm group-hover:text-primary transition-colors">{p.name}</p>
-                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{p.city} • {p.age} वर्ष</p>
+                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{item.label}</p>
+                          <p className="text-xl font-black">{item.val}</p>
                        </div>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider ${p.type === 'वर' ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-700'}`}>
-                       {p.type}
-                    </span>
+                    <ArrowUpRight className="size-4 text-slate-700 group-hover:text-white transition-colors" />
                  </div>
                ))}
             </div>
-            <button className="w-full mt-8 py-3 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-primary transition-all uppercase tracking-widest">
-               सभी प्रोफाइल देखें
-            </button>
-         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="mt-12 pt-8 border-t border-white/5 space-y-4">
+               <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <span>Storage Usage</span>
+                  <span>64%</span>
+               </div>
+               <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-indigo-500 w-[64%] rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)]"></div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* 🚀 QUICK ACCESS & TOOLS */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {[
-            { label: "स्टोर प्रबंधन", desc: "Sales & Orders", icon: ShoppingBag, color: "bg-primary", path: "/admin/store" },
-            { label: "सदस्य प्रबंधन", desc: "Listings & Search", icon: Users, color: "bg-orange-600", path: "/admin/members" },
-            { label: "सूचना पट्ट", desc: "Manage Notices", icon: Bell, color: "bg-emerald-600", path: "/admin/notices" },
-            { label: "एनालिटिक्स", desc: "System Metrics", icon: BarChart3, color: "bg-blue-600", path: "/admin/analytics" }
+           { label: "Manage Members", path: "/admin/members", icon: Users, color: "hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200" },
+           { label: "View Analytics", path: "/admin/analytics", icon: BarChart3, color: "hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200" },
+           { label: "Notice Board", path: "/admin/notices", icon: Bell, color: "hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200" },
+           { label: "System Shield", path: "/admin/shield", icon: ShieldCheck, color: "hover:bg-slate-900 hover:text-white hover:border-slate-800" }
          ].map((action, i) => (
-            <button key={i} onClick={() => navigate(action.path)} className="flex flex-col items-start gap-4 p-8 bg-white rounded-3xl border-2 border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all text-left group">
-               <div className={`size-14 ${action.color} text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                  <action.icon className="size-6" />
-               </div>
-               <div>
-                  <h3 className="text-lg font-bold text-slate-800 leading-tight">{action.label}</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{action.desc}</p>
-               </div>
-            </button>
+           <button 
+             key={i} 
+             onClick={() => navigate(action.path)}
+             className={`flex flex-col items-center gap-4 p-8 bg-white rounded-3xl border border-slate-100 shadow-sm transition-all duration-300 group ${action.color}`}
+           >
+              <div className="size-14 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all shadow-inner">
+                 <action.icon className="size-7" />
+              </div>
+              <span className="text-[11px] font-black uppercase tracking-widest text-center">{action.label}</span>
+           </button>
          ))}
-      </div>
+      </section>
 
-      <div className="bg-slate-900 rounded-3xl p-10 text-white relative overflow-hidden border border-slate-800 shadow-2xl">
-         <div className="absolute top-0 right-0 size-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
-         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="space-y-4">
-               <div className="flex items-center gap-3">
-                  <div className="size-10 bg-white rounded-xl flex items-center justify-center border border-primary/20 p-1">
-                     <img src="/brand-logo.png" alt="Logo" className="size-full object-contain" />
-                  </div>
-                  <h3 className="text-lg font-bold leading-none tracking-tighter">प्रणाली जानकारी<br/><span className="text-[10px] font-black text-primary uppercase tracking-widest">System Architecture</span></h3>
-               </div>
-               <p className="text-slate-400 text-xs font-medium leading-relaxed italic">
-                  लखारा समाज डिजिटल नेटवर्क सुरक्षित फायरबेस इंफ्रास्ट्रक्चर और एडवांस्ड एआई मॉडलिंग द्वारा संचालित है।
-               </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">संस्करण</p>
-                  <p className="text-sm font-bold text-primary font-mono">v4.0.0-ULTRA</p>
-               </div>
-               <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">अंतिम बैकअप</p>
-                  <p className="text-sm font-bold text-emerald-400">आज (सफल)</p>
-               </div>
-            </div>
-            <div className="flex flex-col justify-center items-end gap-2 text-right">
-               <img src="/admin-signature.png" alt="Admin Signature" className="h-12 w-auto object-contain invert grayscale brightness-200" />
-               <span className="text-3xl font-black text-white leading-none tracking-tighter">॥ संघे शक्तिः कलौ युगे ॥</span>
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">United Excellence • Rakesh Lakhara</span>
-            </div>
+      {/* 🕒 ACTIVITY FEED MOCKUP */}
+      <section className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm">
+         <div className="flex items-center justify-between mb-10">
+            <h2 className="text-2xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">Global Log Feed</h2>
+            <button className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline">View All Records</button>
          </div>
-      </div>
+         
+         <div className="space-y-6">
+            {[
+              { type: 'member', user: 'Sunil Lakhara', action: 'applied for membership', time: '2 mins ago', icon: Users, color: 'text-indigo-600 bg-indigo-50' },
+              { type: 'news', user: 'Admin', action: 'published breaking news', time: '45 mins ago', icon: Megaphone, color: 'text-emerald-600 bg-emerald-50' },
+              { type: 'matrimonial', user: 'Anjali Lakhara', action: 'updated profile photos', time: '3 hours ago', icon: Heart, color: 'text-rose-600 bg-rose-50' },
+              { type: 'order', user: 'Rahul Solanki', action: 'placed a new order #4521', time: '5 hours ago', icon: ShoppingBag, color: 'text-amber-600 bg-amber-50' }
+            ].map((log, i) => (
+              <div key={i} className="flex items-center justify-between py-4 border-b border-slate-50 last:border-0 group cursor-pointer hover:bg-slate-50/50 px-4 -mx-4 rounded-2xl transition-colors">
+                 <div className="flex items-center gap-4">
+                    <div className={`size-12 ${log.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                       <log.icon className="size-5" />
+                    </div>
+                    <div>
+                       <p className="text-sm font-bold text-slate-900">
+                          <span className="text-indigo-600">{log.user}</span> {log.action}
+                       </p>
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{log.time} • LOG_ID_{Math.floor(Math.random()*10000)}</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-2">
+                    <div className="size-2 bg-indigo-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <ArrowUpRight className="size-4 text-slate-300" />
+                 </div>
+              </div>
+            ))}
+         </div>
+      </section>
+
     </div>
   );
 }

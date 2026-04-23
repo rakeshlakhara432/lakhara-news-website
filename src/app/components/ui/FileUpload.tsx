@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, Loader2, Camera, FileText } from "lucide-react";
-import { uploadFile } from "../../utils/storage";
+import { fileService } from "../../services/api";
 import { toast } from "sonner";
 
 interface FileUploadProps {
@@ -58,9 +58,13 @@ export function FileUpload({
 
     setIsUploading(true);
     try {
-      const url = await uploadFile(file, path);
-      onUploadComplete(url);
-      toast.success(`${type === "image" ? "Image" : "PDF"} uploaded successfully!`);
+      const res = await fileService.upload(file);
+      if (res.success) {
+        onUploadComplete(res.data);
+        toast.success(`${type === "image" ? "Image" : "PDF"} uploaded successfully to server!`);
+      } else {
+        throw new Error(res.message);
+      }
     } catch (error) {
       toast.error("Upload failed. Please try again.");
       console.error(error);
