@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as ImageIcon, Bot, X } from "lucide-react";
+import { Loader2, Plus, Trash2, Megaphone, Calendar, Bookmark, Eye, Image as ImageIcon, X } from "lucide-react";
 import { samajService, NewsPost } from "../../services/samajService";
-import { extractKeywords } from "../../../utils/mlUtils";
 import { toast } from "sonner";
 import { AutoNewsWriter } from "../../components/ai/AutoNewsWriter";
 import { FileUpload } from "../../components/ui/FileUpload";
@@ -116,18 +115,7 @@ export function ManageSamajNews() {
                         </div>
                         
                         <div className="space-y-1.5">
-                           <div className="flex justify-between items-center mb-1 pr-1">
-                              <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">Description</label>
-                              <button type="button" onClick={() => {
-                                 const tags = extractKeywords(formData.content);
-                                 if(tags.length) {
-                                    setFormData(prev => ({...prev, content: prev.content + "\n\n" + tags.join(" ")}));
-                                    toast.success("AI Auto-Tags added!");
-                                 }
-                              }} className="text-[10px] font-black text-indigo-500 uppercase flex items-center gap-1 hover:text-indigo-700 transition-colors">
-                                 <Bot className="size-3" /> Auto-Tag
-                              </button>
-                           </div>
+                           <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">Description</label>
                            <textarea value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} rows={8} required className="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-3.5 text-sm font-bold focus:bg-white focus:border-slate-200 outline-none transition-all shadow-sm resize-none" placeholder="Write details..." />
                         </div>
                      </div>
