@@ -28,7 +28,7 @@ const NoticeBoardPage = lazy(() => import("./pages/samaj/NoticeBoardPage").then(
 const BirthdayWishesPage = lazy(() => import("./pages/samaj/BirthdayWishesPage").then(m => ({ default: m.BirthdayWishesPage })));
 
 // Admin Pages (Lazy)
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard").then(m => ({ default: m.AdminDashboard })));
+const AdminDashboard = lazy(() => import("./pages/admin/MainDashboard").then(m => ({ default: m.MainDashboard })));
 const ManageMembers = lazy(() => import("./pages/admin/ManageMembers").then(m => ({ default: m.ManageMembers })));
 const ManageMatrimonial = lazy(() => import("./pages/admin/ManageMatrimonial").then(m => ({ default: m.ManageMatrimonial })));
 const ManageEvents = lazy(() => import("./pages/admin/ManageEvents").then(m => ({ default: m.ManageEvents })));

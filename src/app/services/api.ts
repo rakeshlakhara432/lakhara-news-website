@@ -40,6 +40,7 @@ export const adminService = {
   addProduct: (data: any) => api.post('/shop/products', data).then(res => res.data),
   updateProduct: (id: string, data: any) => api.put(`/shop/products/${id}`, data).then(res => res.data),
   deleteProduct: (id: string) => api.delete(`/shop/products/${id}`).then(res => res.data),
+  getAnalytics: () => api.get('/admin/analytics').then(res => res.data),
 };
 
 export const fileService = {

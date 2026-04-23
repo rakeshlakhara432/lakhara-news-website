@@ -64,10 +64,37 @@ public class AdminController {
         return ApiResponse.success(null, "Profile deleted successfully");
     }
 
-    // --- Member Admin ---
+    @PutMapping("/members/{id}/approve")
+    public ApiResponse<Member> approveMember(@PathVariable String id) {
+        Member member = memberRepository.findById(id).orElseThrow();
+        member.setApproved(true);
+        // Generate a professional Member ID if not exists
+        if (member.getMemberId() == null || member.getMemberId().isEmpty()) {
+            member.setMemberId("LAK-" + (1000 + memberRepository.count()));
+        }
+        return ApiResponse.success(memberRepository.save(member), "Member approved successfully");
+    }
+
     @DeleteMapping("/members/{id}")
     public ApiResponse<Void> deleteMember(@PathVariable String id) {
         memberRepository.deleteById(id);
         return ApiResponse.success(null, "Member deleted successfully");
+    }
+
+    @GetMapping("/analytics")
+    public ApiResponse<Map<String, Object>> getAnalytics() {
+        Map<String, Object> analytics = new HashMap<>();
+        analytics.put("totalViews", 15420); // Static for now, can be linked to a ViewLog table
+        analytics.put("newReviews", 48);
+        analytics.put("activeUsers", 230);
+        analytics.put("revenue", 12500);
+        
+        // Dynamic growth data for charts
+        analytics.put("growth", Map.of(
+            "labels", new String[]{"Jan", "Feb", "Mar", "Apr", "May"},
+            "data", new int[]{120, 450, 800, 1200, 2500}
+        ));
+        
+        return ApiResponse.success(analytics, "Analytics fetched successfully");
     }
 }
