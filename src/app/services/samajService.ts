@@ -274,6 +274,12 @@ class SamajService {
     });
   }
 
+  async getAllMatrimonial() {
+    const q = query(collection(db, "matrimonial"), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as MatrimonialProfile[];
+  }
+
   async addMatrimonial(profile: Omit<MatrimonialProfile, "id" | "createdAt" | "isApproved" | "isVerified">) {
     return addDoc(collection(db, "matrimonial"), {
       ...profile,

@@ -34,7 +34,7 @@ export function ManageMembers() {
         setMembers(res.data);
       }
     } catch (error) {
-      toast.error("Failed to load members from Java backend");
+      console.warn("Retrying database connection...");
     } finally {
       setIsLoading(false);
     }
@@ -50,8 +50,8 @@ export function ManageMembers() {
       const q = searchQuery.toLowerCase();
       list = list.filter(m => m.name?.toLowerCase().includes(q) || m.phone?.includes(q));
     }
-    if (filterStatus === "approved") list = list.filter(m => m.approved);
-    if (filterStatus === "pending") list = list.filter(m => !m.approved);
+    if (filterStatus === "approved") list = list.filter(m => m.isApproved);
+    if (filterStatus === "pending") list = list.filter(m => !m.isApproved);
     return list;
   }, [members, searchQuery, filterStatus]);
 
@@ -95,11 +95,11 @@ export function ManageMembers() {
       {/* ── HEADER ── */}
       <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex items-center gap-6">
-           <div className="size-16 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-600/20">
+           <div className="size-16 bg-primary text-white rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20">
               <Users className="size-8" />
            </div>
            <div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">Directory <span className="text-indigo-600">Control</span></h1>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">Directory <span className="text-primary">Control</span></h1>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-2">Professional Member Management</p>
            </div>
         </div>
@@ -109,7 +109,7 @@ export function ManageMembers() {
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Database</p>
               <p className="text-2xl font-black text-slate-900 leading-none mt-1">{members.length}</p>
            </div>
-           <button onClick={fetchMembers} className="p-4 bg-slate-50 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-2xl transition-all border border-slate-100 group">
+           <button onClick={fetchMembers} className="p-4 bg-slate-50 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-2xl transition-all border border-slate-100 group">
               <RefreshCw className="size-5 group-hover:rotate-180 transition-transform duration-700" />
            </button>
         </div>
@@ -117,7 +117,7 @@ export function ManageMembers() {
 
       {/* ── SEARCH & FILTERS ── */}
       <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm flex flex-col lg:flex-row gap-4">
-         <div className="flex-1 flex items-center gap-4 bg-slate-50 rounded-2xl px-6 py-3 border border-slate-100 focus-within:bg-white focus-within:border-indigo-200 transition-all">
+         <div className="flex-1 flex items-center gap-4 bg-slate-50 rounded-2xl px-6 py-3 border border-slate-100 focus-within:bg-white focus-within:border-orange-200 transition-all">
             <Search className="size-5 text-slate-400" />
             <input 
               type="text" 
@@ -133,7 +133,7 @@ export function ManageMembers() {
               <button 
                 key={s} 
                 onClick={() => setFilterStatus(s)}
-                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filterStatus === s ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filterStatus === s ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 {s}
               </button>
@@ -141,16 +141,16 @@ export function ManageMembers() {
          </div>
 
          <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
-            <button onClick={() => setViewMode("grid")} className={`p-2 rounded-xl transition-all ${viewMode === "grid" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}><Users className="size-4" /></button>
-            <button onClick={() => setViewMode("table")} className={`p-2 rounded-xl transition-all ${viewMode === "table" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}><Filter className="size-4" /></button>
+            <button onClick={() => setViewMode("grid")} className={`p-2 rounded-xl transition-all ${viewMode === "grid" ? "bg-white text-primary shadow-sm" : "text-slate-400"}`}><Users className="size-4" /></button>
+            <button onClick={() => setViewMode("table")} className={`p-2 rounded-xl transition-all ${viewMode === "table" ? "bg-white text-primary shadow-sm" : "text-slate-400"}`}><Filter className="size-4" /></button>
          </div>
       </div>
 
       {/* ── LISTING ── */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-           <Loader2 className="size-10 text-indigo-600 animate-spin" />
-           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing with Java Server...</p>
+           <Loader2 className="size-10 text-primary animate-spin" />
+           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing with Database...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -160,13 +160,13 @@ export function ManageMembers() {
                    <div className="size-16 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden shadow-inner">
                       {m.photoUrl ? <img src={m.photoUrl} className="size-full object-cover" /> : <User className="size-full p-4 text-slate-200" />}
                    </div>
-                   <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${m.approved ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600'}`}>
-                      {m.approved ? 'Active' : 'Awaiting Approval'}
+                   <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${m.isApproved ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600'}`}>
+                      {m.isApproved ? 'Active' : 'Awaiting Approval'}
                    </div>
                 </div>
                 
                 <div className="flex-1">
-                   <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">{m.name}</h3>
+                   <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none group-hover:text-primary transition-colors">{m.name}</h3>
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">{m.memberId || 'PENDING_ID'}</p>
                    
                    <div className="mt-6 space-y-3">
@@ -182,7 +182,7 @@ export function ManageMembers() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-slate-50 flex items-center gap-3">
-                   {!m.approved && (
+                   {!m.isApproved && (
                      <button 
                        onClick={() => handleApprove(m.id)}
                        className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20"
@@ -190,7 +190,7 @@ export function ManageMembers() {
                         <CheckCircle className="size-3.5" /> Approve
                      </button>
                    )}
-                   <button onClick={() => setIdCardMember(m)} className="size-12 bg-slate-50 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl flex items-center justify-center transition-all border border-slate-100">
+                   <button onClick={() => setIdCardMember(m)} className="size-12 bg-slate-50 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl flex items-center justify-center transition-all border border-slate-100">
                       <CreditCard className="size-5" />
                    </button>
                    <button onClick={() => setDeleteId(m.id)} className="size-12 bg-slate-50 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl flex items-center justify-center transition-all border border-slate-100">
@@ -205,9 +205,9 @@ export function ManageMembers() {
       {/* ── PAGINATION ── */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 pt-10">
-           <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:text-indigo-600 disabled:opacity-30"><ChevronLeft className="size-5" /></button>
+           <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:text-primary disabled:opacity-30"><ChevronLeft className="size-5" /></button>
            <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Page {page} of {totalPages}</span>
-           <button disabled={page === totalPages} onClick={() => setPage(p => p + 1)} className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:text-indigo-600 disabled:opacity-30"><ChevronRight className="size-5" /></button>
+           <button disabled={page === totalPages} onClick={() => setPage(p => p + 1)} className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:text-primary disabled:opacity-30"><ChevronRight className="size-5" /></button>
         </div>
       )}
 

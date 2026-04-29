@@ -17,6 +17,7 @@
     }
   ],
   "hosting": {
+    "site": "lakhara-news-website-306401-pali",
     "public": "dist",
     "ignore": [
       "firebase.json",

@@ -34,13 +34,13 @@ export function MainDashboard() {
   }, []);
 
   const growthData = [
-    { name: "Mon", users: 40 },
-    { name: "Tue", users: 55 },
-    { name: "Wed", users: 48 },
-    { name: "Thu", users: 70 },
-    { name: "Fri", users: 85 },
-    { name: "Sat", users: 95 },
-    { name: "Sun", users: stats?.totalMembers || 120 },
+    { name: "Mon", users: 0 },
+    { name: "Tue", users: 0 },
+    { name: "Wed", users: 0 },
+    { name: "Thu", users: 0 },
+    { name: "Fri", users: 0 },
+    { name: "Sat", users: 0 },
+    { name: "Sun", users: stats?.totalMembers || 0 },
   ];
 
   if (isLoading) {
@@ -59,7 +59,7 @@ export function MainDashboard() {
       
       {/* WELCOME HEADER */}
       <section className="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-10 text-white shadow-2xl">
-         <div className="absolute top-0 right-0 size-96 bg-indigo-600/20 rounded-full blur-[100px] -mr-48 -mt-48 animate-pulse"></div>
+         <div className="absolute top-0 right-0 size-96 bg-primary/20 rounded-full blur-[100px] -mr-48 -mt-48 animate-pulse"></div>
          
          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="space-y-4">
@@ -67,9 +67,9 @@ export function MainDashboard() {
                   <div className="size-2 bg-emerald-400 rounded-full animate-ping"></div>
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">System Live</span>
                </div>
-               <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none italic uppercase">
-                  WELCOME BACK, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">RAKESH</span>
-               </h1>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none italic uppercase">
+                   WELCOME BACK, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">ADMIN</span>
+                </h1>
             </div>
          </div>
       </section>
@@ -77,7 +77,7 @@ export function MainDashboard() {
       {/* KPI CARDS */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {[
-           { label: "Total Members", val: stats?.totalMembers || 0, icon: Users, color: "from-indigo-600 to-blue-500" },
+            { label: "Total Members", val: stats?.totalMembers || 0, icon: Users, color: "from-primary to-orange-500" },
            { label: "Pending Approvals", val: stats?.pendingMembers || 0, icon: AlertCircle, color: "from-orange-600 to-amber-500" },
            { label: "Matrimonial", val: stats?.totalProfiles || 0, icon: Heart, color: "from-rose-600 to-pink-500" },
            { label: "Samaj Events", val: stats?.totalEvents || 0, icon: Calendar, color: "from-emerald-600 to-teal-500" }
@@ -104,7 +104,7 @@ export function MainDashboard() {
                   <XAxis dataKey="name" axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip />
-                  <Area type="monotone" dataKey="users" stroke="#4f46e5" strokeWidth={4} fill="#4f46e520" />
+                  <Area type="monotone" dataKey="users" stroke="var(--primary)" strokeWidth={4} fill="var(--primary)" fillOpacity={0.1} />
                </AreaChart>
             </ResponsiveContainer>
          </div>

@@ -68,11 +68,11 @@ export function AdminLayout() {
       {/* ── PREMIUM SIDEBAR ── */}
       <aside className="hidden lg:flex flex-col w-72 bg-slate-950 text-white relative z-50">
         <div className="p-8 border-b border-white/5 flex items-center gap-4">
-          <div className="size-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
+          <div className="size-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
             <Command className="size-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-black tracking-tighter italic leading-none uppercase">Admin <span className="text-indigo-400">Hub</span></h2>
+            <h2 className="text-xl font-black tracking-tighter italic leading-none uppercase">Admin <span className="text-primary">Panel</span></h2>
             <p className="text-[7px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1.5">Lakhara Network</p>
           </div>
         </div>
@@ -88,11 +88,11 @@ export function AdminLayout() {
                 to={item.path}
                 className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${
                   active
-                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20 translate-x-2"
+                    ? "bg-primary text-white shadow-xl shadow-primary/20 translate-x-2"
                     : "text-slate-500 hover:text-white hover:bg-white/5"
                 }`}
               >
-                <Icon className={`size-5 transition-colors ${active ? 'text-white' : 'group-hover:text-indigo-400'}`} />
+                <Icon className={`size-5 transition-colors ${active ? 'text-white' : 'group-hover:text-primary'}`} />
                 <span className="font-black text-[11px] uppercase tracking-wider">{item.label}</span>
                 {active && <div className="ml-auto size-1.5 bg-white/40 rounded-full animate-pulse" />}
               </Link>
@@ -103,11 +103,11 @@ export function AdminLayout() {
         <div className="p-6 border-t border-white/5 space-y-4">
            <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
               <div className="flex items-center gap-3 mb-3">
-                 <div className="size-8 rounded-full bg-indigo-500 flex items-center justify-center font-black text-[10px]">RL</div>
-                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-tight">Rakesh Lakhara</p>
-                    <p className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">System Owner</p>
-                 </div>
+               <div className="size-8 rounded-full bg-primary flex items-center justify-center font-black text-[10px]">RL</div>
+               <div>
+                  <p className="text-[10px] font-black uppercase tracking-tight">Rakesh Lakhara</p>
+                  <p className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">Admin</p>
+               </div>
               </div>
               <button 
                 onClick={handleLogout}
@@ -127,11 +127,11 @@ export function AdminLayout() {
           <div className="flex items-center gap-6">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-3 bg-slate-50 rounded-2xl hover:bg-indigo-600 hover:text-white transition-all border border-slate-100"
+              className="lg:hidden p-3 bg-slate-50 rounded-2xl hover:bg-primary hover:text-white transition-all border border-slate-100"
             >
               <Menu className="size-5" />
             </button>
-            <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100 focus-within:bg-white focus-within:border-indigo-200 transition-all w-80">
+            <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100 focus-within:bg-white focus-within:border-primary/20 transition-all w-80">
                <Search className="size-4 text-slate-400" />
                <input 
                  type="text" 
@@ -147,12 +147,12 @@ export function AdminLayout() {
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Server: Online</span>
             </div>
             
-            <button className="relative p-3 bg-slate-50 rounded-2xl hover:bg-indigo-50 hover:text-indigo-600 transition-all border border-slate-100 group">
+            <button className="relative p-3 bg-slate-50 rounded-2xl hover:bg-primary/5 hover:text-primary transition-all border border-slate-100 group">
                <Bell className="size-5" />
                <div className="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white"></div>
             </button>
             
-            <Link to="/" className="flex items-center gap-2.5 px-6 py-2.5 bg-slate-950 text-white font-black rounded-2xl hover:bg-indigo-600 transition-all text-[10px] tracking-widest uppercase shadow-xl hover:scale-105 active:scale-95">
+            <Link to="/" className="flex items-center gap-2.5 px-6 py-2.5 bg-slate-950 text-white font-black rounded-2xl hover:bg-primary transition-all text-[10px] tracking-widest uppercase shadow-xl hover:scale-105 active:scale-95">
               <Globe className="size-4" />
               Live Portal
             </Link>
@@ -198,7 +198,7 @@ export function AdminLayout() {
                      onClick={() => setIsSidebarOpen(false)}
                      className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all ${
                        isActive(item.path)
-                         ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20'
+                         ? 'bg-primary text-white shadow-xl shadow-primary/20'
                          : 'text-slate-500 hover:text-white hover:bg-white/5'
                      }`}
                    >
